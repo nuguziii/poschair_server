@@ -104,7 +104,7 @@ def after_request(response):
 def homepage():
     # depending on whether the requesting user is logged in or not, show them
     # either the public timeline or their own private timeline
-    if request.method == 'POST'
+    if request.method == 'POST':
         if request.form['name']:
             try:
                 with database.atomic():
