@@ -103,9 +103,9 @@ def homepage():
     # depending on whether the requesting user is logged in or not, show them
     # either the public timeline or their own private timeline
     if len(request.form) == 4:
-        return join()
+        return redirect(url_for('join'))
     else:
-        return login()
+        return redirect(url_for('login'))
 
 
 @app.route('/join/', methods=['GET', 'POST'])
