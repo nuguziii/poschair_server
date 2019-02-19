@@ -103,6 +103,7 @@ def after_request(response):
 def homepage():
     # depending on whether the requesting user is logged in or not, show them
     # either the public timeline or their own private timeline
+    print('start')
     if len(request.form) == 4:
         print('redirect join')
         return redirect(url_for('join'))
