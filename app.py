@@ -47,6 +47,7 @@ def auth_user(user):
     session['logged_in'] = True
     session['user_email'] = user.email
     session['username'] = user.name
+    print('Logged in')
     #flash('You are logged in as %s' % (user.username))
 
 # get the user from the session
@@ -103,13 +104,16 @@ def homepage():
     # depending on whether the requesting user is logged in or not, show them
     # either the public timeline or their own private timeline
     if len(request.form) == 4:
+        print('redirect join')
         return redirect(url_for('join'))
     else:
+        print('redirect login')
         return redirect(url_for('login'))
 
 
 @app.route('/join/', methods=['GET', 'POST'])
 def join():
+    print('join page')
     if request.method == 'POST' and request.form['name']:
         try:
             with database.atomic():
@@ -122,7 +126,7 @@ def join():
                     email=request.form['email'])
 
             # mark the user as being 'authenticated' by setting the session vars
-            auth_user(user)
+            #auth_user(user)
             return 'success'#redirect(url_for('homepage'))
 
         except IntegrityError:
@@ -132,6 +136,7 @@ def join():
 
 @app.route('/login/', methods=['GET', 'POST'])
 def login():
+    print('login page')
     if request.method == 'POST' and request.form['username']:
         try:
             pw_hash = md5(request.form['password'].encode('utf-8')).hexdigest()
@@ -141,7 +146,7 @@ def login():
         except User.DoesNotExist:
             return 'wrong_pw'#flash('The password entered is incorrect')
         else:
-            auth_user(user)
+            #auth_user(user)
             return 'success'
 
     return 0
