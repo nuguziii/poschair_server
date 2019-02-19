@@ -90,6 +90,7 @@ def get_object_or_404(model, *expressions):
 # to create and tear down a database connection on each request.
 @app.before_request
 def before_request():
+    print('before_request')
     g.db = database
     g.db.connect()
 
@@ -99,58 +100,44 @@ def after_request(response):
     return response
 
 # views -- these are the actual mappings of url to view function
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 def homepage():
     # depending on whether the requesting user is logged in or not, show them
     # either the public timeline or their own private timeline
-    print('start')
-    if len(request.form) == 4:
-        print('redirect join')
-        return redirect(url_for('join'))
-    else:
-        print('redirect login')
-        return redirect(url_for('login'))
+    if request.method == 'POST'
+        if request.form['name']:
+            try:
+                with database.atomic():
+                    # Attempt to create the user. If the username is taken, due to the
+                    # unique constraint, the database will raise an IntegrityError.
+                    user = User.create(
+                        name=request.form['name'],
+                        password=md5((request.form['password']).encode('utf-8')).hexdigest(),
+                        serialnum=request.form['serialnumber'],
+                        email=request.form['email'])
 
+                # mark the user as being 'authenticated' by setting the session vars
+                #auth_user(user)
+                return 'success'#redirect(url_for('homepage'))
 
-@app.route('/join/', methods=['GET', 'POST'])
-def join():
-    print('join page')
-    if request.method == 'POST' and request.form['name']:
-        try:
-            with database.atomic():
-                # Attempt to create the user. If the username is taken, due to the
-                # unique constraint, the database will raise an IntegrityError.
-                user = User.create(
-                    name=request.form['name'],
-                    password=md5((request.form['password']).encode('utf-8')).hexdigest(),
-                    serialNum=request.form['serialNum'],
-                    email=request.form['email'])
+            except IntegrityError:
+                return 'already_existed'#flash('That username is already taken')
 
-            # mark the user as being 'authenticated' by setting the session vars
-            #auth_user(user)
-            return 'success'#redirect(url_for('homepage'))
+        elif request.form['email']:
+            try:
+                pw_hash = md5(request.form['password'].encode('utf-8')).hexdigest()
+                user = User.get(
+                    (User.email == request.form['email']) &
+                    (User.password == pw_hash))
+            except User.DoesNotExist:
+                return 'wrong_pw'#flash('The password entered is incorrect')
+            else:
+                #auth_user(user)
+                return 'success'
 
-        except IntegrityError:
-            return 'already_existed'#flash('That username is already taken')
 
     return render_template('./index.html')
 
-@app.route('/login/', methods=['GET', 'POST'])
-def login():
-    print('login page')
-    if request.method == 'POST' and request.form['username']:
-        try:
-            pw_hash = md5(request.form['password'].encode('utf-8')).hexdigest()
-            user = User.get(
-                (User.name == request.form['name']) &
-                (User.password == pw_hash))
-        except User.DoesNotExist:
-            return 'wrong_pw'#flash('The password entered is incorrect')
-        else:
-            #auth_user(user)
-            return 'success'
-
-    return 0
 
 #@app.context_processor
 #def _inject_user():
