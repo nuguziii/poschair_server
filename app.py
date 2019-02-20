@@ -97,7 +97,7 @@ def homepage():
     # either the public timeline or their own private timeline
     if request.method == 'POST':
     	userDetails = request.form
-        if len(userDetails) == 4: #join
+        if len(userDetails) == 4:#join
             try:
                 with database.atomic():
                     # Attempt to create the user. If the username is taken, due to the
