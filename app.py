@@ -96,8 +96,8 @@ def homepage():
     # depending on whether the requesting user is logged in or not, show them
     # either the public timeline or their own private timeline
     if request.method == 'POST':
-    	userDetails = request.form
-		if len(userDetails)==4:#join
+    	#userDetails = request.form
+		if len(request.form)==4:#join
 			try:
                 with database.atomic():
                     # Attempt to create the user. If the username is taken, due to the
@@ -115,7 +115,7 @@ def homepage():
             except IntegrityError:
                 return 'already_existed'#flash('That username is already taken')
 
-        elif len(userDetails)==2: #login
+        elif len(request.form)==2: #login
             try:
                 #pw_hash = md5(request.form['password'].encode('utf-8')).hexdigest()
                 user = User.get(
@@ -123,9 +123,9 @@ def homepage():
                     (User.password == request.form['password']))
             except User.DoesNotExist:
                 return 'wrong_pw'#flash('The password entered is incorrect')
-        else:
+        	else:
                 #auth_user(user)
-            return 'success'
+            	return 'success'
 
 
     return render_template('./index.html')
