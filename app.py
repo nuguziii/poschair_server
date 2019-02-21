@@ -123,9 +123,9 @@ def homepage():
                     (User.password == request.form['password']))
             except User.DoesNotExist:
                 return 'wrong_pw'#flash('The password entered is incorrect')
-            else:
+        else:
                 #auth_user(user)
-                return 'success'
+            return 'success'
 
 
     return render_template('./index.html')
