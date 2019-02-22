@@ -102,7 +102,7 @@ def homepage():
                 with database.atomic():
                     # Attempt to create the user. If the username is taken, due to the
                     # unique constraint, the database will raise an IntegrityError.
-					user = User.create(
+                    user = User.create(
 						name=request.form['name'],
 						password=request.form['password'],#md5((request.form['password']).encode('utf-8')).hexdigest(),
                         serialnum=request.form['serialnumber'],
@@ -123,9 +123,9 @@ def homepage():
                     (User.password == request.form['password']))
             except User.DoesNotExist:
                 return 'wrong_pw'#flash('The password entered is incorrect')
-        	else:
-                #auth_user(user)
-            	return 'success'
+        else:
+            #auth_user(user)
+            return 'success'
 
 
     return render_template('./index.html')
