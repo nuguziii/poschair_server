@@ -79,11 +79,11 @@ def get_object_or_404(model, *expressions):
 
 # Request handlers -- these two hooks are provided by flask and we will use them
 # to create and tear down a database connection on each request.
-#@app.before_request
-#def before_request():
-#    print('before_request')
-#    g.db = database
-#    g.db.connect()
+@app.before_request
+def before_request():
+    print('before_request')
+    g.db = database
+	g.db.connect()
 
 @app.after_request
 def after_request(response):
@@ -93,8 +93,6 @@ def after_request(response):
 # views -- these are the actual mappings of url to view function
 @app.route('/login/', methods=['GET', 'POST'])
 def homepage():
-	g.db = database
-	g.db.connect()
 	if request.method == 'POST':
 		userDetails = request.form
 		email = userDetails['email']
@@ -150,9 +148,6 @@ def homepage():
 
 @app.route('/signup/', methods=['GET', 'POST'])
 def signup():
-	if(!g.db.connect())
-		g.db = database
-		g.db.connect()
 	
 	if request.method == 'POST':
 		try:
