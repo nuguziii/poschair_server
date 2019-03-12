@@ -79,11 +79,11 @@ def get_object_or_404(model, *expressions):
 
 # Request handlers -- these two hooks are provided by flask and we will use them
 # to create and tear down a database connection on each request.
-@app.before_request
-def before_request():
-    print('before_request')
-    g.db = database
-    g.db.connect()
+#@app.before_request
+#def before_request():
+#    print('before_request')
+#    g.db = database
+#    g.db.connect()
 
 @app.after_request
 def after_request(response):
@@ -91,44 +91,84 @@ def after_request(response):
     return response
 
 # views -- these are the actual mappings of url to view function
-@app.route('/', methods=['GET', 'POST'])
+@app.route('/login/', methods=['GET', 'POST'])
 def homepage():
+	g.db = database
+	g.db.connect()
+	if request.method == 'POST':
+		userDetails = request.form
+		email = userDetails['email']
+		password = userDetails['password']
+		try:
+			user = User.get(
+                    (User.email == request.form['email']) &
+                    (User.password == request.form['password']))
+		except User.DoesNotExist:
+			return 'wrong_pw'
+
+	else:
+		return 'success'
+
+
     # depending on whether the requesting user is logged in or not, show them
     # either the public timeline or their own private timeline
-	if request.method == 'POST':
+#	if request.method == 'POST':
     	#userDetails = request.form
-		if request.form['name']:#join
-			try:
-                with database.atomic():
+#		if request.form['name']:#join
+#			try:
+#                with database.atomic():
                     # Attempt to create the user. If the username is taken, due to the
                     # unique constraint, the database will raise an IntegrityError.
-                    user = User.create(
-						name=request.form['name'],
-						password=request.form['password'],#md5((request.form['password']).encode('utf-8')).hexdigest(),
-                        serialnum=request.form['serialnumber'],
-                        email=request.form['email'])
+#                    user = User.create(
+#						name=request.form['name'],
+#						password=request.form['password'],#md5((request.form['password']).encode('utf-8')).hexdigest(),
+#                        serialnum=request.form['serialnumber'],
+#                        email=request.form['email'])
 
                 # mark the user as being 'authenticated' by setting the session vars
                 #auth_user(user)
-                return 'success'#redirect(url_for('homepage'))
+#                return 'success'#redirect(url_for('homepage'))
 
-            except IntegrityError:
-                return 'already_existed'#flash('That username is already taken')
+#            except IntegrityError:
+#                return 'already_existed'#flash('That username is already taken')
 
-        elif request.form['email']: #login
-            try:
+#        elif request.form['email']: #login
+#            try:
                 #pw_hash = md5(request.form['password'].encode('utf-8')).hexdigest()
-                user = User.get(
-                    (User.email == request.form['email']) &
-                    (User.password == request.form['password']))
-            except User.DoesNotExist:
-                return 'wrong_pw'#flash('The password entered is incorrect')
-        else:
+#                user = User.get(
+#                    (User.email == request.form['email']) &
+#                    (User.password == request.form['password']))
+#            except User.DoesNotExist:
+#                return 'wrong_pw'#flash('The password entered is incorrect')
+#        else:
             #auth_user(user)
-            return 'success'
+#            return 'success'
 
 
-    return render_template('./index.html')
+#    return render_template('./index.html')
+
+
+@app.route('/signup/', methods=['GET', 'POST'])
+def signup():
+	if(!g.db.connect())
+		g.db = database
+		g.db.connect()
+	
+	if request.method == 'POST':
+		try:
+			with database.atomic():
+				user = User.create(
+					name=request.form['name'],
+					password=request.form['password'],#md5((request.form['password']).encode('utf-8')).hexdigest(),
+                    serialnum=request.form['serialnumber'],
+                    email=request.form['email'])
+
+			return 'success'
+
+		except IntegrityError:
+			return 'already_existed'
+
+	return render_template('./index.html')
 
 
 #@app.context_processor
