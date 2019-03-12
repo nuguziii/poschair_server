@@ -83,7 +83,7 @@ def get_object_or_404(model, *expressions):
 def before_request():
     print('before_request')
     g.db = database
-	g.db.connect()
+    g.db.connect()
 
 @app.after_request
 def after_request(response):
