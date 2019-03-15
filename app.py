@@ -76,19 +76,41 @@ def get_object_or_404(model, *expressions):
     except model.DoesNotExist:
         abort(404)
 
+def get_db():
+	if 'db' not in g:
+		g.db = sqlite2.connect(
+			current_app.config['DATABASE'],
+			detect_types=sqlite3.PARSE_DECLTYPES
+			)
+		g.db.row_factory = sqlite3.row
+
+	return g.db
+
+def close_db(e=None):
+	db = g.pop('db', None)
+
+	if db is not None:
+		db.close()
+
+
+
+
 
 # Request handlers -- these two hooks are provided by flask and we will use them
 # to create and tear down a database connection on each request.
-@app.before_request
-def before_request():
-    print('before_request')
-    g.db = database
-    g.db.connect()
+#@app.before_request
+#def before_request():
+#    print('before_request')
+#    g.db = database
+#    g.db.connect()
 
-@app.after_request
-def after_request(response):
-    g.db.close()
-    return response
+
+
+
+#@app.after_request
+#def after_request(response):
+#    g.db.close()
+#    return response
 
 # views -- these are the actual mappings of url to view function
 @app.route('/login/', methods=['GET', 'POST'])
