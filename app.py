@@ -99,6 +99,7 @@ def after_request(response):
 # views -- these are the actual mappings of url to view function
 @app.route('/login/', methods=['GET', 'POST'])
 def homepage():
+	print('login')
 	if request.method == 'POST':
 		userDetails = request.form
 		email = userDetails['email']
@@ -154,7 +155,7 @@ def homepage():
 
 @app.route('/signup/', methods=['GET', 'POST'])
 def signup():
-	
+	print('signup')
 	if request.method == 'POST':
 		try:
 			with database.atomic():
