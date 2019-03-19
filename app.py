@@ -94,8 +94,8 @@ def before_request():
 @app.after_request
 def after_request(response):
 	print('close_request')
-    g.db.close()
-    return response
+	g.db.close()
+	return response
 
 # views -- these are the actual mappings of url to view function
 @app.route('/login/', methods=['GET', 'POST'])
