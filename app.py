@@ -93,6 +93,7 @@ def before_request():
 
 @app.after_request
 def after_request(response):
+	print('close_request')
     g.db.close()
     return response
 
