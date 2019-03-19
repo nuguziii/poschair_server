@@ -41,45 +41,11 @@ class User(BaseModel):
     email = CharField(unique=True)
 
 
-# get the user from the session
-#def get_current_user(user):
-#    if session.get('logged_in'):
-#        return User.get(User.email == user.email)
-
-# view decorator which indicates that the requesting user must be authenticated
-# before they can access the view.  it checks the session to see if they're
-# logged in, and if not redirects them to the login view.
-#def login_required(f):
-#    @wraps(f)
-#    def inner(*args, **kwargs):
-#        if not session.get('logged_in'):
-#            return redirect(url_for('login'))
-#        return f(*args, **kwargs)
-#    return inner
-
-# given a template and a SelectQuery instance, render a paginated list of
-# objects from the query inside the template
-#def object_list(template_name, qr, var_name='object_list', **kwargs):
-#    kwargs.update(
-#        page=int(request.args.get('page', 1)),
-#        pages=qr.count() / 20 + 1)
-#    kwargs[var_name] = qr.paginate(kwargs['page'])
-#    return render_template(template_name, **kwargs)
-
-# retrieve a single object matching the specified query or 404 -- this uses the
-# shortcut "get" method on model, which retrieves a single object or raises a
-# DoesNotExist exception if no matching object exists
-# http://charlesleifer.com/docs/peewee/peewee/models.html#Model.get)
 def get_object_or_404(model, *expressions):
     try:
         return model.get(*expressions)
     except model.DoesNotExist:
         abort(404)
-
-
-
-
-
 
 
 # Request handlers -- these two hooks are provided by flask and we will use them
@@ -105,6 +71,12 @@ def homepage():
 		userDetails = request.form
 		email = userDetails['email']
 		password = userDetails['password']
+
+		print(email)
+		print(password)
+
+		return 'success'
+		'''
 		try:
 			user = User.get(
                     (User.email == request.form['email']) &
@@ -114,7 +86,7 @@ def homepage():
 
 	else:
 		return 'success'
-
+		'''
 
 
 @app.route('/signup/', methods=['GET', 'POST'])
@@ -125,7 +97,7 @@ def signup():
 			with database.atomic():
 				user = User.create(
 					name=request.form['name'],
-					password=request.form['password'],#md5((request.form['password']).encode('utf-8')).hexdigest(),
+					password=request.form['password'],
                     serialnum=request.form['serialnumber'],
                     email=request.form['email'])
 
