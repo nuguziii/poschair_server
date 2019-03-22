@@ -72,9 +72,6 @@ def homepage():
 		email = userDetails['email']
 		password = userDetails['password']
 
-		print(email)
-		print(password)
-
 		try:
 			user = User.get(
                     (User.email == request.form['email']) &
