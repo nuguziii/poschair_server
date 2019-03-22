@@ -94,7 +94,6 @@ def signup():
 					password=request.form['password'],
                     serialnum=request.form['serialnumber'],
                     email=request.form['email'])
-
 			return "success"
 
 		except IntegrityError:
@@ -106,4 +105,3 @@ def signup():
 if __name__=='__main__':
 	print('connection succeeded')
 	app.run(host='0.0.0.0',port=80,debug=True)
-
