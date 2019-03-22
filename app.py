@@ -31,14 +31,14 @@ database = SqliteDatabase(DATABASE)
 class BaseModel(Model):
     class Meta:
         database = database
-        db_table = 'users'
+        db_table = 'User'
 
 # the user model specifies its fields (or columns) declaratively, like django
 class User(BaseModel):
     name = CharField()
-    password = CharField()
-    serialnum = CharField()
-    email = CharField(unique=True)
+    pwd = CharField()
+    serialNum = CharField()
+    ID = CharField(unique=True)
 
 
 def get_object_or_404(model, *expressions):
@@ -69,13 +69,13 @@ def homepage():
 	print('login')
 	if request.method == 'POST':
 		userDetails = request.form
-		email = userDetails['email']
-		password = userDetails['password']
+		ID = userDetails['email']
+		pwd = userDetails['password']
 
 		try:
 			user = User.get(
-                    (User.email == request.form['email']) &
-                    (User.password == request.form['password']))
+                    (User.ID == request.form['email']) &
+                    (User.pwd == request.form['password']))
 		except User.DoesNotExist:
 			return 'wrong_pw'
 
@@ -91,9 +91,9 @@ def signup():
 			with database.atomic():
 				user = User.create(
 					name=request.form['name'],
-					password=request.form['password'],
-                    serialnum=request.form['serialnumber'],
-                    email=request.form['email'])
+					pwd=request.form['password'],
+                    serialNum=request.form['serialnumber'],
+                    ID=request.form['email'])
 			return "success"
 
 		except IntegrityError:
