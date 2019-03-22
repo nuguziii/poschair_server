@@ -75,8 +75,6 @@ def homepage():
 		print(email)
 		print(password)
 
-		return 'success'
-		'''
 		try:
 			user = User.get(
                     (User.email == request.form['email']) &
@@ -86,7 +84,6 @@ def homepage():
 
 	else:
 		return 'success'
-		'''
 
 
 @app.route('/signup/', methods=['GET', 'POST'])
