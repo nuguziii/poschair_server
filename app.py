@@ -88,6 +88,7 @@ def signup():
 	print('signup')
 	if request.method == 'POST':
 		try:
+			print('post')
 			with database.atomic():
 				user = User.create(
 					name=request.form['name'],
