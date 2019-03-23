@@ -122,6 +122,7 @@ def addInfo():
 					height=int(request.form['height']),
 					weight=int(request.form['weight'])).where(User.ID == "choo@naver.com")
 				query.execute()
+			return "success"
 
 		except IntegrityError:
 			return 'addInfo_error'
