@@ -39,6 +39,10 @@ class User(BaseModel):
     pwd = CharField()
     serialNum = CharField()
     ID = CharField(unique=True)
+    gender = CharField()
+    weight = IntegerField()
+    height = IntegerField()
+    age = IntegerField()
 
 
 def get_object_or_404(model, *expressions):
@@ -87,6 +91,7 @@ def homepage():
 def signup():
 	print('signup')
 	if request.method == 'POST':
+
 		try:
 			print('post')
 			with database.atomic():
@@ -101,6 +106,24 @@ def signup():
 			return 'already_existed'
 
 	return render_template('./index.html')
+
+	
+
+@app.route('/addInfo/', methods=['GET', 'POST'])
+def addInfo():
+	#age, sex, height, weight
+	if request.method = 'POST':
+		try:
+			with database.atomic():
+				update = User.update(
+					age=request.form['age'],
+					gender=request.form['sex'],
+					height=request.form['height'],
+					weight=request.form['weight']).where(User.name == "user01")
+				update.execute()
+
+		except IntegrityError:
+			return 'addInfo_error'
 
 
 if __name__=='__main__':
