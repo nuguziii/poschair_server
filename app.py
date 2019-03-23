@@ -116,10 +116,10 @@ def addInfo():
 		try:
 			with database.atomic():
 				query = User.update(
-					age=request.form['age'],
+					age=int(request.form['age']),
 					gender=request.form['sex'],
-					height=request.form['height'],
-					weight=request.form['weight']).where(User.name == "user01")
+					height=int(request.form['height']),
+					weight=int(request.form['weight'])).where(User.name == "user01")
 				query.execute()
 
 		except IntegrityError:
