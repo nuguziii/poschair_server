@@ -115,13 +115,13 @@ def addInfo():
 	if request.method == 'POST':
 		try:
 			print('addInfo')
-			#with database.atomic():
-			#	query = User.update(
-			#		age=int(request.form['age']),
-			#		gender=request.form['sex'],
-			#		height=int(request.form['height']),
-			#		weight=int(request.form['weight'])).where(User.name == "abc")
-			#	query.execute()
+			with database.atomic():
+				query = User.update(
+					age=int(request.form['age']),
+					gender=request.form['sex'],
+					height=int(request.form['height']),
+					weight=int(request.form['weight'])).where(User.ID == "choo@naver.com")
+				query.execute()
 
 		except IntegrityError:
 			return 'addInfo_error'
