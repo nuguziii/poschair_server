@@ -112,7 +112,7 @@ def signup():
 @app.route('/addInfo/', methods=['GET', 'POST'])
 def addInfo():
 	#age, sex, height, weight
-	if request.method = 'POST':
+	if request.method == 'POST':
 		try:
 			with database.atomic():
 				update = User.update(
