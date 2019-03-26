@@ -93,7 +93,7 @@ def result():
         except IntegrityError:
             print("inserting error")
             return "inserting error"
-	else:
+    else:
         return "success"
 
 if __name__=='__main__':
