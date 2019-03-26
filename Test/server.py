@@ -81,8 +81,8 @@ def result():
             with database.atomic():
                 db_data = Posture.create(
                     ID="choo@naver.com",
-                    value=data_string,
-                    ultra_value = "ultra_value",
+                    value=data_string, #TODO: this data_string includes ultra_value. it should only contain pressure
+                    ultra_value = "ultra_value", #TODO: ultra_value should be obtained from data_string
                     label = 10
                     )
                 print("insert succeed")
