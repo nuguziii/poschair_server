@@ -8,6 +8,7 @@ import os
 from data_generator import data
 import json
 from peewee import *
+import datetime
 
 DATABASE = 'POSCHAIR.db'
 
