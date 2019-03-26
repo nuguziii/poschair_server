@@ -78,7 +78,7 @@ def result():
             val = json.loads(data_string) # pressure and ultrasonic value from arduino
 
             with database.atomic():
-                data = Posture.create(
+                db_data = Posture.create(
                     ID="choo@naver.com",
                     value=val
                     )
