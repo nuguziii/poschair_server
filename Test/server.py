@@ -82,6 +82,7 @@ def result():
                     ID="choo@naver.com",
                     value=data_string
                     )
+                print("insert succeed")
 
                 val = val[:-2]
                 image = d.generator(value)
@@ -90,6 +91,7 @@ def result():
             return "received!"
 
         except IntegrityError:
+        	print("inserting error")
             return "inserting error"
 
     else:
