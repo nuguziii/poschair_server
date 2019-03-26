@@ -80,7 +80,7 @@ def result():
             with database.atomic():
                 db_data = Posture.create(
                     ID="choo@naver.com",
-                    value=val
+                    value=data_string
                     )
 
                 val = val[:-2]
