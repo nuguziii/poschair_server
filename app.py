@@ -71,10 +71,10 @@ def after_request(response):
 @app.route('/login/', methods=['GET', 'POST'])
 def login():
 	print('login')
-	if request.method == 'POST':
+	if request.method == 'POST' and request.form['email']:
 		try:
 			user = User.get(
-                    (User.ID == request.form['email']) &
+                    (User.ID == request.form['email']) ,
                     (User.pwd == request.form['password'])
                     )
 		except User.DoesNotExist:
