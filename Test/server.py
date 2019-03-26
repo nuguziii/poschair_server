@@ -9,6 +9,7 @@ from data_generator import data
 import json
 from peewee import *
 import datetime
+import traceback
 
 DATABASE = '../POSCHAIR.db'
 
@@ -29,7 +30,7 @@ class BaseModel(Model):
 
 # the user model specifies its fields (or columns) declaratively, like django
 class Posture(BaseModel):
-    ID = CharField(unique=True)
+    ID = CharField()
     value = CharField()
     ultra_value = CharField()
     label = IntegerField()
@@ -80,18 +81,21 @@ def result():
             with database.atomic():
                 db_data = Posture.create(
                     ID="choo@naver.com",
-                    value=data_string
+                    value=data_string, #TODO: this data_string includes ultra_value. it should only contain pressure
+                    ultra_value = "ultra_value", #TODO: ultra_value should be obtained from data_string
+                    label = 10
                     )
                 print("insert succeed")
 
                 val = val[:-2]
-                image = d.generator(value)
+                image = d.generator(val)
                 y = test_model("model0225.pth", image) #model path, image array .. => .. .. ..
                 print("label predicted: ",y)
             return "received!"
 
         except IntegrityError:
             print("inserting error")
+            traceback.print_exc()
             return "inserting error"
     else:
         return "success"
