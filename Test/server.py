@@ -8,6 +8,7 @@ import os
 from data_generator import data
 import json
 from peewee import *
+import datetime
 
 DATABASE = '../POSCHAIR.db'
 
@@ -41,7 +42,7 @@ def test_model(model_name, image):
     # - input: (180*180*3) image
     # - output: posture label(0-15)
     #=======================================
-    model = torch.load("model0225.pth", map_location='cpu')
+    model = torch.load("../../haeyoon/"+model_name, map_location='cpu')
     model.eval()
     model=model.cpu()
 
@@ -77,9 +78,9 @@ def result():
             val = json.loads(data_string) # pressure and ultrasonic value from arduino
 
             with database.atomic():
-                data = Posture.create(
+                db_data = Posture.create(
                     ID="choo@naver.com",
-                    value=val
+                    value=data_string
                     )
 
                 val = val[:-2]
