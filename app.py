@@ -1,4 +1,5 @@
-from flask import datetime
+import datetime
+
 from flask import Flask
 from flask import g
 from flask import redirect
