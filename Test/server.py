@@ -9,6 +9,7 @@ from data_generator import data
 import json
 from peewee import *
 import datetime
+import traceback
 
 DATABASE = '../POSCHAIR.db'
 
@@ -92,6 +93,7 @@ def result():
 
         except IntegrityError:
             print("inserting error")
+            traceback.print_exc()
             return "inserting error"
     else:
         return "success"
