@@ -82,7 +82,8 @@ def result():
                 db_data = Posture.create(
                     ID="choo@naver.com",
                     value=data_string,
-                    ultra_value = "ultra_value"
+                    ultra_value = "ultra_value",
+                    label = 10
                     )
                 print("insert succeed")
 
