@@ -81,7 +81,7 @@ def result():
             with database.atomic():
                 db_data = Posture.create(
                     ID="choo@naver.com",
-                    value=data_string
+                    value=data_string,
                     ultra_value = "ultra_value"
                     )
                 print("insert succeed")
