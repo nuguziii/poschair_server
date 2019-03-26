@@ -69,7 +69,7 @@ def after_request(response):
 
 # views -- these are the actual mappings of url to view function
 @app.route('/login/', methods=['GET', 'POST'])
-def homepage():
+def login():
 	print('login')
 	if request.method == 'POST':
 		try:
