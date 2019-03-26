@@ -91,11 +91,10 @@ def result():
             return "received!"
 
         except IntegrityError:
-        	print("inserting error")
-			return "inserting error"
+            print("inserting error")
+            return "inserting error"
 	else:
         return "success"
 
 if __name__=='__main__':
  app.run(host='0.0.0.0',port=80,debug=True)
-
