@@ -1,5 +1,4 @@
-import datetime
-
+from flask import datetime
 from flask import Flask
 from flask import g
 from flask import redirect
@@ -72,10 +71,6 @@ def after_request(response):
 def homepage():
 	print('login')
 	if request.method == 'POST':
-		userDetails = request.form
-		ID = userDetails['email']
-		pwd = userDetails['password']
-
 		try:
 			user = User.get(
                     (User.ID == request.form['email']) &
@@ -83,8 +78,9 @@ def homepage():
 		except User.DoesNotExist:
 			return 'wrong_pw'
 
-	else:
-		return 'success'
+		else:
+			return 'success'
+	return 'success'
 
 
 @app.route('/signup/', methods=['GET', 'POST'])
