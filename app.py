@@ -75,7 +75,8 @@ def login():
 		try:
 			user = User.get(
                     (User.ID == request.form['email']) &
-                    (User.pwd == request.form['password']))
+                    (User.pwd == request.form['password'])
+                    )
 		except User.DoesNotExist:
 			return 'wrong_pw'
 
