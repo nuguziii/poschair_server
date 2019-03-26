@@ -82,7 +82,7 @@ def result():
                     ID="choo@naver.com",
                     value=data_string
                     )
-				print("insert succeed")
+                print("insert succeed")
 
                 val = val[:-2]
                 image = d.generator(value)
