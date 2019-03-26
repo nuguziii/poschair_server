@@ -30,7 +30,7 @@ class BaseModel(Model):
 
 # the user model specifies its fields (or columns) declaratively, like django
 class Posture(BaseModel):
-    ID = CharField(unique=True)
+    ID = CharField()
     value = CharField()
     ultra_value = CharField()
     label = IntegerField()
