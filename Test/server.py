@@ -9,7 +9,7 @@ from data_generator import data
 import json
 from peewee import *
 
-DATABASE = 'POSCHAIR.db'
+DATABASE = '../POSCHAIR.db'
 
 app = Flask(__name__)
 
