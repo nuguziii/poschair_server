@@ -88,7 +88,7 @@ def result():
                 print("insert succeed")
 
                 val = val[:-2]
-                image = d.generator(value)
+                image = d.generator(val)
                 y = test_model("model0225.pth", image) #model path, image array .. => .. .. ..
                 print("label predicted: ",y)
             return "received!"
