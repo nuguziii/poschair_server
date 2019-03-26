@@ -75,6 +75,7 @@ def result():
             d = data()
 
             data_string = request.form['data']
+            print(type(data_string))
             val = json.loads(data_string) # pressure and ultrasonic value from arduino
 
             with database.atomic():
