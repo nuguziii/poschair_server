@@ -77,9 +77,9 @@ def login():
                     (User.ID == request.form['email']) &
                     (User.pwd == request.form['password'])
                     )
-			return 'get success'
+			print ('get success')
 		except User.DoesNotExist:
-			print 'wrong_pw'
+			print ('wrong_pw')
 			return 'wrong_pw'
 
 		else:
