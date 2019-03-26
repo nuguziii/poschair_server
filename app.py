@@ -74,13 +74,16 @@ def login():
 	if request.method == 'POST' and request.form['email']:
 		try:
 			user = User.get(
-                    (User.ID == request.form['email']) ,
+                    (User.ID == request.form['email']) &
                     (User.pwd == request.form['password'])
                     )
+			return 'get success'
 		except User.DoesNotExist:
+			print 'wrong_pw'
 			return 'wrong_pw'
 
 		else:
+			print 'success'
 			return 'success'
 	return 'success'
 
