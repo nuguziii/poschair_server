@@ -9,13 +9,6 @@ import os
 
 app = Flask(__name__)
 
-global total_pressure = []
-global total_ultra = []
-global num_of_sensor_real_time = 10 # 실시간 (1초마다) 업데이트 되는 이미지
-global num_of_sensor_total = 10 # n초 동안 받아오는 자세 데이터의 수 #자세 판별시 10개 써서 한다는거
-global interval = 0.2
-global total_hour = 0
-
 real_time_count = 0
 total_time_count = 0
 
@@ -64,4 +57,10 @@ def result():
         return "Complete!!"
 
 if __name__ == '__main__':
+    global total_pressure = []
+    global total_ultra = []
+    global num_of_sensor_real_time = 10 # 실시간 (1초마다) 업데이트 되는 이미지
+    global num_of_sensor_total = 10 # n초 동안 받아오는 자세 데이터의 수 #자세 판별시 10개 써서 한다는거
+    global interval = 0.2
+    global total_hour = 0
     app.run(host='0.0.0.0', port=80, debug=False)
