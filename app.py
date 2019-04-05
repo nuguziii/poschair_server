@@ -132,7 +132,9 @@ def addInfo():
 
 		except IntegrityError:
 			return 'addInfo_error'
-
+@app.route('/image/',methods=['GET','POST'])
+def getImage():
+	return '<img src='+url_for('static',filename='posture_sample.png')+'>'
 
 if __name__=='__main__':
 	print('connection succeeded')
