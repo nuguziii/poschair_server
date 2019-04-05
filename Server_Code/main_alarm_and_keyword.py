@@ -1,11 +1,104 @@
 import numpy as np
 import time
 import os
+import sqlite3
+from sqlite3 import Error
 from data_generator import data
 from utils import *
+from peewee import *
+
+DATABASE = '../POSCHAIR.db'
+
+app = Flask(__name__)
+app.config.from_object(__name__)
+
+database = SqliteDatabase(DATABASE)
+
+
+def create_connection(db_file):
+    """ create a database connection to the SQLite database
+        specified by the db_file
+    :param db_file: database file
+    :return: Connection object or None
+    """
+    try:
+        conn = sqlite3.connect(db_file)
+        return conn
+    except Error as e:
+        print(e)
+ 
+    return None
+ 
+ 
+def select_all_tasks(conn):
+    """
+    Query all rows in the tasks table
+    :param conn: the Connection object
+    :return:
+    """
+    cur = conn.cursor()
+    cur.execute("SELECT * FROM tasks")
+ 
+    rows = cur.fetchall()
+ 
+    for row in rows:
+        print(row)
+ 
+ 
+def select_task_by_priority(conn, priority):
+    """
+    Query tasks by priority
+    :param conn: the Connection object
+    :param priority:
+    :return:
+    """
+    cur = conn.cursor()
+    cur.execute("SELECT * FROM tasks WHERE priority=?", (priority,))
+ 
+    rows = cur.fetchall()
+ 
+    for row in rows:
+        print(row)
+
+
+def messaging(upper, lower, ):
+	'''
+	upper posture & lower posture 
+	=> insert label(INT) into table Posture
+	'''
+
+
+def keyword_matching(upper, lower):
+	'''
+	upper posture & lower posture(int list) 
+	=> insert current posture(int list) into table
+	'''
+
+
+def is_alarm():
+	'''
+	check if there's an alarm to send to android
+	most recent 
+	=> alarm_list(int list)
+	'''
+
+
+	
+
 
 if __name__ == '__main__':
     d = data()
+
+    database = "../POSCHAIR.db"
+ 
+    # create a database connection
+    conn = create_connection(database)
+    with conn:
+        print("1. Query task by priority:")
+        select_task_by_priority(conn,1)
+ 
+        print("2. Query all tasks")
+        select_all_tasks(conn)
 
     '''DB에서 초기자세 데이터 받아올 것'''
     lower_origin = None #DB에서 초기 압력센서 자세값 받아옴
@@ -34,3 +127,7 @@ if __name__ == '__main__':
             alarm_list = is_alarm() #알람 보낼 리스트가 있는지 확인
             if len(alarm_list) is not 0: #알람 리스트가 있으면
                 generate_alarm(alarm_list, current_posture) #알람 전송
+
+
+
+

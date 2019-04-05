@@ -67,6 +67,10 @@ def after_request(response):
 	g.db.close()
 	return response
 
+@app.route('/image/',methods=['GET','POST'])
+def getImage():
+        return redirect(url_for('static',filename='posture_sample.png'))
+
 # views -- these are the actual mappings of url to view function
 @app.route('/login/', methods=['GET', 'POST'])
 def login():
