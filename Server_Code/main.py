@@ -9,15 +9,7 @@ import os
 
 app = Flask(__name__)
 
-total_pressure = []
-total_ultra = []
-num_of_sensor_real_time = 10 # 실시간 (1초마다) 업데이트 되는 이미지
-num_of_sensor_total = 10 # n초 동안 받아오는 자세 데이터의 수 #자세 판별시 10개 써서 한다는거
-interval = 0.2
-total_hour = 0
 
-real_time_count = 0
-total_time_count = 0
 
 @app.route('/', methods=['POST'])
 def result():
@@ -59,4 +51,13 @@ def result():
             #DB에 저장하기
 
 if __name__ == '__main__':
+    total_pressure = []
+    total_ultra = []
+    num_of_sensor_real_time = 10 # 실시간 (1초마다) 업데이트 되는 이미지
+    num_of_sensor_total = 10 # n초 동안 받아오는 자세 데이터의 수 #자세 판별시 10개 써서 한다는거
+    interval = 0.2
+    total_hour = 0
+
+    real_time_count = 0
+    total_time_count = 0
     app.run(host='0.0.0.0', port=80, debug=False)
