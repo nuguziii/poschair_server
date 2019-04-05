@@ -35,7 +35,7 @@ def result():
         pressure_list.append(pressure_value)
         ultra_list.append(ultra_value)
 
-        image = d.generator(value) #압력센서 값을 이미지로 전송
+        image = d.generator(pressure_value) #압력센서 값을 이미지로 전송
         d.save_image(image, os.path.join(path, "../temp.png")) #실시간으로 보낼 이미지 폴더에 저장
 
         real_time_count+=1
