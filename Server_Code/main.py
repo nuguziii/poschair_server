@@ -49,6 +49,7 @@ def result():
         #    lower_median_total = np.median(np.asarray(total_pressure), axis=0)
         #    upper_median_total = np.median(np.asarray(total_ultra), axis=0)
             #DB에 저장하기
+        return "Complete!!"
 
 if __name__ == '__main__':
     total_pressure = []
