@@ -11,12 +11,12 @@ app = Flask(__name__)
 
 global total_pressure
 global total_ultra
-global num_of_sensor_real_time = 10
-global num_of_sensor_total = 10
-global interval = 0.2
-global total_hour = 0
-global real_time_count = 0
-global total_time_count = 0
+global num_of_sensor_real_time
+global num_of_sensor_total
+global interval
+global total_hour
+global real_time_count
+global total_time_count
 
 @app.route('/', methods=['POST'])
 def result():
