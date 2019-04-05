@@ -2,7 +2,7 @@ import numpy as np
 import time
 import os
 from data_generator import data
-from utils import *
+#from utils import * #not using yet
 
 app = Flask(__name__)
 
