@@ -44,7 +44,7 @@ def result():
             lower_median = np.median(np.asarray(pressure_list), axis=0)
             upper_median = np.median(np.asarray(ultra_list), axis=0)
             #DB에 저장하기
-            
+
             total_pressure.append(lower_median)
             total_ultra.append(upper_median)
 
