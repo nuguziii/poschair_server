@@ -32,22 +32,22 @@ def result():
 
         d.save_image(image, "../temp.png") #실시간으로 보낼 이미지 폴더에 저장
 
-        real_time_count+=1
-        total_time_count+=1
+        #real_time_count+=1
+        #total_time_count+=1
 
-        if real_time_count == num_of_sensor_real_time:
-            '''각 값 DB에 저장'''
-            lower_median = np.median(np.asarray(pressure_list), axis=0)
-            upper_median = np.median(np.asarray(ultra_list), axis=0)
-            #DB에 저장하기
+        #if real_time_count == num_of_sensor_real_time:
+        #    '''각 값 DB에 저장'''
+        #    lower_median = np.median(np.asarray(pressure_list), axis=0)
+        #    upper_median = np.median(np.asarray(ultra_list), axis=0)
+        #    #DB에 저장하기
 
-            total_pressure.append(lower_median)
-            total_ultra.append(upper_median)
+        #    total_pressure.append(lower_median)
+        #    total_ultra.append(upper_median)
 
-        if total_time_count == num_of_sensor_total * num_of_sensor_real_time:
-            '''각 값 DB에 저장''' #키워드 매칭 때 사용되는 정보 #마찬가지로 DB에 10개
-            lower_median_total = np.median(np.asarray(total_pressure), axis=0)
-            upper_median_total = np.median(np.asarray(total_ultra), axis=0)
+        #if total_time_count == num_of_sensor_total * num_of_sensor_real_time:
+        #    '''각 값 DB에 저장''' #키워드 매칭 때 사용되는 정보 #마찬가지로 DB에 10개
+        #    lower_median_total = np.median(np.asarray(total_pressure), axis=0)
+        #    upper_median_total = np.median(np.asarray(total_ultra), axis=0)
             #DB에 저장하기
 
 if __name__ == '__main__':
