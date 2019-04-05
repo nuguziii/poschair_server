@@ -47,6 +47,8 @@ def result():
             '''각 값 DB에 저장'''
            lower_median = np.median(np.asarray(pressure_list), axis=0)
            upper_median = np.median(np.asarray(ultra_list), axis=0)
+           print("lower_median: "+lower_median)
+           print("upper_median: "+upper_median)
            #DB에 저장하기
 
            total_pressure.append(lower_median)
@@ -56,6 +58,8 @@ def result():
            '''각 값 DB에 저장''' #키워드 매칭 때 사용되는 정보 #마찬가지로 DB에 10개
            lower_median_total = np.median(np.asarray(total_pressure), axis=0)
            upper_median_total = np.median(np.asarray(total_ultra), axis=0)
+           print("lower_median_total: "+lower_median_total)
+           print("upper_median_total: "+upper_median_total)
             #DB에 저장하기
         return "Complete!!"
 
