@@ -9,8 +9,14 @@ import os
 
 app = Flask(__name__)
 
-real_time_count = 0
-total_time_count = 0
+global total_pressure
+global total_ultra
+global num_of_sensor_real_time = 10
+global num_of_sensor_total = 10
+global interval = 0.2
+global total_hour = 0
+global real_time_count = 0
+global total_time_count = 0
 
 @app.route('/', methods=['POST'])
 def result():
@@ -55,10 +61,12 @@ def result():
         return "Complete!!"
 
 if __name__ == '__main__':
-    global total_pressure
-    global total_ultra
-    global num_of_sensor_real_time = 10
-    global num_of_sensor_total = 10
-    global interval = 0.2
-    global total_hour = 0
+    total_pressure = []
+    total_ultra = []
+    num_of_sensor_real_time = 10
+    num_of_sensor_total = 10
+    interval = 0.2
+    total_hour = 0
+    real_time_count = 0
+    total_time_count = 0
     app.run(host='0.0.0.0', port=80, debug=False)
