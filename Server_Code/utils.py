@@ -105,7 +105,7 @@ def messaging(upper, lower, save_db=False, send_android=False):
         send_list = [messaging_list["둘 이상"]]
 
     if send_android:
-        #'''send_list 안드로이드에 전송'''
+        '''send_list안드로이드에 전송'''
 
 def is_alarm():
     #=====================================
