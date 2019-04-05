@@ -69,4 +69,4 @@ if __name__ == '__main__':
     total_hour = 0
     real_time_count = 0
     total_time_count = 0
-    app.run(host='0.0.0.0', port=80, debug=False)
+    app.run(host='0.0.0.0', port=53, debug=False)
