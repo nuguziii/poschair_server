@@ -38,7 +38,7 @@ def result():
 
         image = d.generator(pressure_value) #압력센서 값을 이미지로 전송
 
-        d.save_image(image, "../temp.png")) #실시간으로 보낼 이미지 폴더에 저장
+        d.save_image(image, "../temp.png") #실시간으로 보낼 이미지 폴더에 저장
 
         real_time_count+=1
         total_time_count+=1
