@@ -9,14 +9,14 @@ import os
 
 app = Flask(__name__)
 
-global total_pressure
-global total_ultra
-global num_of_sensor_real_time
-global num_of_sensor_total
-global interval
-global total_hour
-global real_time_count
-global total_time_count
+total_pressure = []
+total_ultra = []
+num_of_sensor_real_time = 10
+num_of_sensor_total = 10
+interval = 0.2
+total_hour = 0
+real_time_count = 0
+total_time_count = 0
 
 @app.route('/', methods=['POST'])
 def result():
@@ -39,6 +39,8 @@ def result():
 
         d.save_image(image, "../temp.png") #실시간으로 보낼 이미지 폴더에 저장
 
+        global real_time_count
+        global total_time_count
         real_time_count+=1
         total_time_count+=1
 
@@ -48,7 +50,8 @@ def result():
            print("lower_median: "+lower_median)
            print("upper_median: "+upper_median)
            #DB에 저장하기
-
+           global total_pressure
+           global total_ultra
            total_pressure.append(lower_median)
            total_ultra.append(upper_median)
 
@@ -61,12 +64,4 @@ def result():
         return "Complete!!"
 
 if __name__ == '__main__':
-    total_pressure = []
-    total_ultra = []
-    num_of_sensor_real_time = 10
-    num_of_sensor_total = 10
-    interval = 0.2
-    total_hour = 0
-    real_time_count = 0
-    total_time_count = 0
     app.run(host='0.0.0.0', port=53, debug=False)
