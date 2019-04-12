@@ -17,6 +17,46 @@ import time
 import os
 from data_generator import data
 from model import vgg19
+from peewee import *
+from datetime import datetime
+
+DATABASE = '../POSCHAIR.db'
+
+# create a peewee database instance -- our models will use this database to
+# persist information
+database = SqliteDatabase(DATABASE)
+
+# model definitions -- the standard "pattern" is to define a base model class
+# that specifies which database to use.  then, any subclasses will automatically
+# use the correct storage. for more information, see:
+# http://charlesleifer.com/docs/peewee/peewee/models.html#model-api-smells-like-django
+class BaseModel(Model):
+    class Meta:
+        database = database
+        
+
+# the user model specifies its fields (or columns) declaratively, like django
+class User(BaseModel):
+    name = CharField()
+    pwd = CharField()
+    ID = CharField(unique=True)
+    pos_upper = CharField()
+    pos_lower = CharField()
+
+
+class Median(Basemodel):
+    ID = CharField()
+    lower_median = IntegerField()
+    upper_median = IntegerField()
+    lower_median_total = IntegerField()
+    upper_mdeian_total = IntegerField()
+
+class Posture_data(Basemodel):
+    ID = CharField()
+    timestamp = CharField()
+    pos_upper = CharField()
+    pos_lower = CharField()
+
 
 def LBCNet(model_name, image):
     #=======================================
@@ -99,6 +139,18 @@ def messaging(upper, lower, save_db=False, send_android=False):
 
     if save_db:
         '''DB에 send_list(현재 자세) 저장'''
+        try:
+            with database.atomic():
+                save = Posture_data.create(
+                    ID='choo@naver.com',
+                    timestamp=datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+                    pos_upper=upper,
+                    pos_lower=lower
+                    )
+                return "success"
+        except: IntegrityError
+            return "Integrity Error"
+
         return send_list
 
     if len(send_list)>1:
@@ -115,6 +167,8 @@ def is_alarm():
     #{"바른자세":0, "목":2, "어깨":3, "다리꼬기":4, "앞으로 기울임":5, "뒤로기댐":6, "양반다리":7, "불균형":8, "error":-1}
     alarm_list = []
     '''DB에서 10분간 데이터 계산해서 85% 비율을 차지한 자세를 alarm_list에 넣음'''
+
+
 
     return alarm_list
 
@@ -139,11 +193,22 @@ def keyword_matching(upper, lower):
     #   upper: int type
     #   lower: list type
     #======================================
-    keyword_list = {"목디스크":0, "거북목":1, "어깨굽음":2, "골반불균형":3, "척추틀어짐":4, "고관절통증":5, "무릎통증":6, "혈액순환":7}
+    keyword_list = {"목디스크":"k0", "거북목":"k1", "어깨굽음":"k2", "골반불균형":"k3", "척추틀어짐":"k4", "고관절통증":"k5", "무릎통증":"k6", "혈액순환":"k7"}
 
     ''' DB에서 해당되는 키워드에 +1을 해줌 (Upper 경우)'''
     if upper is 1:
         keyword_list["목디스크"]
+        try:
+            with database.atomic():
+                save_upper_0 = int(Keyword.select(Keyword.k0).where(Keyword.ID == "choo@naver.com"))
+                save_upper_0 += 1
+                query = Keyword.update(
+                    Keyword.k0 = int(save_upper_0)
+                    ).where(Keyword.ID == "choo@naver.com")
+            return "success"
+        except: IntegrityError
+            return "Integrity Error"
+
     elif upper is 2:
         keyword_list["거북목"]
     elif upper is 3 or upper is 4:
