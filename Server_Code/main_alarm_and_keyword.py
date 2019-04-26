@@ -54,8 +54,8 @@ if __name__ == '__main__':
     #DB에서 초기자세 데이터 받아올 것
     try:
     	with database.atomic():
-    		init_upper_data = User.select(User.init_pos_upper).where(User.ID = "choo@naver.com")
-    		init_lower_data = User.select(User.init_pos_lower).where(User.ID = "choo@naver.com")
+    		init_upper_data = User.select(User.init_pos_upper).where(User.ID == "choo@naver.com")
+    		init_lower_data = User.select(User.init_pos_lower).where(User.ID == "choo@naver.com")
     		init_upper_data.execute()
     		init_lower_data.execute()
     	return "success"
