@@ -104,7 +104,7 @@ def result():
                 ).where(Median.ID=='choo@naver.com')
               query1.execute()
             return 'upper_median_update_succeess'
-          except: IntegrityError
+          except IntegrityError:
             return 'IntegrityError'
           global total_pressure
           global total_ultra

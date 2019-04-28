@@ -64,6 +64,24 @@ if __name__ == '__main__':
 
 
 
+
+
+
+    database = "../POSCHAIR.db"
+ 
+    # create a database connection
+    conn = create_connection(database)
+    with conn:
+        print("1. Query task by priority:")
+        select_task_by_priority(conn,1)
+ 
+        print("2. Query all tasks")
+        select_all_tasks(conn)
+
+    '''DB에서 초기자세 데이터 받아올 것'''
+    lower_origin = None #DB에서 초기 압력센서 자세값 받아옴
+    upper_origin = None #DB에서 초기 초음파센서 자세값 받아옴
+
     #DB에서 초기 압력센서 자세값 받아옴
     init_lower_string = json.loads(init_lower_data)
 
@@ -101,3 +119,7 @@ if __name__ == '__main__':
             alarm_list = is_alarm() #알람 보낼 리스트가 있는지 확인
             if len(alarm_list) is not 0: #알람 리스트가 있으면
                 generate_alarm(alarm_list, current_posture) #알람 전송
+
+
+
+
