@@ -79,9 +79,10 @@ def upper_balance_check(value):
     posture_list = {"Alright":0, "Turtle/Bowed":1, "Slouched":2}
     # 센서 계산 과정 통해서 result 결과 출력
     result = None
-    if (value[0] == -1 && value[1] <= 20):
+
+    if (value[0] == -1 and value[1] <= 20):
         result = posture_list["Alright"]
-    elif (value[0] == -1 && value[1] >= 150):
+    elif (value[0] == -1 and value[1] >= 150):
         result = posture_list["Turtle/Bowed"]
     else:
         result = posture_list["Slouched"]
