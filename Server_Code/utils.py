@@ -176,7 +176,7 @@ def messaging(upper, lower, save_db=False, send_android=False):
                     pos_lower=lower
                     )
                 return "success"
-        except: IntegrityError
+        except IntegrityError:
             return "Integrity Error"
 
         return send_list
@@ -248,7 +248,7 @@ def keyword_matching(upper, lower):
                     Keyword.k0 = int(temp)
                     ).where(Keyword.ID == "choo@naver.com")
             return "keyword_update_success"
-        except: IntegrityError
+        except IntegrityError:
             return "Integrity Error"
 
     elif upper is 2:
@@ -261,7 +261,7 @@ def keyword_matching(upper, lower):
                     Keyword.k1 = int(temp)
                     ).where(Keyword.ID == "choo@naver.com")
             return "keyword_update_success"
-        except: IntegrityError
+        except IntegrityError:
             return "Integrity Error"
 
 
@@ -275,7 +275,7 @@ def keyword_matching(upper, lower):
                     Keyword.k2 = int(temp)
                     ).where(Keyword.ID == "choo@naver.com")
             return "keyword_update_success"
-        except: IntegrityError
+        except IntegrityError:
             return "Integrity Error"
 
     ''' DB에서 해당되는 키워드에 +1을 해줌 (Lower 경우)'''
@@ -289,7 +289,7 @@ def keyword_matching(upper, lower):
                     Keyword.k3 = int(temp)
                     ).where(Keyword.ID == "choo@naver.com")
             return "keyword_update_success"
-        except: IntegrityError
+        except IntegrityError:
             return "Integrity Error"
 
         keyword_list["척추틀어짐"]
@@ -301,7 +301,7 @@ def keyword_matching(upper, lower):
                     Keyword.k4 = int(temp)
                     ).where(Keyword.ID == "choo@naver.com")
             return "keyword_update_success"
-        except: IntegrityError
+        except IntegrityError:
             return "Integrity Error"
 
 
@@ -314,7 +314,7 @@ def keyword_matching(upper, lower):
                     Keyword.k5 = int(temp)
                     ).where(Keyword.ID == "choo@naver.com")
             return "keyword_update_success"
-        except: IntegrityError
+        except IntegrityError:
             return "Integrity Error"
 
 
@@ -328,7 +328,7 @@ def keyword_matching(upper, lower):
                     Keyword.k6 = int(temp)
                     ).where(Keyword.ID == "choo@naver.com")
             return "keyword_update_success"
-        except: IntegrityError
+        except IntegrityError:
             return "Integrity Error"
 
 
@@ -342,7 +342,7 @@ def keyword_matching(upper, lower):
                     Keyword.k3 = int(temp)
                     ).where(Keyword.ID == "choo@naver.com")
             return "keyword_update_success"
-        except: IntegrityError
+        except IntegrityError:
             return "Integrity Error"
 
         keyword_list["척추틀어짐"]
@@ -354,7 +354,7 @@ def keyword_matching(upper, lower):
                     Keyword.k4 = int(temp)
                     ).where(Keyword.ID == "choo@naver.com")
             return "keyword_update_success"
-        except: IntegrityError
+        except IntegrityError:
             return "Integrity Error"
 
 
@@ -367,7 +367,7 @@ def keyword_matching(upper, lower):
                     Keyword.k7 = int(temp)
                     ).where(Keyword.ID == "choo@naver.com")
             return "keyword_update_success"
-        except: IntegrityError
+        except IntegrityError:
             return "Integrity Error"
 
 
