@@ -30,7 +30,7 @@ class data:
         self.w = None
         self.h = None
 
-    def generator(self, values, w=90, h=90):
+    def generator(self, values, w=40, h=40):
         #=======================================
         # posture sensor value to image
         # - input: sensor values list type
