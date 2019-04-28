@@ -19,6 +19,7 @@ if __name__ == '__main__':
     
 
     lower_init = rows.replace('[','').replace(']','').split(',')
+    lower_init = list(map(int, lower_init))
 
     print(lower_init)
 
