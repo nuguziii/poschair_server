@@ -1,19 +1,27 @@
+import datetime
 import numpy as np
 import time
 import os
-import sqlite3
-from sqlite3 import Error
+import json
 from data_generator import data
 from utils import *
+from functools import wraps
 from peewee import *
 
 DATABASE = '../POSCHAIR.db'
 
-app = Flask(__name__)
-app.config.from_object(__name__)
-
+# create a peewee database instance -- our models will use this database to
+# persist information
 database = SqliteDatabase(DATABASE)
 
+# model definitions -- the standard "pattern" is to define a base model class
+# that specifies which database to use.  then, any subclasses will automatically
+# use the correct storage. for more information, see:
+# http://charlesleifer.com/docs/peewee/peewee/models.html#model-api-smells-like-django
+class BaseModel(Model):
+    class Meta:
+        database = database
+        
 
 def create_connection(db_file):
     """ create a database connection to the SQLite database
@@ -67,27 +75,28 @@ def messaging(upper, lower, ):
 	=> insert label(INT) into table Posture
 	'''
 
-
-def keyword_matching(upper, lower):
-	'''
-	upper posture & lower posture(int list)
-	=> insert current posture(int list) into table
-	'''
-
-
-def is_alarm():
-	'''
-	check if there's an alarm to send to android
-	most recent
-	=> alarm_list(int list)
-	'''
-
-
-
-
+class Posture_data(Basemodel):
+	ID = CharField()
+	timestamp = CharField()
+	pos_upper = CharField()
+	pos_lower = CharField()
 
 if __name__ == '__main__':
     d = data()
+
+    #DB에서 초기자세 데이터 받아올 것
+    try:
+    	with database.atomic():
+    		init_upper_data = User.select(User.init_pos_upper).where(User.ID == "choo@naver.com")
+    		init_lower_data = User.select(User.init_pos_lower).where(User.ID == "choo@naver.com")
+    		init_upper_data.execute()
+    		init_lower_data.execute()
+    	return "success"
+    except: IntegrityError
+    	return "IntegrityError"
+
+
+
 
     database = "../POSCHAIR.db"
 
@@ -104,12 +113,26 @@ if __name__ == '__main__':
     lower_origin = None #DB에서 초기 압력센서 자세값 받아옴
     upper_origin = None #DB에서 초기 초음파센서 자세값 받아옴
 
-    #계속 돌면서 keword 저장
+    #DB에서 초기 압력센서 자세값 받아옴
+    init_lower_string = json.loads(init_lower_data)
+
+    #DB에서 초기 초음파센서 자세값 받아옴
+    init_upper_string = json.loads(init_upper_data)
+
+    #계속 돌면서 keyword 저장
     while(True):
 
         '''lower_median_total, upper_median_total DB에서 가져옴'''
-        lower_median_total = [10,20,30,40,50,60,70,80,90,100,110,120,130,140,150,160]
-        upper_median_total = [0,0]
+        try:
+        	with database.atomic():
+        		lower_median_total_data = Median.select(Median.lower_median_total)
+        		upper_median_total_data = Median.select(Median.upper_median_total)
+        	return "success"
+        except: IntegrityError
+        	return "IntegrityError"
+
+        lower_median_total = json.loads(lower_median_total_data)
+        upper_median_total = json.loads(upper_median_total_data)
 
         if np.count_nonzero(lower_median-10)>6: #사용자가 의자에 앉아있는지 판단
 

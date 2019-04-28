@@ -37,12 +37,10 @@ class BaseModel(Model):
 class User(BaseModel):
     name = CharField()
     pwd = CharField()
-    serialNum = CharField()
     ID = CharField(unique=True)
-    gender = CharField()
-    weight = IntegerField()
-    height = IntegerField()
-    age = IntegerField()
+    pos_upper = CharField()
+    pos_lower = CharField()
+
 
 
 def get_object_or_404(model, *expressions):
@@ -78,7 +76,7 @@ def login():
 	if request.method == 'POST' and request.form['email']:
 		try:
 			print ('in try')
-			user = User.get(
+			user = User.select(
                     (User.ID == request.form['email']) &
                     (User.pwd == request.form['password'])
                     )
@@ -104,7 +102,6 @@ def signup():
 				user = User.create(
 					name=request.form['name'],
 					pwd=request.form['password'],
-                    serialNum=request.form['serialnumber'],
                     ID=request.form['email'])
 			return "success"
 
@@ -121,20 +118,27 @@ def addInfo():
 	if request.method == 'POST':
 		try:
 			print('addInfo')
-			with database.atomic():
-				query = User.update(
-					age=int(request.form['age']),
-					gender=request.form['sex'],
-					height=int(request.form['height']),
-					weight=int(request.form['weight'])).where(User.ID == "choo@naver.com")
-				query.execute()
+			#with database.atomic():
+			#	query = User.update(
+			#		age=int(request.form['age']),
+			#		gender=request.form['sex'],
+			#		height=int(request.form['height']),
+			#		weight=int(request.form['weight'])).where(User.ID == "choo@naver.com")
+			#	query.execute()
 			return "success"
 
 		except IntegrityError:
 			return 'addInfo_error'
+
 @app.route('/image/',methods=['GET','POST'])
 def getImage():
 	return '<img src='+url_for('static',filename='posture_sample.png')+'>'
+
+@app.route('/posture/', methods=['GET', 'POST'])
+def getLabel():
+	#label string으로 반환한다
+	if request.method == 'GET':
+		
 
 if __name__=='__main__':
 	print('connection succeeded')
