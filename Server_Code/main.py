@@ -112,8 +112,8 @@ def result():
           real_time_count = 0
           lower_median = np.median(np.asarray(pressure_list), axis=0)
           upper_median = np.median(np.asarray(ultra_list), axis=0)
-          lower_median = list(map(int, lower_median))
-          upper_median = list(map(int, upper_median))
+          lower_median = str(list(map(int, lower_median)))
+          upper_median = str(list(map(int, upper_median)))
           print("lower_median: "+ str(lower_median))
           print("upper_median: "+ str(upper_median))
           #DB에 저장하기
