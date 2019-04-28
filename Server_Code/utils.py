@@ -390,7 +390,7 @@ def keyword_matching(upper, lower):
     if lower[1] is 1 and upper is not 3:
         keyword_list["어깨굽음"]
 	'''
-	
+
 def generate_keyword_for_video_matching():
     #=====================================
     # generate keyword from Database
@@ -420,7 +420,7 @@ def video_matching(keyword):
     video_list = []
 
     for k, v in dictionary.items():
-    if v == sorted_key[0][0]: #가장 시간 많은 것들 video list에 저장
+    if v == sorted_key[0][0]: 
         video_list.append(video_dict[k])
 
     if len(video_list)>3:
