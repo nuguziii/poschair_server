@@ -117,8 +117,8 @@ def result():
           try:
             with database.atomic():
               query1 = Median.update(
-                lower_median=str(lower_median),
-                upper_median=str(upper_median)
+                lower_median='0,9,8,7,6,5',
+                upper_median='0,0,0'
                 ).where(Median.ID=='choo@naver.com')
               query1.execute()
               print("query1 finished")
