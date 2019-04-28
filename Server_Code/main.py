@@ -130,7 +130,7 @@ def result():
           except IntegrityError:
             return 'IntegrityError'
           return 'success'
-       return 'post success'
+    return 'post success'
 
 
 if __name__ == '__main__':
