@@ -93,6 +93,7 @@ def result():
 
         
         if real_time_count == num_of_sensor_real_time:
+          real_time_count = 0
           lower_median = np.median(np.asarray(pressure_list), axis=0)
           upper_median = np.median(np.asarray(ultra_list), axis=0)
           print("lower_median: "+ str(lower_median))
@@ -117,6 +118,7 @@ def result():
 
         
         if total_time_count == num_of_sensor_total * num_of_sensor_real_time:
+          total_time_count = 0
           lower_median_total = np.median(np.asarray(total_pressure), axis=0)
           upper_median_total = np.median(np.asarray(total_ultra), axis=0)
           print("lower_median_total: "+ str(lower_median_total))
