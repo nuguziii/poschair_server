@@ -17,6 +17,9 @@ import time
 import os
 from data_generator import data
 from model import vgg19
+import firebase_admin
+from firebase_admin import credentials
+
 
 def LBCNet(model_name, image):
     #=======================================
@@ -133,7 +136,42 @@ def generate_alarm(alarm_value):
     1. current_posture와 alarm_list 비교해서 교집합 현재 alarm_list에 저장
     3. alarm_list 가 0이 아닐 경우 android에 alarm_list 전송
     '''
-    
+    posture = None
+
+    # 예시임...
+    if (alarm_value == 1) {
+        posture = 'turtle neck'
+    }
+    elif (alarm_value ==2) {
+        posture = 'slouched'
+    }
+    #TO BE CONTINUED;
+
+    cred = credentials.Certificate('/root/poschair-134c8-firebase-adminsdk-1i2vn-01f260312b.json')
+    app = firebase_admin.initialize_app(cred)
+
+    # This registration token comes from the client FCM SDKs.
+    registration_token = 'YOUR_REGISTRATION_TOKEN'
+
+    # See documentation on defining a message payload.
+    message = messaging.Message(
+        android=messaging.AndroidConfig(
+            ttl=0, #즉시 보낸다는 뜻
+            priority='normal',
+            notification=messaging.AndroidNotification(
+                title='Mind your posture!',
+                body=posture,
+            ),
+        )
+    )
+
+    # Send a message to the device corresponding to the provided
+    # registration token.
+    response = messaging.send(message)
+    # Response is a message ID string.
+    print('Successfully sent message:', response)
+
+
 
 
 
