@@ -19,8 +19,8 @@ if __name__ == '__main__':
     print(rows, type(rows))
     for row in rows:
         print(row)
-    
 
+    lower_init = rows.replace('[','').replace(']','').split(',')
 
     '''
     #계속 돌면서 keyword 저장
