@@ -119,7 +119,6 @@ def result():
           #DB에 저장하기
           c.execute("UPDATE Median SET lower_median = ?, upper_median = ? WHERE ID = ?", (lower_median, upper_median, 'choo@naver.com'))
           conn.commit()
-          print('db input success')
           
           global total_pressure
           global total_ultra
@@ -127,7 +126,8 @@ def result():
           total_ultra.append(upper_median)
           print('success')
 
-        
+        global num_of_sensor_total
+        global num_of_sensor_real_time
         if total_time_count == num_of_sensor_total * num_of_sensor_real_time:
           total_time_count = 0
           lower_median_total = np.median(np.asarray(total_pressure), axis=0)
