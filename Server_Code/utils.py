@@ -24,58 +24,7 @@ from firebase_admin import credentials
 from peewee import *
 from datetime import datetime
 
-DATABASE = '../POSCHAIR.db'
 
-# create a peewee database instance -- our models will use this database to
-# persist information
-database = SqliteDatabase(DATABASE)
-
-
-conn = sqlite3.connect("../POSCHAIR_db")
-c = conn.cursor()
-# model definitions -- the standard "pattern" is to define a base model class
-# that specifies which database to use.  then, any subclasses will automatically
-# use the correct storage. for more information, see:
-# http://charlesleifer.com/docs/peewee/peewee/models.html#model-api-smells-like-django
-class BaseModel(Model):
-    class Meta:
-        database = database
-
-
-# the user model specifies its fields (or columns) declaratively, like django
-class User(BaseModel):
-    name = CharField()
-    pwd = CharField()
-    ID = CharField(unique=True)
-    pos_upper = CharField()
-    pos_lower = CharField()
-
-
-class Median(Basemodel):
-    ID = CharField()
-    lower_median = IntegerField()
-    upper_median = IntegerField()
-    lower_median_total = IntegerField()
-    upper_mdeian_total = IntegerField()
-
-class Posture_data(Basemodel):
-    ID = CharField()
-    timestamp = TimestampField()
-    pos_upper = CharField()
-    pos_lower = CharField()
-
-
-class Keyword(Basemodel):
-    date = DateTimeField(default=datetime.datetime.now)
-    ID = CharField()
-    k0 = IntegerField()
-    k1 = IntegerField()
-    k2 = IntegerField()
-    k3 = IntegerField()
-    k4 = IntegerField()
-    k5 = IntegerField()
-    k6 = IntegerField()
-    k7 = IntegerField()
 
 def LBCNet(image, guide):
     #=======================================
@@ -131,13 +80,13 @@ def upper_balance_check(value):
     # 센서 계산 과정 통해서 result 결과 출력
     result = None
     if (value[0] == -1 && value[1] <= 20):
-        result = 0
+        result = posture_list["Alright"]
     elif (value[0] == -1 && value[1] >= 150):
-        result = 1
+        result = posture_list["Turtle/Bowed"]
     else:
-        result = 2
+        result = posture_list["Slouched"]
 
-    return posture_list[result]
+    return result
 
 def messaging(upper, lower, save_db=False, send_android=False):
     #=====================================
@@ -172,8 +121,10 @@ def messaging(upper, lower, save_db=False, send_android=False):
         send_result = messaging_list["others"]
 
     if save_db:
+    	conn = sqlite3.connect("../../POSCHAIR.db")
+    	c = conn.cursor()
         '''DB에 send_list(현재 자세) 저장'''
-        try:
+        '''try:
             with database.atomic():
                 save = Posture_data.create(
                     ID='choo@naver.com',
@@ -184,7 +135,7 @@ def messaging(upper, lower, save_db=False, send_android=False):
                 return "success"
         except IntegrityError:
             return "Integrity Error"
-
+		'''
         return send_list
 
     if send_android:
@@ -202,11 +153,12 @@ def is_alarm():
     t_now = datetime.datetime.now()
     t_old = t_now - datetime.timedelta(minutes = 10)
     #posture_data 이용해서 판단하기 10분전
-    cur.execute("SELECT * FROM Posture_data WHERE date BETWEEN t_old AND t_now")
-    rows = cur.fetchall()
-    count = 0
-    for row in rows:
-    	print(row)
+    #cur.execute("SELECT * FROM Posture_data WHERE date BETWEEN t_old AND t_now")
+    #rows = cur.fetchall()
+    #count = 0
+    
+    #for row in rows:
+    #	print(row)
 
 
     #check if the percentage is over 85%
@@ -252,9 +204,8 @@ def generate_alarm(alarm_value):
     posture = None
 
     #예시임 5까지 추가해야하고 메세지 바꿔야함
-    if (alarm_value == 0) {
-        return 0 #don't send the alarm
-    }
+    if alarm_value == 0
+    	return 0 #don't send the alarm
     elif (alarm_value == 1) {
         posture = 'turtle neck'
     }
