@@ -1,4 +1,5 @@
 import datetime
+import sqlite3
 import numpy as np
 import time
 import os
@@ -6,108 +7,28 @@ import json
 from data_generator import data
 from utils import *
 from functools import wraps
-from peewee import *
-
-DATABASE = '../POSCHAIR.db'
-
-# create a peewee database instance -- our models will use this database to
-# persist information
-database = SqliteDatabase(DATABASE)
-
-# model definitions -- the standard "pattern" is to define a base model class
-# that specifies which database to use.  then, any subclasses will automatically
-# use the correct storage. for more information, see:
-# http://charlesleifer.com/docs/peewee/peewee/models.html#model-api-smells-like-django
-class BaseModel(Model):
-    class Meta:
-        database = database
-        
-
-def create_connection(db_file):
-    """ create a database connection to the SQLite database
-        specified by the db_file
-    :param db_file: database file
-    :return: Connection object or None
-    """
-    try:
-        conn = sqlite3.connect(db_file)
-        return conn
-    except Error as e:
-        print(e)
-
-    return None
-
-
-def select_all_tasks(conn):
-    """
-    Query all rows in the tasks table
-    :param conn: the Connection object
-    :return:
-    """
-    cur = conn.cursor()
-    cur.execute("SELECT * FROM tasks")
-
-    rows = cur.fetchall()
-
-    for row in rows:
-        print(row)
-
-
-def select_task_by_priority(conn, priority):
-    """
-    Query tasks by priority
-    :param conn: the Connection object
-    :param priority:
-    :return:
-    """
-    cur = conn.cursor()
-    cur.execute("SELECT * FROM tasks WHERE priority=?", (priority,))
-
-    rows = cur.fetchall()
-
-    for row in rows:
-        print(row)
-
-
-def messaging(upper, lower, ):
-	'''
-	upper posture & lower posture
-	=> insert label(INT) into table Posture
-	'''
-
-class Posture_data(Basemodel):
-	ID = CharField()
-	timestamp = CharField()
-	pos_upper = CharField()
-	pos_lower = CharField()
 
 if __name__ == '__main__':
     d = data()
-
+    conn = sqlite3.connect("../../POSCHAIR.db")
+    c = conn.cursor()
     #DB에서 초기자세 데이터 받아올 것
-    try:
-    	with database.atomic():
-    		init_upper_data = User.select(User.init_pos_upper).where(User.ID == "choo@naver.com")
-    		init_lower_data = User.select(User.init_pos_lower).where(User.ID == "choo@naver.com")
-    		init_upper_data.execute()
-    		init_lower_data.execute()
-    	return "success"
-    except: IntegrityError
-    	return "IntegrityError"
+    
+    c.execute("SELECT init_pos_lower FROM User WHERE ID = ?", ("choo@naver.com"))
+    rows = c.fetchall()
+    print(rows, type(rows))
+    for row in rows:
+        print(row)
+
+#    		init_upper_data = User.select(User.init_pos_upper).where(User.ID == "choo@naver.com")
+ #   		init_lower_data = User.select(User.init_pos_lower).where(User.ID == "choo@naver.com")
+  #  		init_upper_data.execute()
+   # 		init_lower_data.execute()
+    	
 
 
 
 
-    database = "../POSCHAIR.db"
-
-    # create a database connection
-    conn = create_connection(database)
-    with conn:
-        print("1. Query task by priority:")
-        select_task_by_priority(conn,1)
-
-        print("2. Query all tasks")
-        select_all_tasks(conn)
 
     '''DB에서 초기자세 데이터 받아올 것'''
     lower_origin = None #DB에서 초기 압력센서 자세값 받아옴
