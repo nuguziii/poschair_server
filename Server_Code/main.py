@@ -120,16 +120,7 @@ def result():
           c.execute("UPDATE Median SET lower_median = ?, upper_median = ? WHERE ID = ?", (lower_median, upper_median, 'choo@naver.com'))
           conn.commit()
           print('db input success')
-          '''try:
-            with database.atomic():
-              query1 = Median.update(
-                lower_median='haeyoon',
-                upper_median='chws'
-                ).where(Median.ID=='choo@naver.com')
-              query1.execute()
-              print("query1 finished")
-          except IntegrityError:
-            print('IntegrityError')'''
+          
           global total_pressure
           global total_ultra
           total_pressure.append(lower_median)
@@ -141,21 +132,18 @@ def result():
           total_time_count = 0
           lower_median_total = np.median(np.asarray(total_pressure), axis=0)
           upper_median_total = np.median(np.asarray(total_ultra), axis=0)
+          lower_median_total = str(list(map(int, lower_median_total)))
+          upper_median_total = str(list(map(int, upper_median_total)))
           print("lower_median_total: "+ str(lower_median_total))
           print("upper_median_total: "+ str(upper_median_total))
           #DB에 저장하기
-          try:
-            with database.atomic():
-              query2 = Median.update(
-                lower_median_total=str(lower_median_total),
-                upper_median_total=str(upper_median_total)
-                ).where(Median.ID=='choo@naver.com')
-              query2.execute()
-              print("query2 finished")
-          except IntegrityError:
-            print('IntegrityError')
+          c.execute("UPDATE Median SET lower_median_total = ?, upper_median_total = ? WHERE ID = ?", (lower_median_total, upper_median_total, 'choo@naver.com'))
+          conn.commit()
+          
           print('succeess')
+        conn.close()
     print('post success')
+
     return 'complete'
 
 
