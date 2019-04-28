@@ -15,6 +15,8 @@ import torch
 import torch.nn as nn
 import time
 import os
+import sqlite3
+import datetime
 from data_generator import data
 from model import vgg19
 from peewee import *
@@ -26,6 +28,9 @@ DATABASE = '../POSCHAIR.db'
 # persist information
 database = SqliteDatabase(DATABASE)
 
+
+conn = sqlite3.connect("../POSCHAIR_db")
+c = conn.cursor()
 # model definitions -- the standard "pattern" is to define a base model class
 # that specifies which database to use.  then, any subclasses will automatically
 # use the correct storage. for more information, see:
@@ -53,9 +58,23 @@ class Median(Basemodel):
 
 class Posture_data(Basemodel):
     ID = CharField()
-    timestamp = CharField()
+    timestamp = TimestampField()
     pos_upper = CharField()
     pos_lower = CharField()
+
+
+class Keyword(Basemodel):
+    date = DateTimeField(default=datetime.datetime.now)
+    ID = CharField()
+    k0 = IntegerField()
+    k1 = IntegerField()
+    k2 = IntegerField()
+    k3 = IntegerField()
+    k4 = IntegerField()
+    k5 = IntegerField()
+    k6 = IntegerField()
+    k7 = IntegerField()
+
 
 
 def LBCNet(model_name, image):
@@ -142,8 +161,7 @@ def messaging(upper, lower, save_db=False, send_android=False):
         try:
             with database.atomic():
                 save = Posture_data.create(
-                    ID='choo@naver.com',
-                    timestamp=datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+                    timestamp=time.time(),
                     pos_upper=upper,
                     pos_lower=lower
                     )
@@ -167,6 +185,23 @@ def is_alarm():
     #{"바른자세":0, "목":2, "어깨":3, "다리꼬기":4, "앞으로 기울임":5, "뒤로기댐":6, "양반다리":7, "불균형":8, "error":-1}
     alarm_list = []
     '''DB에서 10분간 데이터 계산해서 85% 비율을 차지한 자세를 alarm_list에 넣음'''
+    #bring data of 10 minutes from the database
+    t_now = datetime.datetime.now()
+    t_old = t_now - datetime.timedelta(minutes = 10)
+    #posture_data 이용해서 판단하기 10분전
+    cur.execute("SELECT * FROM Posture_data WHERE date BETWEEN t_old AND t_now")
+    rows = cur.fetchall()
+    count = 0
+    for row in rows:
+    	print(row)
+
+
+    #check if the percentage is over 85%
+
+    #put the posture in the alarm_list
+
+
+
 
 
 
@@ -194,36 +229,141 @@ def keyword_matching(upper, lower):
     #   lower: list type
     #======================================
     keyword_list = {"목디스크":"k0", "거북목":"k1", "어깨굽음":"k2", "골반불균형":"k3", "척추틀어짐":"k4", "고관절통증":"k5", "무릎통증":"k6", "혈액순환":"k7"}
-
+    now = datetime.datetime.now()
     ''' DB에서 해당되는 키워드에 +1을 해줌 (Upper 경우)'''
     if upper is 1:
         keyword_list["목디스크"]
         try:
             with database.atomic():
-                save_upper_0 = int(Keyword.select(Keyword.k0).where(Keyword.ID == "choo@naver.com"))
-                save_upper_0 += 1
+                temp = int(Keyword.select(Keyword.k0).where(Keyword.ID == "choo@naver.com"))
+                temp ++
                 query = Keyword.update(
-                    Keyword.k0 = int(save_upper_0)
+                    Keyword.k0 = int(temp)
                     ).where(Keyword.ID == "choo@naver.com")
-            return "success"
+            return "keyword_update_success"
         except: IntegrityError
             return "Integrity Error"
 
     elif upper is 2:
         keyword_list["거북목"]
+        try:
+            with database.atomic():
+                temp = int(Keyword.select(Keyword.k1).where(Keyword.ID == "choo@naver.com"))
+                temp ++
+                query = Keyword.update(
+                    Keyword.k1 = int(temp)
+                    ).where(Keyword.ID == "choo@naver.com")
+            return "keyword_update_success"
+        except: IntegrityError
+            return "Integrity Error"
+
+
     elif upper is 3 or upper is 4:
         keyword_list["어깨굽음"]
+        try:
+            with database.atomic():
+                temp = int(Keyword.select(Keyword.k2).where(Keyword.ID == "choo@naver.com"))
+                temp ++
+                query = Keyword.update(
+                    Keyword.k2 = int(temp)
+                    ).where(Keyword.ID == "choo@naver.com")
+            return "keyword_update_success"
+        except: IntegrityError
+            return "Integrity Error"
 
     ''' DB에서 해당되는 키워드에 +1을 해줌 (Lower 경우)'''
     if lower[2] is 1:
         keyword_list["골반불균형"]
+        try:
+            with database.atomic():
+                temp = int(Keyword.select(Keyword.k3).where(Keyword.ID == "choo@naver.com"))
+                temp ++
+                query = Keyword.update(
+                    Keyword.k3 = int(temp)
+                    ).where(Keyword.ID == "choo@naver.com")
+            return "keyword_update_success"
+        except: IntegrityError
+            return "Integrity Error"
+
         keyword_list["척추틀어짐"]
+        try:
+            with database.atomic():
+                temp = int(Keyword.select(Keyword.k4).where(Keyword.ID == "choo@naver.com"))
+                temp ++
+                query = Keyword.update(
+                    Keyword.k4 = int(temp)
+                    ).where(Keyword.ID == "choo@naver.com")
+            return "keyword_update_success"
+        except: IntegrityError
+            return "Integrity Error"
+
+
         keyword_list["고관절통증"]
+        try:
+            with database.atomic():
+                temp = int(Keyword.select(Keyword.k5).where(Keyword.ID == "choo@naver.com"))
+                temp ++
+                query = Keyword.update(
+                    Keyword.k5 = int(temp)
+                    ).where(Keyword.ID == "choo@naver.com")
+            return "keyword_update_success"
+        except: IntegrityError
+            return "Integrity Error"
+
+
+
         keyword_list["무릎통증"]
+        try:
+            with database.atomic():
+                temp = int(Keyword.select(Keyword.k6).where(Keyword.ID == "choo@naver.com"))
+                temp ++
+                query = Keyword.update(
+                    Keyword.k6 = int(temp)
+                    ).where(Keyword.ID == "choo@naver.com")
+            return "keyword_update_success"
+        except: IntegrityError
+            return "Integrity Error"
+
+
     elif lower[3] is 1:
         keyword_list["골반불균형"]
+        try:
+            with database.atomic():
+                temp = int(Keyword.select(Keyword.k3).where(Keyword.ID == "choo@naver.com"))
+                temp ++
+                query = Keyword.update(
+                    Keyword.k3 = int(temp)
+                    ).where(Keyword.ID == "choo@naver.com")
+            return "keyword_update_success"
+        except: IntegrityError
+            return "Integrity Error"
+
         keyword_list["척추틀어짐"]
+        try:
+            with database.atomic():
+                temp = int(Keyword.select(Keyword.k4).where(Keyword.ID == "choo@naver.com"))
+                temp ++
+                query = Keyword.update(
+                    Keyword.k4 = int(temp)
+                    ).where(Keyword.ID == "choo@naver.com")
+            return "keyword_update_success"
+        except: IntegrityError
+            return "Integrity Error"
+
+
         keyword_list["혈액순환"]
+        try:
+            with database.atomic():
+                temp = int(Keyword.select(Keyword.k7).where(Keyword.ID == "choo@naver.com"))
+                temp ++
+                query = Keyword.update(
+                    Keyword.k7 = int(temp)
+                    ).where(Keyword.ID == "choo@naver.com")
+            return "keyword_update_success"
+        except: IntegrityError
+            return "Integrity Error"
+
+
     elif lower[0] is 1:
         keyword_list["골반불균형"]
         keyword_list["척추틀어짐"]
