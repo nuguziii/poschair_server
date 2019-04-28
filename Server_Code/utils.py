@@ -99,13 +99,13 @@ def messaging(upper, lower, save_db=False, send_android=False):
     messaging_list = {"Alright":0, "moreThanOne":1, "turtle/bowed":2, "legsOnChair":3, "crossedLegs":4, "backbone":5, "others":6}
     send_result = None
 
-    if upper[0]==1 and sum(lower)==0: #둘다 바른자세일 경우 (바른 자세입니다.)
+    if upper==0 and sum(lower)==0: #둘다 바른자세일 경우 (바른 자세입니다.)
         send_result = messaging_list["Alright"]
 
-    if (upper[1]==1 or upper[2]==1) and (lower[0]==1 or lower[2]==1 or lower[3]==1): #전체적으로 바른자세 유지
+    if (upper==1 or upper==2) and (lower[0]==1 or lower[2]==1 or lower[3]==1): #전체적으로 바른자세 유지
         # 전체적으로 몸이 틀어져있습니다.
         send_result = messaging_list["moreThanOne"]
-    elif upper[1]==1:
+    elif upper==1:
         # 혹시 목을 숙이고 있으신가요?
         send_result = messaging_list["turtle/bowed"]
     elif lower[3]==1:
