@@ -204,14 +204,12 @@ def generate_alarm(alarm_value):
     posture = None
 
     #예시임 5까지 추가해야하고 메세지 바꿔야함
-    if alarm_value == 0
+    if alarm_value == 0:
     	return 0 #don't send the alarm
-    elif (alarm_value == 1) {
+    elif alarm_value == 1:
         posture = 'turtle neck'
-    }
-    elif (alarm_value ==2) {
+    elif (alarm_value ==2):
         posture = 'slouched'
-    }
 
     cred = credentials.Certificate('/root/poschair-134c8-firebase-adminsdk-1i2vn-01f260312b.json')
     app = firebase_admin.initialize_app(cred)
