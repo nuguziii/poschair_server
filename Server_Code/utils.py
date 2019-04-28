@@ -19,6 +19,8 @@ import sqlite3
 import datetime
 from data_generator import data
 from model import vgg19
+import firebase_admin
+from firebase_admin import credentials
 from peewee import *
 from datetime import datetime
 
@@ -117,20 +119,24 @@ def LBCNet(image, guide):
 
     return y_p
 
-def upper_balance_check(origin, new):
+def upper_balance_check(value):
     #=====================================
     # upper posture Check
     # input:
-    #  origin: initial ultrasonic sensor
-    #          [sensor1, sensor2]
-    #  new: current ultrasonic sensor
+    #  value: ultrasonic sensor value
     #          [sensor1, sensor2]
     # output: upper posture
     #======================================
-    posture_list = {"바른자세":0, "고개숙임":1, "거북목":2, "어깨굽힘":3, "허리굽힘":4}
+    posture_list = {"Alright":0, "Turtle/Bowed":1, "Slouched":2}
     # 센서 계산 과정 통해서 result 결과 출력
-
     result = None
+    if (value[0] == -1 && value[1] <= 20):
+        result = 0
+    elif (value[0] == -1 && value[1] >= 150):
+        result = 1
+    else:
+        result = 2
+
     return posture_list[result]
 
 def messaging(upper, lower, save_db=False, send_android=False):
@@ -232,17 +238,55 @@ def is_alarm():
 
     return alarm_list
 
-def generate_alarm(alarm_list, current_posture):
+def generate_alarm(alarm_value):
     #=====================================
     # send alarm alert to android
     # - input:
-    #     list type(alarm list)
+    #     integer(indicates the current posture alarm label)
     #======================================
 
     '''
     1. current_posture와 alarm_list 비교해서 교집합 현재 alarm_list에 저장
     3. alarm_list 가 0이 아닐 경우 android에 alarm_list 전송
     '''
+    posture = None
+
+    #예시임 5까지 추가해야하고 메세지 바꿔야함
+    if (alarm_value == 0) {
+        return 0 #don't send the alarm
+    }
+    elif (alarm_value == 1) {
+        posture = 'turtle neck'
+    }
+    elif (alarm_value ==2) {
+        posture = 'slouched'
+    }
+
+    cred = credentials.Certificate('/root/poschair-134c8-firebase-adminsdk-1i2vn-01f260312b.json')
+    app = firebase_admin.initialize_app(cred)
+
+    # This registration token comes from the client FCM SDKs.
+    registration_token = 'YOUR_REGISTRATION_TOKEN'
+
+    # See documentation on defining a message payload.
+    message = messaging.Message(
+        android=messaging.AndroidConfig(
+            ttl=0, #즉시 보낸다는 뜻
+            priority='normal',
+            notification=messaging.AndroidNotification(
+                title='Mind your posture!',
+                body=posture,
+            ),
+        )
+    )
+
+    # Send a message to the device corresponding to the provided
+    # registration token.
+    response = messaging.send(message)
+    # Response is a message ID string.
+    print('Successfully sent message:', response)
+
+
 
 
 
@@ -437,9 +481,3 @@ def video_matching(keyword):
     '''
 
     ''' url list 안드로이드에 전송 '''
-
-
-def crawling_video():
-    #=====================================
-    # crawling video from youtube and save db
-    #======================================
