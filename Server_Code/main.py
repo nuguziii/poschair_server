@@ -29,8 +29,7 @@ app.config.from_object(__name__)
 database = SqliteDatabase(DATABASE)
 
 
-conn = sqlite3.connect("../POSCHAIR_db")
-c = conn.cursor()
+
 # model definitions -- the standard "pattern" is to define a base model class
 # that specifies which database to use.  then, any subclasses will automatically
 # use the correct storage. for more information, see:
@@ -107,7 +106,8 @@ def result():
         real_time_count+=1
         total_time_count+=1
 
-        
+        conn = sqlite3.connect("../POSCHAIR_db")
+        c = conn.cursor()
         if real_time_count == num_of_sensor_real_time:
           real_time_count = 0
           lower_median = np.median(np.asarray(pressure_list), axis=0)
