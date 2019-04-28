@@ -17,7 +17,7 @@ if __name__ == '__main__':
     c.execute("SELECT init_pos_lower FROM User WHERE ID = ?", ("choo@naver.com",))
     rows = c.fetchall()
     print(rows, type(rows))
-    for row in rows
+    for row in rows:
         print(row)
     
 
