@@ -14,11 +14,10 @@ if __name__ == '__main__':
     c = conn.cursor()
     #DB에서 초기자세 데이터 받아올 것
 
-    c.execute("SELECT * FROM User WHERE ID = ?", ("choo@naver.com"))
-    rows = c.fetchall()
+    c.execute("SELECT init_pos_lower FROM User WHERE ID == ?", ("choo@naver.com"))
+    rows = c.fetchone()[0]
     print(rows, type(rows))
-    for row in rows:
-        print(row)
+    
 
 
     '''
