@@ -4,7 +4,7 @@ import numpy as np
 import time
 import os
 from data_generator import data
-from utils import * #not using yet
+#from utils import * #not using yet
 from flask import Flask
 from flask import g
 from flask import redirect
