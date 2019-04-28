@@ -115,8 +115,8 @@ def result():
           try:
             with database.atomic():
               query1 = Median.update(
-                lower_median=(lower_median),
-                upper_median=(upper_median)
+                lower_median=str(lower_median),
+                upper_median=str(upper_median)
                 ).where(Median.ID=='choo@naver.com')
               query1.execute()
               print("query1 finished")
@@ -139,8 +139,8 @@ def result():
           try:
             with database.atomic():
               query2 = Median.update(
-                lower_median_total=(lower_median_total),
-                upper_median_total=(upper_median_total)
+                lower_median_total=str(lower_median_total),
+                upper_median_total=str(upper_median_total)
                 ).where(Median.ID=='choo@naver.com')
               query2.execute()
               print("query2 finished")
