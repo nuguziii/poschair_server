@@ -420,11 +420,11 @@ def video_matching(keyword):
     video_list = []
 
     for k, v in dictionary.items():
-    if v == sorted_key[0][0]: 
-        video_list.append(video_dict[k])
+    	if v == sorted_key[0][0]: 
+        	video_list.append(video_dict[k])
 
-    if len(video_list)>3:
-        video_list = [video_dict[8]]
+    	if len(video_list)>3:
+        	video_list = [video_dict[8]]
 
     '''
     video_list에 해당하는 url들 db에서 가져오기
