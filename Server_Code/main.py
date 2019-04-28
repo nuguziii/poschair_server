@@ -45,7 +45,7 @@ class User(BaseModel):
     pos_lower = CharField()
 
 
-class Median(Basemodel):
+class Median(BaseModel):
     ID = CharField()
     lower_median = IntegerField()
     upper_median = IntegerField()
