@@ -122,9 +122,8 @@ def messaging(upper, lower, save_db=False, send_android=False):
         send_result = messaging_list["others"]
 
     if save_db:
-    	conn = sqlite3.connect("../../POSCHAIR.db")
-    	c = conn.cursor()
-        '''DB에 send_list(현재 자세) 저장'''
+    	#conn = sqlite3.connect("../../POSCHAIR.db")
+    	#c = conn.cursor()
         '''try:
             with database.atomic():
                 save = Posture_data.create(
