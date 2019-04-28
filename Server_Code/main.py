@@ -35,8 +35,6 @@ database = SqliteDatabase(DATABASE)
 class BaseModel(Model):
     class Meta:
         database = database
-        db_table1 = 'User'
-        db_table2 = 'Median'
 
 # the user model specifies its fields (or columns) declaratively, like django
 class User(BaseModel):
