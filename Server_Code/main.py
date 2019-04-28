@@ -102,6 +102,7 @@ def result():
                 upper_median=(request.form['upper_median'])
                 ).where(Median.ID=='choo@naver.com')
               query1.execute()
+              print("query1 finished")
             return 'upper_median_update_succeess'
           except IntegrityError:
             return 'IntegrityError'
