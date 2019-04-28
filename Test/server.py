@@ -94,9 +94,9 @@ def result():
             return "received!"
 
         except IntegrityError:
-            print("inserting error")
+            print("insertion error")
             traceback.print_exc()
-            return "inserting error"
+            return "insertion error"
     else:
         return "success"
 

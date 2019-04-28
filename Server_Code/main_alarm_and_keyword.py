@@ -1,5 +1,4 @@
 import datetime
-
 import numpy as np
 import time
 import os
@@ -24,29 +23,63 @@ class BaseModel(Model):
         database = database
         
 
-# the user model specifies its fields (or columns) declaratively, like django
-class User(BaseModel):
-    name = CharField()
-    pwd = CharField()
-    ID = CharField(unique=True)
-    pos_upper = CharField()
-    pos_lower = CharField()
+def create_connection(db_file):
+    """ create a database connection to the SQLite database
+        specified by the db_file
+    :param db_file: database file
+    :return: Connection object or None
+    """
+    try:
+        conn = sqlite3.connect(db_file)
+        return conn
+    except Error as e:
+        print(e)
+
+    return None
 
 
-class Median(Basemodel):
-	ID = CharField()
-    lower_median = IntegerField()
-    upper_median = IntegerField()
-    lower_median_total = IntegerField()
-    upper_mdeian_total = IntegerField()
+def select_all_tasks(conn):
+    """
+    Query all rows in the tasks table
+    :param conn: the Connection object
+    :return:
+    """
+    cur = conn.cursor()
+    cur.execute("SELECT * FROM tasks")
+
+    rows = cur.fetchall()
+
+    for row in rows:
+        print(row)
+
+
+def select_task_by_priority(conn, priority):
+    """
+    Query tasks by priority
+    :param conn: the Connection object
+    :param priority:
+    :return:
+    """
+    cur = conn.cursor()
+    cur.execute("SELECT * FROM tasks WHERE priority=?", (priority,))
+
+    rows = cur.fetchall()
+
+    for row in rows:
+        print(row)
+
+
+def messaging(upper, lower, ):
+	'''
+	upper posture & lower posture
+	=> insert label(INT) into table Posture
+	'''
 
 class Posture_data(Basemodel):
 	ID = CharField()
 	timestamp = CharField()
 	pos_upper = CharField()
 	pos_lower = CharField()
-
-
 
 if __name__ == '__main__':
     d = data()
@@ -65,16 +98,14 @@ if __name__ == '__main__':
 
 
 
-
-
     database = "../POSCHAIR.db"
- 
+
     # create a database connection
     conn = create_connection(database)
     with conn:
         print("1. Query task by priority:")
         select_task_by_priority(conn,1)
- 
+
         print("2. Query all tasks")
         select_all_tasks(conn)
 
@@ -118,8 +149,4 @@ if __name__ == '__main__':
             '''알림 확인 및 전송'''
             alarm_list = is_alarm() #알람 보낼 리스트가 있는지 확인
             if len(alarm_list) is not 0: #알람 리스트가 있으면
-                generate_alarm(alarm_list, current_posture) #알람 전송
-
-
-
-
+                result = generate_alarm(alarm_list) #알람 전송

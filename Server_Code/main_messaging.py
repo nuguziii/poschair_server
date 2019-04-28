@@ -9,7 +9,6 @@ if __name__ == '__main__':
 
     '''DB에서 초기자세 데이터 받아올 것'''
     lower_origin = None #DB에서 초기 압력센서 자세값 받아옴
-    upper_origin = None #DB에서 초기 초음파센서 자세값 받아옴
 
     '''오늘 총 시간 DB에서 받아옴'''
     total_hour = 0
@@ -28,7 +27,7 @@ if __name__ == '__main__':
 
             '''각 센서값으로 자세 lower/upper 자세 판단 (이건 median 값)'''
             lower = LBCNet("model_0326.pth", d.generator(lower_median)) #딥러닝 모델로 lower 자세값 받아옴.
-            upper = upper_balance_check(upper_origin, upper_median) #upper 자세값 받아옴.
+            upper = upper_balance_check(upper_median) #upper 자세값 받아옴.
 
             '''안드로이드로 실시간 메세지 전송'''
             messaging(upper, lower, send_android=True) #output은 int 형태로 나옴 이걸 안드로이드로 전송해서 안드로이드에서 메세지 생성
