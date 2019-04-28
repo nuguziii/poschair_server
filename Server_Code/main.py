@@ -4,7 +4,7 @@ import numpy as np
 import time
 import os
 from data_generator import data
-#from utils import * #not using yet
+from utils import * #not using yet
 from flask import Flask
 from flask import g
 from flask import redirect
@@ -127,11 +127,10 @@ def result():
                 ).where(Median.ID=='choo@naver.com')
               query2.execute()
             return "Complete!!"
-          except IntegerityError:
+          except IntegrityError:
             return 'IntegrityError'
           return 'success'
-
-      return 'post_success'
+      return 'post success'
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=53, debug=False)
