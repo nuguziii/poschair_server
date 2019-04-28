@@ -1,5 +1,5 @@
 import datetime
-
+import sqlite3
 import numpy as np
 import time
 import os
@@ -28,6 +28,9 @@ app.config.from_object(__name__)
 # persist information
 database = SqliteDatabase(DATABASE)
 
+
+#conn = sqlite3.connect("../POSCHAIR_db")
+#c = conn.cursor()
 # model definitions -- the standard "pattern" is to define a base model class
 # that specifies which database to use.  then, any subclasses will automatically
 # use the correct storage. for more information, see:
@@ -114,11 +117,13 @@ def result():
           print("lower_median: "+ str(lower_median))
           print("upper_median: "+ str(upper_median))
           #DB에 저장하기
+          #cur.execute("UPDATE Median SET lower_median = ? WHERE ID = ?")
+
           try:
             with database.atomic():
               query1 = Median.update(
-                lower_median='0,9,8,7,6,5',
-                upper_median='0,0,0'
+                lower_median='haeyoon',
+                upper_median='chws'
                 ).where(Median.ID=='choo@naver.com')
               query1.execute()
               print("query1 finished")
