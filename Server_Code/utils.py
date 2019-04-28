@@ -206,7 +206,25 @@ def is_alarm():
     #check if the percentage is over 85%
 
     #put the posture in the alarm_list
+    #교집합 구하기
+    result = [0]*len(a)
+    for i in range(len(a)):
+        if a[i]==b[i]:
+            result[i]=a[i]
 
+    notification_list = {"Alright":0, "moreThanOne":1, "turtle/bowed":2, "backbone":3, "legs":4, "others":5}
+    if sum(result)==0: #바른자세
+        return notification_list["Alright"]
+    elif sum(result)>=2: #전체적으로 바른 자세 유지 알람
+        return notification_list["moreThanOne"]
+    elif result[1]==1: #목 운동 알람
+        return notification_list["turtle/bowed"]
+    elif result[4]==1: #허리 운동 알람
+        return notification_list["backbone"]
+    elif result[5]==1 or result[6]==1: #다리 바르게 알람
+        return notification_list["legs"]
+    else: #자세 바르게 알람
+        return notification_list["others"]
 
 
 
