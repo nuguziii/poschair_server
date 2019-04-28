@@ -28,9 +28,9 @@ if __name__ == '__main__':
     for i in range(2):
 
         #lower_median_total, upper_median_total DB에서 가져옴
-        c.execute("SELECT lower_median_total FROM Median WHERE ID = ?", ("choo@naver.com"))
+        c.execute("SELECT lower_median_total FROM Median WHERE ID = ?", ("choo@naver.com",))
         lower_median_total = c.fetchone()[0]
-        c.execute("SELECT upper_median_total FROM Median WHERE ID = ?", ("choo@naver.com"))
+        c.execute("SELECT upper_median_total FROM Median WHERE ID = ?", ("choo@naver.com",))
         upper_median_total = c.fetchone()[0]
 
         lower_median_total = rows.replace('[','').replace(']','').split(',')
