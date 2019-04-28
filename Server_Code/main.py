@@ -135,7 +135,7 @@ def result():
           print("lower_median_total: "+ str(lower_median_total))
           print("upper_median_total: "+ str(upper_median_total))
           #DB에 저장하기
-          c.execute("UPDATE Median SET lower_median_total = ?, upper_median_total = ? WHERE ID = ?", (str(lower_median_total), str(upper_median_total)s, 'choo@naver.com'))
+          c.execute("UPDATE Median SET lower_median_total = ?, upper_median_total = ? WHERE ID = ?", (str(lower_median_total), str(upper_median_total), 'choo@naver.com'))
           conn.commit()
 
           
