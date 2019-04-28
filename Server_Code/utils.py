@@ -51,20 +51,24 @@ def LBCNet(model_name, image):
     #print(y_p, y_p.shape)
     return result
 
-def upper_balance_check(origin, new):
+def upper_balance_check(value):
     #=====================================
     # upper posture Check
     # input:
-    #  origin: initial ultrasonic sensor
-    #          [sensor1, sensor2]
-    #  new: current ultrasonic sensor
+    #  value: ultrasonic sensor value
     #          [sensor1, sensor2]
     # output: upper posture
     #======================================
-    posture_list = {"바른자세":0, "고개숙임":1, "거북목":2, "어깨굽힘":3, "허리굽힘":4}
+    posture_list = {"Alright":0, "Turtle/Bowed":1, "Slouched":2}
     # 센서 계산 과정 통해서 result 결과 출력
-
     result = None
+    if (value[0] == -1 && value[1] <= 20):
+        result = 0
+    elif (value[0] == -1 && value[1] >= 150):
+        result = 1
+    else:
+        result = 2
+
     return posture_list[result]
 
 def messaging(upper, lower, save_db=False, send_android=False):
@@ -207,9 +211,3 @@ def video_matching(keyword):
     '''
 
     ''' url list 안드로이드에 전송 '''
-
-
-def crawling_video():
-    #=====================================
-    # crawling video from youtube and save db
-    #======================================
