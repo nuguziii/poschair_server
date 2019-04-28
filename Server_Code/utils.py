@@ -246,15 +246,15 @@ def keyword_matching(upper, lower):
     #   upper: int type
     #   lower: list type
     #======================================
-    keyword_list = {"목디스크":"k0", "거북목":"k1", "어깨굽음":"k2", "골반불균형":"k3", "척추틀어짐":"k4", "고관절통증":"k5", "무릎통증":"k6", "혈액순환":"k7"}
+'''    keyword_list = {"목디스크":"k0", "거북목":"k1", "어깨굽음":"k2", "골반불균형":"k3", "척추틀어짐":"k4", "고관절통증":"k5", "무릎통증":"k6", "혈액순환":"k7"}
     now = datetime.datetime.now()
-    ''' DB에서 해당되는 키워드에 +1을 해줌 (Upper 경우)'''
+     DB에서 해당되는 키워드에 +1을 해줌 (Upper 경우)
     if upper is 1:
         keyword_list["목디스크"]
         try:
             with database.atomic():
                 temp = int(Keyword.select(Keyword.k0).where(Keyword.ID == "choo@naver.com"))
-                temp ++
+                temp += 1
                 query = Keyword.update(
                     Keyword.k0 = int(temp)
                     ).where(Keyword.ID == "choo@naver.com")
@@ -289,7 +289,7 @@ def keyword_matching(upper, lower):
         except IntegrityError:
             return "Integrity Error"
 
-    ''' DB에서 해당되는 키워드에 +1을 해줌 (Lower 경우)'''
+     DB에서 해당되는 키워드에 +1을 해줌 (Lower 경우)
     if lower[2] is 1:
         keyword_list["골반불균형"]
         try:
@@ -388,7 +388,7 @@ def keyword_matching(upper, lower):
 
     if lower[1] is 1 and upper is not 3:
         keyword_list["어깨굽음"]
-
+'''
 def generate_keyword_for_video_matching():
     #=====================================
     # generate keyword from Database
