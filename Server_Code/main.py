@@ -62,7 +62,7 @@ total_hour = 0
 real_time_count = 0
 total_time_count = 0
 
-@app.route('/main/', methods=['GET', 'POST'])
+@app.route('/', methods=['GET', 'POST'])
 def result():
     if request.method=='POST':
         d = data()
