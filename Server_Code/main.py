@@ -63,21 +63,10 @@ real_time_count = 0
 total_time_count = 0
 
 
-@app.before_request
-def before_request():
-    print('before_request')
-    g.db = database
-    g.db.connect()
-
-
-@app.after_request
-def after_request(response):
-  print('close_request')
-  g.db.close()
-  return response
 
 @app.route('/', methods=['POST'])
 def result():
+    print ('connection success')
     if request.method=='POST':
         d = data()
 
