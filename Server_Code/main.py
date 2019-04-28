@@ -127,7 +127,7 @@ def result():
                 ).where(Median.ID=='choo@naver.com')
               query2.execute()
             return "Complete!!"
-          except: IntegerityError
+          except IntegerityError:
             return 'IntegrityError'
           return 'success'
 
