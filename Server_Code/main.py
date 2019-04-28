@@ -29,8 +29,8 @@ app.config.from_object(__name__)
 database = SqliteDatabase(DATABASE)
 
 
-#conn = sqlite3.connect("../POSCHAIR_db")
-#c = conn.cursor()
+conn = sqlite3.connect("../POSCHAIR_db")
+c = conn.cursor()
 # model definitions -- the standard "pattern" is to define a base model class
 # that specifies which database to use.  then, any subclasses will automatically
 # use the correct storage. for more information, see:
@@ -117,9 +117,9 @@ def result():
           print("lower_median: "+ str(lower_median))
           print("upper_median: "+ str(upper_median))
           #DB에 저장하기
-          #cur.execute("UPDATE Median SET lower_median = ? WHERE ID = ?")
+          cur.execute("UPDATE Median SET lower_median = ?, upper_median = ? WHERE ID = ?", (lower_median, upper_median, 'choo@naver.com'))
 
-          try:
+          '''try:
             with database.atomic():
               query1 = Median.update(
                 lower_median='haeyoon',
@@ -128,7 +128,7 @@ def result():
               query1.execute()
               print("query1 finished")
           except IntegrityError:
-            print('IntegrityError')
+            print('IntegrityError')'''
           global total_pressure
           global total_ultra
           total_pressure.append(lower_median)
