@@ -122,17 +122,18 @@ def is_alarm():
 
     return alarm_list
 
-def generate_alarm(alarm_list, current_posture):
+def generate_alarm(alarm_value):
     #=====================================
     # send alarm alert to android
     # - input:
-    #     list type(alarm list)
+    #     integer(indicates the current posture alarm label)
     #======================================
 
     '''
     1. current_posture와 alarm_list 비교해서 교집합 현재 alarm_list에 저장
     3. alarm_list 가 0이 아닐 경우 android에 alarm_list 전송
     '''
+    
 
 
 
