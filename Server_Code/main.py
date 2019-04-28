@@ -107,14 +107,13 @@ def result():
                 ).where(Median.ID=='choo@naver.com')
               query1.execute()
               print("query1 finished")
-            return 'upper_median_update_succeess'
           except IntegrityError:
-            return 'IntegrityError'
+            print('IntegrityError')
           global total_pressure
           global total_ultra
           total_pressure.append(lower_median)
           total_ultra.append(upper_median)
-          return 'success'
+          print('success')
 
         
         if total_time_count == num_of_sensor_total * num_of_sensor_real_time:
@@ -131,11 +130,11 @@ def result():
                 upper_median_total=(request.form['upper_median_total'])
                 ).where(Median.ID=='choo@naver.com')
               query2.execute()
-            return "Complete!!"
+              print("query2 finished")
           except IntegrityError:
-            return 'IntegrityError'
-          return 'success'
-    return 'post success'
+            print('IntegrityError')
+          print('succeess')
+    print('post success')
 
 
 if __name__ == '__main__':
