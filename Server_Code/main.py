@@ -118,7 +118,8 @@ def result():
           print("upper_median: "+ str(upper_median))
           #DB에 저장하기
           c.execute("UPDATE Median SET lower_median = ?, upper_median = ? WHERE ID = ?", (lower_median, upper_median, 'choo@naver.com'))
-
+          c.commit()
+          print('db input success')
           '''try:
             with database.atomic():
               query1 = Median.update(
