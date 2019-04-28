@@ -42,7 +42,7 @@ if __name__ == '__main__':
         if np.count_nonzero(np.asarray(lower_median_total)-10)>6: #사용자가 의자에 앉아있는지 판단
             #각 센서값으로 자세 lower/upper 자세 판단 (이건 median 값)
             lower = LBCNet(d.generator(lower_median_total), d.generator(lower_init)) #lower 자세값
-            upper = upper_balance_check(upper_origin, upper_median_total) #upper 자세값 받아옴.
+            upper = upper_balance_check(upper_median_total) #upper 자세값 받아옴.
 
             print(lower, upper)
 
