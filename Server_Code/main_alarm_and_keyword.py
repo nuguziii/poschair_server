@@ -27,7 +27,7 @@ if __name__ == '__main__':
     	
 
 
-
+'''
 
 
     '''DB에서 초기자세 데이터 받아올 것'''
@@ -71,3 +71,4 @@ if __name__ == '__main__':
             alarm_list = is_alarm() #알람 보낼 리스트가 있는지 확인
             if len(alarm_list) is not 0: #알람 리스트가 있으면
                 result = generate_alarm(alarm_list) #알람 전송
+'''
