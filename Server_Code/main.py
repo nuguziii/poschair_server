@@ -112,12 +112,12 @@ def result():
           real_time_count = 0
           lower_median = np.median(np.asarray(pressure_list), axis=0)
           upper_median = np.median(np.asarray(ultra_list), axis=0)
-          lower_median = str(list(map(int, lower_median)))
-          upper_median = str(list(map(int, upper_median)))
+          lower_median = list(map(int, lower_median))
+          upper_median = list(map(int, upper_median))
           print("lower_median: "+ str(lower_median))
           print("upper_median: "+ str(upper_median))
           #DB에 저장하기
-          c.execute("UPDATE Median SET lower_median = ?, upper_median = ? WHERE ID = ?", (lower_median, upper_median, 'choo@naver.com'))
+          c.execute("UPDATE Median SET lower_median = ?, upper_median = ? WHERE ID = ?", (str(lower_median), str(upper_median), 'choo@naver.com'))
           conn.commit()
           
           global total_pressure
@@ -130,12 +130,12 @@ def result():
           total_time_count = 0
           lower_median_total = np.median(np.asarray(total_pressure), axis=0)
           upper_median_total = np.median(np.asarray(total_ultra), axis=0)
-          lower_median_total = str(list(map(int, lower_median_total)))
-          upper_median_total = str(list(map(int, upper_median_total)))
+          lower_median_total = list(map(int, lower_median_total))
+          upper_median_total = list(map(int, upper_median_total))
           print("lower_median_total: "+ str(lower_median_total))
           print("upper_median_total: "+ str(upper_median_total))
           #DB에 저장하기
-          c.execute("UPDATE Median SET lower_median_total = ?, upper_median_total = ? WHERE ID = ?", (lower_median_total, upper_median_total, 'choo@naver.com'))
+          c.execute("UPDATE Median SET lower_median_total = ?, upper_median_total = ? WHERE ID = ?", (str(lower_median_total), str(upper_median_total)s, 'choo@naver.com'))
           conn.commit()
 
           
