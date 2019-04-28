@@ -126,7 +126,7 @@ def result():
           total_ultra.append(upper_median)
           print('success')
 
-        if total_time_count == 10:
+        if total_time_count == num_of_sensor_real_time * num_of_sensor_total:
           total_time_count = 0
           lower_median_total = np.median(np.asarray(total_pressure), axis=0)
           upper_median_total = np.median(np.asarray(total_ultra), axis=0)
