@@ -143,7 +143,7 @@ def is_alarm():
     t_old = t_now - datetime.timedelta(minutes = 10)
 
     #posture_data 이용해서 판단하기 10분전
-    c.execute("SELECT * FROM Posture_data WHERE date BETWEEN t_old AND t_now")
+    c.execute("SELECT * FROM Posture_data WHERE date >= t_old AND date <= t_now")
     rows = c.fetchall()
 
     upper1cnt = 0
