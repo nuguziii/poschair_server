@@ -16,9 +16,9 @@ if __name__ == '__main__':
 	c.execute("SELECT init_pos_lower FROM User WHERE ID = ?", ("choo@naver.com",))
 	rows = c.fetchone()[0]
     
-    lower_init = rows.replace('[','').replace(']','').split(',')
-    lower_init = list(map(int, lower_init))
-    print(lower_init)
+	lower_init = rows.replace('[','').replace(']','').split(',')
+	lower_init = list(map(int, lower_init))
+	print(lower_init)
 
     
     #계속 돌면서 keyword 저장
