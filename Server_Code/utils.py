@@ -271,7 +271,7 @@ def keyword_matching(upper, lower):
         c.execute("UPDATE Keyword SET ? = ? WHERE ID = ?", (keyword_list["Turtle/Bowed"], key, "choo@naver.com"))
 
     elif upper is 2:
-        c.execute("SELECT ? FROM Keyword WHERE ID = ?", (keyword_list["Slouched"], "choo@naver.com"))
+        c.execute("SELECT k1 FROM Keyword WHERE ID = ?", ("choo@naver.com",))
         key = c.fetchone()
         print(key, type(key))
         key += 1
