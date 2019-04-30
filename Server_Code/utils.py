@@ -190,6 +190,7 @@ def is_alarm(lower, upper):
         upper_temp[0]=1
     if upper==2:
         upper_temp[1]=1
+    print(upper_temp, lower)
     current = upper_temp+lower
     print(current)
     result = [0]*len(current)
