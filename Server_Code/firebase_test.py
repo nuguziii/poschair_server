@@ -49,20 +49,30 @@ def generate_alarm(alarm_value):
     #     )
     # )
     # The topic name can be optionally prefixed with "/topics/".
-    topic = 'poschair'
 
     # See documentation on defining a message payload.
     # The topic name can be optionally prefixed with "/topics/".
-    topic = 'highScores'
 
     # See documentation on defining a message payload.
+    # message = messaging.Message(
+    #     data={
+    #         'title': 'Poschair',
+    #         'body': 'Mind your posture!',
+    #         },
+    #         topic=topic,
+    #         )
+
     message = messaging.Message(
-        data={
-            'title': 'Poschair',
-            'body': 'Mind your posture!',
-            },
-            topic=topic,
-            )
+        android=messaging.AndroidConfig(
+            ttl=0,
+            priority='normal',
+            notification=messaging.AndroidNotification(
+                title='PosChair',
+                body='Mind your posture!',
+                ),
+                ),
+                topic='poschair',
+                )
 
     # Send a message to the devices subscribed to the provided topic.
     response = messaging.send(message)
