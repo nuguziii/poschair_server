@@ -265,10 +265,10 @@ def keyword_matching(upper, lower):
     c = conn.cursor()
 
     if upper is 1:
-        c.execute("SELECT ? FROM Keyword WHERE ID = ?", (keyword_list["Turtle/Bowed"], "choo@naver.com"))
+        c.execute("SELECT k0 FROM Keyword WHERE ID = ?", ("choo@naver.com",))
         key = int(c.fetchone()[0])
         key += 1
-        c.execute("UPDATE Keyword SET ? = ? WHERE ID = ?", (keyword_list["Turtle/Bowed"], key, "choo@naver.com"))
+        c.execute("UPDATE Keyword SET k0 = ? WHERE ID = ?", (key, "choo@naver.com"))
 
     elif upper is 2:
         c.execute("SELECT k1 FROM Keyword WHERE ID = ?", ("choo@naver.com",))
@@ -279,59 +279,59 @@ def keyword_matching(upper, lower):
 
     #DB에서 해당되는 키워드에 +1을 해줌 (Lower 경우)
     if lower[2] is 1:
-        c.execute("SELECT ? FROM Keyword WHERE ID = ?", (keyword_list["PelvisImbalance"], "choo@naver.com"))
+        c.execute("SELECT k2 FROM Keyword WHERE ID = ?", ("choo@naver.com",))
         key = int(c.fetchone()[0])
         key += 1
-        c.execute("UPDATE Keyword SET ? = ? WHERE ID = ?", (key, "choo@naver.com"))
+        c.execute("UPDATE Keyword SET k2 = ? WHERE ID = ?", (key, "choo@naver.com"))
 
-        c.execute("SELECT ? FROM Keyword WHERE ID = ?", (keyword_list["Scoliosis"], "choo@naver.com"))
+        c.execute("SELECT k3 FROM Keyword WHERE ID = ?", ("choo@naver.com",))
         key = int(c.fetchone()[0])
         key += 1
-        c.execute("UPDATE Keyword SET ? = ? WHERE ID = ?", (keyword_list["Scoliosis"], key, "choo@naver.com"))
+        c.execute("UPDATE Keyword SET k3 = ? WHERE ID = ?", (key, "choo@naver.com"))
 
-        c.execute("SELECT ? FROM Keyword WHERE ID = ?", (keyword_list["HipPain"], "choo@naver.com"))
+        c.execute("SELECT k4 FROM Keyword WHERE ID = ?", ("choo@naver.com",))
         key = int(c.fetchone()[0])
         key += 1
-        c.execute("UPDATE Keyword SET ? = ? WHERE ID = ?", (keyword_list["HipPain"], key, "choo@naver.com"))
+        c.execute("UPDATE Keyword SET k4 = ? WHERE ID = ?", (key, "choo@naver.com"))
 
-        c.execute("SELECT ? FROM Keyword WHERE ID = ?", (keyword_list["KneePain"], "choo@naver.com"))
+        c.execute("SELECT k5 FROM Keyword WHERE ID = ?", ("choo@naver.com",))
         key = int(c.fetchone()[0])
         key += 1
-        c.execute("UPDATE Keyword SET ? = ? WHERE ID = ?", (keyword_list["KneePain"], key, "choo@naver.com"))
+        c.execute("UPDATE Keyword SET k5 = ? WHERE ID = ?", ( key, "choo@naver.com"))
 
     elif lower[3] is 1:
-        c.execute("SELECT ? FROM Keyword WHERE ID = ?", (keyword_list["PelvisImbalance"], "choo@naver.com"))
+        c.execute("SELECT k2 FROM Keyword WHERE ID = ?", ("choo@naver.com",))
         key = int(c.fetchone()[0])
         key += 1
-        c.execute("UPDATE Keyword SET ? = ? WHERE ID = ?", (keyword_list["PelvisImbalance"], key, "choo@naver.com"))
+        c.execute("UPDATE Keyword SET k2 = ? WHERE ID = ?", (key, "choo@naver.com"))
 
-        c.execute("SELECT ? FROM Keyword WHERE ID = ?", (keyword_list["Scoliosis"], "choo@naver.com"))
+        c.execute("SELECT k3 FROM Keyword WHERE ID = ?", ("choo@naver.com",))
         key = int(c.fetchone()[0])
         key += 1
-        c.execute("UPDATE Keyword SET ? = ? WHERE ID = ?", (keyword_list["Scoliosis"], key, "choo@naver.com"))
+        c.execute("UPDATE Keyword SET k3 = ? WHERE ID = ?", (key, "choo@naver.com"))
 
 
-        c.execute("SELECT ? FROM Keyword WHERE ID = ?", (keyword_list["PoorCirculation"], "choo@naver.com"))
+        c.execute("SELECT k6 FROM Keyword WHERE ID = ?", ( "choo@naver.com",))
         key = int(c.fetchone()[0])
         key += 1
-        c.execute("UPDATE Keyword SET ? = ? WHERE ID = ?", (keyword_list["PoorCirculation"], key, "choo@naver.com"))
+        c.execute("UPDATE Keyword SET k6 = ? WHERE ID = ?", (key, "choo@naver.com"))
 
     elif lower[0] is 1:
-        c.execute("SELECT ? FROM Keyword WHERE ID = ?", (keyword_list["PelvisImbalance"], "choo@naver.com"))
+        c.execute("SELECT k2 FROM Keyword WHERE ID = ?", ( "choo@naver.com",))
         key = int(c.fetchone()[0])
         key += 1
-        c.execute("UPDATE Keyword SET ? = ? WHERE ID = ?", (keyword_list["PelvisImbalance"], key, "choo@naver.com"))
+        c.execute("UPDATE Keyword SET k2 = ? WHERE ID = ?", (key, "choo@naver.com"))
 
-        c.execute("SELECT ? FROM Keyword WHERE ID = ?", (keyword_list["Scoliosis"], "choo@naver.com"))
+        c.execute("SELECT k3 FROM Keyword WHERE ID = ?", ("choo@naver.com",))
         key = int(c.fetchone()[0])
         key += 1
-        c.execute("UPDATE Keyword SET ? = ? WHERE ID = ?", (keyword_list["Scoliosis"], key, "choo@naver.com"))
+        c.execute("UPDATE Keyword SET k3 = ? WHERE ID = ?", (key, "choo@naver.com"))
 
     if lower[1] is 1 and upper is not 2:
-        c.execute("SELECT ? FROM Keyword WHERE ID = ?", (keyword_list["Slouched"], "choo@naver.com"))
+        c.execute("SELECT k1 FROM Keyword WHERE ID = ?", ("choo@naver.com",))
         key = int(c.fetchone()[0])
         key += 1
-        c.execute("UPDATE Keyword SET ? = ? WHERE ID = ?", (keyword_list["Scoliosis"], key, "choo@naver.com"))
+        c.execute("UPDATE Keyword SET k1 = ? WHERE ID = ?", (key, "choo@naver.com"))
 
     conn.commit()
 
