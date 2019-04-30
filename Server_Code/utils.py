@@ -190,14 +190,11 @@ def is_alarm(upper, lower):
         upper_temp[0]=1
     if upper==2:
         upper_temp[1]=1
-    print(upper_temp, lower)
     current = upper_temp+lower
-    print(current)
     result = [0]*len(current)
     for i in range(len(current)):
         if current[i]==alarm_list[i]:
             result[i]=current[i]
-    print("result", result)
 
     notification_list = {"Alright":0, "moreThanOne":1, "turtle/bowed":2, "backbone":3, "legs":4, "others":5}
     if sum(result)==0: #바른자세
