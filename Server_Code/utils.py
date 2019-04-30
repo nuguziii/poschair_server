@@ -134,7 +134,7 @@ def messaging(upper, lower, save_db=False, send_android=False):
     if save_db:
     	conn = sqlite3.connect("../../POSCHAIR.db")
     	c = conn.cursor()
-        
+
 
         input = [datetime.now().strftime('%Y-%m-%d %H:%M:%S'), "choo@naver.com", pos_upper1, pos_lower1, pos_lower2, pos_lower3, pos_lower4]
 
@@ -165,7 +165,7 @@ def is_alarm():
     #posture_data 이용해서 판단하기 10분전
     cur.execute("SELECT * FROM Posture_data WHERE date BETWEEN t_old AND t_now")
     rows = cur.fetchall()
-    
+
     upper1cnt = 0
     lower1cnt = 0
     lower2cnt = 0
@@ -269,106 +269,90 @@ def generate_alarm(alarm_value):
     print('Successfully sent message:', response)
 
 
-
-
-
 def keyword_matching(upper, lower):
     #=====================================
     # save in Keyword Database
     # - input:
-    #   upper: int type 1/2/3
-    #   lower: list type [1,1,1,1] 0/1
+    #   upper: int type
+    #   lower: list type
     #======================================
-	    
-	keyword_list = {"목디스크":"k0", "거북목":"k1", "어깨굽음":"k2", "골반불균형":"k3", "척추틀어짐":"k4", "고관절통증":"k5", "무릎통증":"k6", "혈액순환":"k7"}
+    # {"Alright":0, "Turtle/Bowed":1, "Slouched":2}
+	keyword_list = {"Turtle/Bowed":"k0", "Slouched":"k1", "PelvisImbalance":"k2", "Scoliosis":"k3", "HipPain":"k4", "KneePain":"k5", "PoorCirculation":"k6"}
     now = datetime.datetime.now()
-    #DB에서 해당되는 키워드에 +1을 해줌 (Upper 경우)
 
     conn = sqlite3.connect("../../POSCHAIR.db")
     c = conn.cursor()
 
     if upper is 1:
-        keyword_list["목디스크"]
-
-        c.execute("SELECT k0 FROM Keyword WHERE ID = ?", ("choo@naver.com",))
-        k0 = c.fetchone()[0]
-        k0 += 1
-        c.execute("UPDATE Keyword SET k0 = ? WHERE ID = ?", (k0, "choo@naver.com"))
-        
+        c.execute("SELECT ? FROM Keyword WHERE ID = ?", (keyword_list["Turtle/Bowed"], "choo@naver.com"))
+        key = c.fetchone()[0]
+        key += 1
+        c.execute("UPDATE Keyword SET ? = ? WHERE ID = ?", (keyword_list["Turtle/Bowed"], key, "choo@naver.com"))
 
     elif upper is 2:
-        keyword_list["거북목"]
-        c.execute("SELECT k1 FROM Keyword WHERE ID = ?", ("choo@naver.com",))
-        k1 = c.fetchone()[0]
-        k1 += 1
-        c.execute("UPDATE Keyword SET k1 = ? WHERE ID = ?", (k1, "choo@naver.com"))
-
-
-    elif upper is 3 or upper is 4:
-        keyword_list["어깨굽음"]
-        c.execute("SELECT k2 FROM Keyword WHERE ID = ?", ("choo@naver.com",))
-        k2 = c.fetchone()[0]
-        k2 += 1
-        c.execute("UPDATE Keyword SET k2 = ? WHERE ID = ?", (k2, "choo@naver.com"))
+        c.execute("SELECT ? FROM Keyword WHERE ID = ?", (keyword_list["Slouched"], "choo@naver.com"))
+        key = c.fetchone()[0]
+        key += 1
+        c.execute("UPDATE Keyword SET ? = ? WHERE ID = ?", (keyword_list["Slouched"], key, "choo@naver.com"))
 
     #DB에서 해당되는 키워드에 +1을 해줌 (Lower 경우)
     if lower[2] is 1:
-        keyword_list["골반불균형"]
-        c.execute("SELECT k3 FROM Keyword WHERE ID = ?", ("choo@naver.com",))
-        k3 = c.fetchone()[0]
-        k3 += 1
-        c.execute("UPDATE Keyword SET k3 = ? WHERE ID = ?", (k3, "choo@naver.com"))
+        c.execute("SELECT ? FROM Keyword WHERE ID = ?", (keyword_list["PelvisImbalance"], "choo@naver.com"))
+        key = c.fetchone()[0]
+        key += 1
+        c.execute("UPDATE Keyword SET ? = ? WHERE ID = ?", (key, "choo@naver.com"))
 
-        keyword_list["척추틀어짐"]
-        c.execute("SELECT k4 FROM Keyword WHERE ID = ?", ("choo@naver.com",))
-        k4 = c.fetchone()[0]
-        k4 += 1
-        c.execute("UPDATE Keyword SET k4 = ? WHERE ID = ?", (k4, "choo@naver.com"))
+        c.execute("SELECT ? FROM Keyword WHERE ID = ?", (keyword_list["Scoliosis"], "choo@naver.com"))
+        key = c.fetchone()[0]
+        key += 1
+        c.execute("UPDATE Keyword SET ? = ? WHERE ID = ?", (keyword_list["Scoliosis"], key, "choo@naver.com"))
 
-        keyword_list["고관절통증"]
-        c.execute("SELECT k5 FROM Keyword WHERE ID = ?", ("choo@naver.com",))
-        k5 = c.fetchone()[0]
-        k5 += 1
-        c.execute("UPDATE Keyword SET k5 = ? WHERE ID = ?", (k5, "choo@naver.com"))
+        c.execute("SELECT ? FROM Keyword WHERE ID = ?", (keyword_list["HipPain"], "choo@naver.com"))
+        key = c.fetchone()[0]
+        key += 1
+        c.execute("UPDATE Keyword SET ? = ? WHERE ID = ?", (keyword_list["HipPain"], key, "choo@naver.com"))
 
-        keyword_list["무릎통증"]
-        c.execute("SELECT k6 FROM Keyword WHERE ID = ?", ("choo@naver.com",))
-        k6 = c.fetchone()[0]
-        k6 += 1
-        c.execute("UPDATE Keyword SET k6 = ? WHERE ID = ?", (k6, "choo@naver.com"))
+        c.execute("SELECT ? FROM Keyword WHERE ID = ?", (keyword_list["KneePain"], "choo@naver.com"))
+        key = c.fetchone()[0]
+        key += 1
+        c.execute("UPDATE Keyword SET ? = ? WHERE ID = ?", (keyword_list["KneePain"], key, "choo@naver.com"))
 
     elif lower[3] is 1:
-        keyword_list["골반불균형"]
-        c.execute("SELECT k3 FROM Keyword WHERE ID = ?", ("choo@naver.com",))
-        k3 = c.fetchone()[0]
-        k3 += 1
-        c.execute("UPDATE Keyword SET k3 = ? WHERE ID = ?", (k3, "choo@naver.com"))
+        c.execute("SELECT ? FROM Keyword WHERE ID = ?", (keyword_list["PelvisImbalance"], "choo@naver.com"))
+        key = c.fetchone()[0]
+        key += 1
+        c.execute("UPDATE Keyword SET ? = ? WHERE ID = ?", (keyword_list["PelvisImbalance"], key, "choo@naver.com"))
 
-        keyword_list["척추틀어짐"]
-        c.execute("SELECT k4 FROM Keyword WHERE ID = ?", ("choo@naver.com",))
-        k4 = c.fetchone()[0]
-        k4 += 1
-        c.execute("UPDATE Keyword SET k4 = ? WHERE ID = ?", (k4, "choo@naver.com"))
+        c.execute("SELECT ? FROM Keyword WHERE ID = ?", (keyword_list["Scoliosis"], "choo@naver.com"))
+        key = c.fetchone()[0]
+        key += 1
+        c.execute("UPDATE Keyword SET ? = ? WHERE ID = ?", (keyword_list["Scoliosis"], key, "choo@naver.com"))
 
 
-        keyword_list["혈액순환"]
-        c.execute("SELECT k7 FROM Keyword WHERE ID = ?", ("choo@naver.com",))
-        k7 = c.fetchone()[0]
-        k7 += 1
-        c.execute("UPDATE Keyword SET k7 = ? WHERE ID = ?", (k7, "choo@naver.com"))
-
+        c.execute("SELECT ? FROM Keyword WHERE ID = ?", (keyword_list["PoorCirculation"], "choo@naver.com"))
+        key = c.fetchone()[0]
+        key += 1
+        c.execute("UPDATE Keyword SET ? = ? WHERE ID = ?", (keyword_list["PoorCirculation"], key, "choo@naver.com"))
 
     elif lower[0] is 1:
-        keyword_list["골반불균형"]
-        keyword_list["척추틀어짐"]
-        c.execute("SELECT k3 FROM Keyword WHERE ID = ?", ("choo@naver.com",))
-        k0 = c.fetchone()[0]
+        c.execute("SELECT ? FROM Keyword WHERE ID = ?", (keyword_list["PelvisImbalance"], "choo@naver.com"))
+        key = c.fetchone()[0]
+        key += 1
+        c.execute("UPDATE Keyword SET ? = ? WHERE ID = ?", (keyword_list["PelvisImbalance"], key, "choo@naver.com"))
 
-    if lower[1] is 1 and upper is not 3:
-        keyword_list["어깨굽음"]
-        c.execute("SELECT k3 FROM Keyword WHERE ID = ?", ("choo@naver.com",))
-        k0 = c.fetchone()[0]
-	
+        c.execute("SELECT ? FROM Keyword WHERE ID = ?", (keyword_list["Scoliosis"], "choo@naver.com"))
+        key = c.fetchone()[0]
+        key += 1
+        c.execute("UPDATE Keyword SET ? = ? WHERE ID = ?", (keyword_list["Scoliosis"], key, "choo@naver.com"))
+
+    if lower[1] is 1 and upper is not 2:
+        c.execute("SELECT ? FROM Keyword WHERE ID = ?", (keyword_list["Slouched"], "choo@naver.com"))
+        key = c.fetchone()[0]
+        key += 1
+        c.execute("UPDATE Keyword SET ? = ? WHERE ID = ?", (keyword_list["Scoliosis"], key, "choo@naver.com"))
+
+    conn.commit()
+
 
 def generate_keyword_for_video_matching():
     #=====================================
@@ -396,7 +380,7 @@ def generate_keyword_for_video_matching():
 
     for row in rows:
         for i in range(7):
-            keyword_dict["k"+str(i)] += row[i+1] 
+            keyword_dict["k"+str(i)] += row[i+1]
 
 
     return keyword_dict
@@ -415,7 +399,7 @@ def video_matching(keyword):
     video_list = []
 
     for k, v in dictionary.items():
-    	if v == sorted_key[0][0]: 
+    	if v == sorted_key[0][0]:
         	video_list.append(video_dict[k])
 
     	if len(video_list)>3:
