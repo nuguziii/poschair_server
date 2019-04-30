@@ -1,12 +1,12 @@
 import firebase_admin
 from firebase_admin import credentials
-from flask import Flask
+# from flask import Flask
 import time
 
 # create a flask application - this ``app`` object will be used to handle
 # inbound requests, routing them to the proper 'view' functions, etc
-app = Flask(__name__)
-app.config.from_object(__name__)
+# app = Flask(__name__)
+# app.config.from_object(__name__)
 
 def generate_alarm(alarm_value):
     #=====================================
@@ -28,7 +28,7 @@ def generate_alarm(alarm_value):
         posture = 'turtle neck'
     elif (alarm_value ==2):
         posture = 'slouched'
-    
+
     print("entered firebase credential")
     cred = credentials.Certificate('/root/poschair-134c8-firebase-adminsdk-1i2vn-01f260312b.json')
     app = firebase_admin.initialize_app(cred)
@@ -69,13 +69,13 @@ def generate_alarm(alarm_value):
     print('Successfully sent message:', response)
 
 
-
-@app.route('/', methods=['POST'])
-def result():
-    generate_alarm(1)
-    print("sucess")
-    time.sleep(20)
-    return "Done!"
+# @app.route('/', methods=['POST'])
+# def result():
+#     generate_alarm(1)
+#     print("sucess")
+#     time.sleep(20)
+#     return "Done!"
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=80, debug=False)
+    generate_alarm(1)
+    time.sleep(1000)
