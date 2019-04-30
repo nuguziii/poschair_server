@@ -18,7 +18,6 @@ if __name__ == '__main__':
     
 	lower_init = rows.replace('[','').replace(']','').split(',')
 	lower_init = list(map(int, lower_init))
-	print(lower_init)
 
     
     #계속 돌면서 keyword 저장
@@ -51,7 +50,7 @@ if __name__ == '__main__':
 			conn = sqlite3.connect("../../POSCHAIR.db")
 			c = conn.cursor()
 			input = [datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'), "choo@naver.com", upper, lower[0], lower[1], lower[2], lower[3]]
-			cur.execute("INSERT INTO Posture_data VALUES (?,?,?,?,?,?,?)", input)
+			c.execute("INSERT INTO Posture_data VALUES (?,?,?,?,?,?,?)", input)
 
             #키워드 매칭 알고리즘(DB에 저장하는 함수)
 			keyword_matching(upper, lower) #자세 값을 기반으로 디비에 해당 키워드 별 +1 해줌

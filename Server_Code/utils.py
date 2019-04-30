@@ -62,7 +62,6 @@ def LBCNet(image, guide):
     y_p = np.rint(temp_y)
 
     elapsed_time = time.time() - start_time
-    print(y_p, elapsed_time)
 
     return y_p
 
