@@ -52,16 +52,17 @@ def generate_alarm(alarm_value):
     topic = 'poschair'
 
     # See documentation on defining a message payload.
+    # The topic name can be optionally prefixed with "/topics/".
+    topic = 'highScores'
+
+    # See documentation on defining a message payload.
     message = messaging.Message(
-        android=messaging.AndroidConfig(
-                ttl=0, #즉시 보낸다는 뜻
-                priority='normal',
-                notification=messaging.AndroidNotification(
-                    title='Mind your posture!',
-                    body=posture,
-                ),
-        )
-    )
+        data={
+            'title': 'Poschair',
+            'body': 'Mind your posture!',
+            },
+            topic=topic,
+            )
 
     # Send a message to the devices subscribed to the provided topic.
     response = messaging.send(message)
