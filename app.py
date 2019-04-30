@@ -8,7 +8,10 @@ from flask import session
 from flask import url_for, abort, render_template, flash
 from functools import wraps
 from hashlib import md5
-from peewee import *
+
+import sqlite3
+import json
+
 
 # config - aside from our database, the rest is for use by Flask
 DATABASE = 'POSCHAIR.db'
@@ -40,7 +43,6 @@ class User(BaseModel):
     ID = CharField(unique=True)
     pos_upper = CharField()
     pos_lower = CharField()
-
 
 
 def get_object_or_404(model, *expressions):
@@ -110,7 +112,7 @@ def signup():
 
 	return render_template('./index.html')
 
-	
+
 
 @app.route('/addInfo/', methods=['GET', 'POST'])
 def addInfo():
@@ -130,15 +132,65 @@ def addInfo():
 		except IntegrityError:
 			return 'addInfo_error'
 
-@app.route('/image/',methods=['GET','POST'])
-def getImage():
-	return '<img src='+url_for('static',filename='posture_sample.png')+'>'
+@app.route('/video/',methods=['GET','POST'])
+def sendVideoList():
+    if request.method == 'GET':
+        user_id = request.form['user_id']
+
+        conn = sqlite3.connect("../../POSCHAIR.db")
+        conn.row_factory = sqlite3.Row
+        c = conn.cursor()
+
+        if request.form['isVideoLike']==0: #추천 영상 비디오
+            rows = c.execute('''
+                             select * from Youtube_Video
+                             ''').fetchall()
+            conn.commit()
+            conn.close()
+
+            return json.dumps([dict(i) for i in rows])
+
+        else: #사용자가 좋아한 비디오
+            rows = c.execute('''
+                             select * from Youtube_Video where liked=1
+                             ''').fetchall()
+            conn.commit()
+            conn.close()
+
+            return json.dumps([dict(i) for i in rows])
+
+
+@app.route('/changeVideoLike/',methods=['GET','POST'])
+def updateVideoLike():
+    if request.method == 'POST':
+        user_id = request.form['user_id']
+        videoID = request.form['videoID']
+        isLike = request.form['isLike']
+
+        conn = sqlite3.connect("../../POSCHAIR.db")
+        c = conn.cursor()
+
+        if isLike == "like": # 좋아요 x -> 좋아요 db 업데이트
+            c.execute("update Youtube_Video set liked=1 where vidID={}".format(videoID))
+            conn.commit()
+            conn.close()
+
+            return "success"
+
+        else: #isLike=="unlike" : 좋아요 -> 좋아요 취소 db 업데이트
+            c.execute("update Youtube_Video set liked=0 where vidID={}".format(videoID))
+            conn.commit()
+            conn.close()
+
+            return "success"
 
 @app.route('/posture/', methods=['GET', 'POST'])
 def getLabel():
-	#label string으로 반환한다
+	#label(int 값) string으로 반환한다
 	if request.method == 'GET':
-		
+
+        return label
+
 
 if __name__=='__main__':
 	print('connection succeeded')
