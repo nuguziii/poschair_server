@@ -372,23 +372,24 @@ def video_matching(keyword):
     # video url list string 형태로 안드로이드에 보냄
     # - input: keyword(dictionary)
     #======================================
-    keyword_list = {"목디스크":0, "거북목":1, "어깨굽음":2, "골반불균형":3, "척추틀어짐":4, "고관절통증":5, "무릎통증":6, "혈액순환":7}
-    video_dict = {0:"목운동", 1:"거북목운동", 2:"어깨/허리스트레칭", 3:"골반교정운동/체형교정운동", 4:"척추교정운동", 5:"고관절스트레칭", 6:"무릎운동", 7:"다리스트레칭/혈액순환", 8:"전신"}
+    # {"Turtle/Bowed":"k0", "Slouched":"k1", "PelvisImbalance":"k2", "Scoliosis":"k3", "HipPain":"k4", "KneePain":"k5", "PoorCirculation":"k6"}
+    keyword_list = {"k0":1, "k1":2, "k2":3, "k3":4, "k4":5, "k5":6, "k6":7}
+    # {"k0":"거북목운동", "k1":"어깨/허리스트레칭", "k2":"골반교정운동/체형교정운동", "k3":"척추교정운동", "k4":"고관절스트레칭", "k5":"무릎운동", "k6":"다리스트레칭/혈액순환", "k7":"전신"}
+    video_dict = {"k0":0, "k1":1, "k2":2, "k3":3, "k4":4, "k5":5, "k6":6, "k7":7}
     import operator
     sorted_key = sorted(keyword.items(), key=operator.itemgetter(1), reverse=True) #시간 많은 순으로 정렬
 
     video_list = []
 
-    for k, v in dictionary.items():
-    	if v == sorted_key[0][0]:
-        	video_list.append(video_dict[k])
-
-    	if len(video_list)>3:
-        	video_list = [video_dict[8]]
+    if sorted_key[0][1] == sorted_key[1][1]:
+        video_keyword = video_dict["k7"]
+    else:
+        video_keyword = video_dict[sorted_key[0][0]]
 
     '''
     video_list에 해당하는 url들 db에서 가져오기
     가져올 때 조희수/like 수 등 생각해서 높은 순서대로 상위 5개 가져오기.
     '''
+
 
     ''' url list 안드로이드에 전송 '''
