@@ -29,8 +29,10 @@ def generate_alarm(alarm_value):
     elif (alarm_value ==2):
         posture = 'slouched'
 
+    print("entered firebase credential")
     cred = credentials.Certificate('/root/poschair-134c8-firebase-adminsdk-1i2vn-01f260312b.json')
     app = firebase_admin.initialize_app(cred)
+    print("finished firebase credential")
 
     # # This registration token comes from the client FCM SDKs.
     # registration_token = 'YOUR_REGISTRATION_TOKEN'
@@ -66,13 +68,13 @@ def generate_alarm(alarm_value):
     # Response is a message ID string.
     print('Successfully sent message:', response)
 
-
-
 # @app.route('/', methods=['POST'])
-# def result:
-#     generate_alarm(1);
-#
+# def result():
+#     generate_alarm(1)
+#     print("sucess")
+#     time.sleep(20)
 #     return "Done!"
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=80, debug=False)
+    generate_alarm(1)
+    time.sleep(1000)
