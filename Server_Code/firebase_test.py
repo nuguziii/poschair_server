@@ -1,10 +1,12 @@
 import firebase_admin
 from firebase_admin import credentials
+from firebase_admin import messaging
+import time
 
 # create a flask application - this ``app`` object will be used to handle
 # inbound requests, routing them to the proper 'view' functions, etc
-app = Flask(__name__)
-app.config.from_object(__name__)
+# app = Flask(__name__)
+# app.config.from_object(__name__)
 
 def generate_alarm(alarm_value):
     #=====================================
@@ -66,11 +68,11 @@ def generate_alarm(alarm_value):
 
 
 
-@app.route('/', methods=['POST'])
-def result:
-    generate_alarm(1);
-
-    return "Done!"
+# @app.route('/', methods=['POST'])
+# def result:
+#     generate_alarm(1);
+#
+#     return "Done!"
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=80, debug=False)
