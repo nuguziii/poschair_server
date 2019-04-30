@@ -99,8 +99,18 @@ def messaging(upper, lower, save_db=False, send_android=False):
     messaging_list = {"Alright":0, "moreThanOne":1, "turtle/bowed":2, "legsOnChair":3, "crossedLegs":4, "backbone":5, "others":6}
     send_result = None
 
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> 9a3e125523958f31c88d4d06b16be3f5c85838ff
     if upper==0 and sum(lower)==0: #둘다 바른자세일 경우 (바른 자세입니다.)
         send_result = messaging_list["Alright"]
+        pos_upper1 = 0
+        pos_lower1 = 0
+        pos_lower2 = 0
+        pos_lower3 = 0
+        pos_lower4 = 0
 
     if (upper==1 or upper==2) and (lower[0]==1 or lower[2]==1 or lower[3]==1): #전체적으로 바른자세 유지
         # 전체적으로 몸이 틀어져있습니다.
@@ -108,33 +118,31 @@ def messaging(upper, lower, save_db=False, send_android=False):
     elif upper==1:
         # 혹시 목을 숙이고 있으신가요?
         send_result = messaging_list["turtle/bowed"]
+        pos_upper1 = 1
     elif lower[3]==1:
         # 혹시 다리를 꼬고 계신가요?
         send_result = messaging_list["legsOnChair"]
+        pos_lower3 = 1
     elif lower[2]==1:
         # 혹시 다리를 의자 위에 올려놓고 계신가요?
         send_result = messaging_list["crossedLegs"]
+        pos_lower2 = 1
     elif lower[1]==1:
         # 허리를 바르게 유지하고 계신가요?
         send_result = messaging_list["backbone"]
+        pos_lower1 = 1
     else:
         send_result = messaging_list["others"]
 
     if save_db:
-    	#conn = sqlite3.connect("../../POSCHAIR.db")
-    	#c = conn.cursor()
-        '''try:
-            with database.atomic():
-                save = Posture_data.create(
-                    ID='choo@naver.com',
-                    timestamp=datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
-                    pos_upper=upper,
-                    pos_lower=lower
-                    )
-                return "success"
-        except IntegrityError:
-            return "Integrity Error"
-		'''
+    	conn = sqlite3.connect("../../POSCHAIR.db")
+    	c = conn.cursor()
+        
+
+        input = [datetime.now().strftime('%Y-%m-%d %H:%M:%S'), "choo@naver.com", pos_upper1, pos_lower1, pos_lower2, pos_lower3, pos_lower4]
+
+
+        cur.execute("INSERT INTO Posture_data VALUES (?,?,?,?,?,?,?)", input)
         return send_list
 
     if send_android:
@@ -148,21 +156,34 @@ def is_alarm():
     #{"바른자세":0, "목":2, "어깨":3, "다리꼬기":4, "앞으로 기울임":5, "뒤로기댐":6, "양반다리":7, "불균형":8, "error":-1}
     alarm_list = []
     '''DB에서 10분간 데이터 계산해서 85% 비율을 차지한 자세를 alarm_list에 넣음'''
+
+    d = data()
+    conn = sqlite3.connect("../../POSCHAIR.db")
+    c = conn.cursor()
+
     #bring data of 10 minutes from the database
     t_now = datetime.datetime.now()
     t_old = t_now - datetime.timedelta(minutes = 10)
+
     #posture_data 이용해서 판단하기 10분전
-    #cur.execute("SELECT * FROM Posture_data WHERE date BETWEEN t_old AND t_now")
-    #rows = cur.fetchall()
-    #count = 0
+    cur.execute("SELECT * FROM Posture_data WHERE date BETWEEN t_old AND t_now")
+    rows = cur.fetchall()
     
-    #for row in rows:
-    #	print(row)
+    upper1cnt = 0
+    lower1cnt = 0
+    lower2cnt = 0
+    lower3cnt = 0
+    lower4cnt = 0
+
+    for row in rows:
 
 
     #check if the percentage is over 85%
 
     #put the posture in the alarm_list
+
+
+
     #교집합 구하기
     result = [0]*len(a)
     for i in range(len(a)):
@@ -245,150 +266,96 @@ def keyword_matching(upper, lower):
     #   upper: int type
     #   lower: list type
     #======================================
-	'''    
+	    
 	keyword_list = {"목디스크":"k0", "거북목":"k1", "어깨굽음":"k2", "골반불균형":"k3", "척추틀어짐":"k4", "고관절통증":"k5", "무릎통증":"k6", "혈액순환":"k7"}
     now = datetime.datetime.now()
-     DB에서 해당되는 키워드에 +1을 해줌 (Upper 경우)
+    #DB에서 해당되는 키워드에 +1을 해줌 (Upper 경우)
+
+    conn = sqlite3.connect("../../POSCHAIR.db")
+    c = conn.cursor()
+
     if upper is 1:
         keyword_list["목디스크"]
-        try:
-            with database.atomic():
-                temp = int(Keyword.select(Keyword.k0).where(Keyword.ID == "choo@naver.com"))
-                temp += 1
-                query = Keyword.update(
-                    Keyword.k0 = int(temp)
-                    ).where(Keyword.ID == "choo@naver.com")
-            return "keyword_update_success"
-        except IntegrityError:
-            return "Integrity Error"
+
+        c.execute("SELECT k0 FROM Keyword WHERE ID = ?", ("choo@naver.com",))
+        k0 = c.fetchone()[0]
+        k0 += 1
+        c.execute("UPDATE Keyword SET k0 = ? WHERE ID = ?", (k0, "choo@naver.com"))
+        
 
     elif upper is 2:
         keyword_list["거북목"]
-        try:
-            with database.atomic():
-                temp = int(Keyword.select(Keyword.k1).where(Keyword.ID == "choo@naver.com"))
-                temp ++
-                query = Keyword.update(
-                    Keyword.k1 = int(temp)
-                    ).where(Keyword.ID == "choo@naver.com")
-            return "keyword_update_success"
-        except IntegrityError:
-            return "Integrity Error"
+        c.execute("SELECT k1 FROM Keyword WHERE ID = ?", ("choo@naver.com",))
+        k1 = c.fetchone()[0]
+        k1 += 1
+        c.execute("UPDATE Keyword SET k1 = ? WHERE ID = ?", (k1, "choo@naver.com"))
 
 
     elif upper is 3 or upper is 4:
         keyword_list["어깨굽음"]
-        try:
-            with database.atomic():
-                temp = int(Keyword.select(Keyword.k2).where(Keyword.ID == "choo@naver.com"))
-                temp ++
-                query = Keyword.update(
-                    Keyword.k2 = int(temp)
-                    ).where(Keyword.ID == "choo@naver.com")
-            return "keyword_update_success"
-        except IntegrityError:
-            return "Integrity Error"
+        c.execute("SELECT k2 FROM Keyword WHERE ID = ?", ("choo@naver.com",))
+        k2 = c.fetchone()[0]
+        k2 += 1
+        c.execute("UPDATE Keyword SET k2 = ? WHERE ID = ?", (k2, "choo@naver.com"))
 
-     DB에서 해당되는 키워드에 +1을 해줌 (Lower 경우)
+    #DB에서 해당되는 키워드에 +1을 해줌 (Lower 경우)
     if lower[2] is 1:
         keyword_list["골반불균형"]
-        try:
-            with database.atomic():
-                temp = int(Keyword.select(Keyword.k3).where(Keyword.ID == "choo@naver.com"))
-                temp ++
-                query = Keyword.update(
-                    Keyword.k3 = int(temp)
-                    ).where(Keyword.ID == "choo@naver.com")
-            return "keyword_update_success"
-        except IntegrityError:
-            return "Integrity Error"
+        c.execute("SELECT k3 FROM Keyword WHERE ID = ?", ("choo@naver.com",))
+        k3 = c.fetchone()[0]
+        k3 += 1
+        c.execute("UPDATE Keyword SET k3 = ? WHERE ID = ?", (k3, "choo@naver.com"))
 
         keyword_list["척추틀어짐"]
-        try:
-            with database.atomic():
-                temp = int(Keyword.select(Keyword.k4).where(Keyword.ID == "choo@naver.com"))
-                temp ++
-                query = Keyword.update(
-                    Keyword.k4 = int(temp)
-                    ).where(Keyword.ID == "choo@naver.com")
-            return "keyword_update_success"
-        except IntegrityError:
-            return "Integrity Error"
-
+        c.execute("SELECT k4 FROM Keyword WHERE ID = ?", ("choo@naver.com",))
+        k4 = c.fetchone()[0]
+        k4 += 1
+        c.execute("UPDATE Keyword SET k4 = ? WHERE ID = ?", (k4, "choo@naver.com"))
 
         keyword_list["고관절통증"]
-        try:
-            with database.atomic():
-                temp = int(Keyword.select(Keyword.k5).where(Keyword.ID == "choo@naver.com"))
-                temp ++
-                query = Keyword.update(
-                    Keyword.k5 = int(temp)
-                    ).where(Keyword.ID == "choo@naver.com")
-            return "keyword_update_success"
-        except IntegrityError:
-            return "Integrity Error"
-
-
+        c.execute("SELECT k5 FROM Keyword WHERE ID = ?", ("choo@naver.com",))
+        k5 = c.fetchone()[0]
+        k5 += 1
+        c.execute("UPDATE Keyword SET k5 = ? WHERE ID = ?", (k5, "choo@naver.com"))
 
         keyword_list["무릎통증"]
-        try:
-            with database.atomic():
-                temp = int(Keyword.select(Keyword.k6).where(Keyword.ID == "choo@naver.com"))
-                temp ++
-                query = Keyword.update(
-                    Keyword.k6 = int(temp)
-                    ).where(Keyword.ID == "choo@naver.com")
-            return "keyword_update_success"
-        except IntegrityError:
-            return "Integrity Error"
-
+        c.execute("SELECT k6 FROM Keyword WHERE ID = ?", ("choo@naver.com",))
+        k6 = c.fetchone()[0]
+        k6 += 1
+        c.execute("UPDATE Keyword SET k6 = ? WHERE ID = ?", (k6, "choo@naver.com"))
 
     elif lower[3] is 1:
         keyword_list["골반불균형"]
-        try:
-            with database.atomic():
-                temp = int(Keyword.select(Keyword.k3).where(Keyword.ID == "choo@naver.com"))
-                temp ++
-                query = Keyword.update(
-                    Keyword.k3 = int(temp)
-                    ).where(Keyword.ID == "choo@naver.com")
-            return "keyword_update_success"
-        except IntegrityError:
-            return "Integrity Error"
+        c.execute("SELECT k3 FROM Keyword WHERE ID = ?", ("choo@naver.com",))
+        k3 = c.fetchone()[0]
+        k3 += 1
+        c.execute("UPDATE Keyword SET k3 = ? WHERE ID = ?", (k3, "choo@naver.com"))
 
         keyword_list["척추틀어짐"]
-        try:
-            with database.atomic():
-                temp = int(Keyword.select(Keyword.k4).where(Keyword.ID == "choo@naver.com"))
-                temp ++
-                query = Keyword.update(
-                    Keyword.k4 = int(temp)
-                    ).where(Keyword.ID == "choo@naver.com")
-            return "keyword_update_success"
-        except IntegrityError:
-            return "Integrity Error"
+        c.execute("SELECT k4 FROM Keyword WHERE ID = ?", ("choo@naver.com",))
+        k4 = c.fetchone()[0]
+        k4 += 1
+        c.execute("UPDATE Keyword SET k4 = ? WHERE ID = ?", (k4, "choo@naver.com"))
 
 
         keyword_list["혈액순환"]
-        try:
-            with database.atomic():
-                temp = int(Keyword.select(Keyword.k7).where(Keyword.ID == "choo@naver.com"))
-                temp ++
-                query = Keyword.update(
-                    Keyword.k7 = int(temp)
-                    ).where(Keyword.ID == "choo@naver.com")
-            return "keyword_update_success"
-        except IntegrityError:
-            return "Integrity Error"
+        c.execute("SELECT k7 FROM Keyword WHERE ID = ?", ("choo@naver.com",))
+        k7 = c.fetchone()[0]
+        k7 += 1
+        c.execute("UPDATE Keyword SET k7 = ? WHERE ID = ?", (k7, "choo@naver.com"))
 
 
     elif lower[0] is 1:
         keyword_list["골반불균형"]
         keyword_list["척추틀어짐"]
+        c.execute("SELECT k3 FROM Keyword WHERE ID = ?", ("choo@naver.com",))
+        k0 = c.fetchone()[0]
 
     if lower[1] is 1 and upper is not 3:
         keyword_list["어깨굽음"]
-	'''
+        c.execute("SELECT k3 FROM Keyword WHERE ID = ?", ("choo@naver.com",))
+        k0 = c.fetchone()[0]
+	
 
 def generate_keyword_for_video_matching():
     #=====================================
@@ -402,7 +369,19 @@ def generate_keyword_for_video_matching():
     1. DB에서 n시간 정도의 자세 키워드 데이터 가져옴
     2. 각 키워드 별 시간 계산해서 dictionary 형태로 출력
     '''
+
+    conn = sqlite3.connect("../../POSCHAIR.db")
+    c = conn.cursor()
+
     keyword_dict = None
+
+    t_now = datetime.datetime.now()
+    t_old = t_now - datetime.timedelta(minutes = 10)
+
+    cur.execute("SELECT * FROM Keyword WHERE date BETWEEN t_old AND t_now")
+    rows = cur.fetchall()
+
+
     return keyword_dict
 
 def video_matching(keyword):
