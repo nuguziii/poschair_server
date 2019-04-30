@@ -357,7 +357,7 @@ def generate_keyword_for_video_matching():
     t_now = datetime.datetime.now()
     t_old = t_now - datetime.timedelta(hours = 48)
 
-    c.execute("SELECT * FROM Keyword WHERE ID = ?", ("choo@naver.com"))
+    c.execute("SELECT * FROM Keyword WHERE ID = ?", ("choo@naver.com",))
     rows = c.fetchall()
 
     for row in rows:
