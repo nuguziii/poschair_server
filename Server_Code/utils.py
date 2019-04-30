@@ -98,7 +98,6 @@ def messaging(upper, lower):
     send_result = None
 
 
-    print(lower)
     if upper==0 and sum(lower)==0: #둘다 바른자세일 경우 (바른 자세입니다.)
         send_result = messaging_list["Alright"]
     if (upper==1 or upper==2):
@@ -142,8 +141,6 @@ def is_alarm(upper, lower):
     t_now = datetime.datetime.now()
     t_old = t_now - datetime.timedelta(minutes = 10)
 
-    print(t_now, " ", t_old)
-
     #posture_data 이용해서 판단하기 10분전
     c.execute("SELECT * FROM Posture_data WHERE date BETWEEN ? AND ?", (t_old, t_now))
     rows = c.fetchall()
@@ -157,7 +154,6 @@ def is_alarm(upper, lower):
     cnt = 0
 
     for row in rows:
-        print(row)
         if row[2]==1:
             upper1cnt += 1
         if row[2]==2:
