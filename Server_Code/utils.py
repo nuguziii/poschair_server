@@ -275,7 +275,7 @@ def keyword_matching(upper, lower):
         key = c.fetchone()[0]
         print(key, type(key))
         key += 1
-        c.execute("UPDATE Keyword SET ? = ? WHERE ID = ?", (keyword_list["Slouched"], key, "choo@naver.com"))
+        c.execute("UPDATE Keyword SET k1 = ? WHERE ID = ?", (key, "choo@naver.com"))
 
     #DB에서 해당되는 키워드에 +1을 해줌 (Lower 경우)
     if lower[2] is 1:
