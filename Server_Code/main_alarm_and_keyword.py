@@ -41,6 +41,7 @@ if __name__ == '__main__':
 			lower = LBCNet(d.generator(lower_median_total), d.generator(lower_init)) #lower 자세값
 			upper = upper_balance_check(upper_median_total) #upper 자세값 받아옴.
 
+			lower = lower.reshape(4).tolist()
 			print(lower, upper)
 
             

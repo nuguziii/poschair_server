@@ -99,7 +99,7 @@ def messaging(upper, lower):
     send_result = None
 
 
-
+    print(lower)
     if upper==0 and sum(lower)==0: #둘다 바른자세일 경우 (바른 자세입니다.)
         send_result = messaging_list["Alright"]
     if (upper==1 or upper==2):
