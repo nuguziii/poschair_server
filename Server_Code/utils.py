@@ -258,8 +258,9 @@ def keyword_matching(upper, lower):
     #   lower: list type
     #======================================
     # {"Alright":0, "Turtle/Bowed":1, "Slouched":2}
-	keyword_list = {"Turtle/Bowed":"k0", "Slouched":"k1", "PelvisImbalance":"k2", "Scoliosis":"k3", "HipPain":"k4", "KneePain":"k5", "PoorCirculation":"k6"}
+    keyword_list = {"Turtle/Bowed":"k0", "Slouched":"k1", "PelvisImbalance":"k2", "Scoliosis":"k3", "HipPain":"k4", "KneePain":"k5", "PoorCirculation":"k6"}
     now = datetime.datetime.now()
+
 
     conn = sqlite3.connect("../../POSCHAIR.db")
     c = conn.cursor()
