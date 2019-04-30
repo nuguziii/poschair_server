@@ -19,9 +19,11 @@ import sqlite3
 import datetime
 from data_generator import data
 from model import vgg19
+from datetime import datetime
 import firebase_admin
 from firebase_admin import credentials
-from datetime import datetime
+from firebase_admin import messaging
+import time
 
 
 
@@ -132,7 +134,7 @@ def messaging(upper, lower, save_db=False, send_android=False):
     if save_db:
     	conn = sqlite3.connect("../../POSCHAIR.db")
     	c = conn.cursor()
-        
+
 
         input = [datetime.now().strftime('%Y-%m-%d %H:%M:%S'), "choo@naver.com", pos_upper1, pos_lower1, pos_lower2, pos_lower3, pos_lower4]
 
@@ -163,7 +165,7 @@ def is_alarm():
     #posture_data 이용해서 판단하기 10분전
     cur.execute("SELECT * FROM Posture_data WHERE date BETWEEN t_old AND t_now")
     rows = cur.fetchall()
-    
+
     upper1cnt = 0
     lower1cnt = 0
     lower2cnt = 0
@@ -212,56 +214,43 @@ def generate_alarm(alarm_value):
     #     integer(indicates the current posture alarm label)
     #======================================
 
-    '''
-    1. current_posture와 alarm_list 비교해서 교집합 현재 alarm_list에 저장
-    3. alarm_list 가 0이 아닐 경우 android에 alarm_list 전송
-    '''
     posture = None
 
-    #예시임 5까지 추가해야하고 메세지 바꿔야함
     if alarm_value == 0:
     	return 0 #don't send the alarm
     elif alarm_value == 1:
-        posture = 'turtle neck'
-    elif (alarm_value ==2):
-        posture = 'slouched'
+        posture = 'Mind your posture! Stretch out a bit :)'
+    elif alarm_value == 2:
+        posture = 'Mind your neck! Better stretch your neck :)'
+    elif alarm_value == 3:
+        posture = 'Mind your back! Better stretch your back right and left :)'
+    elif alarm_value == 4:
+        posture = 'You are crossing your legs for too long. How about changing your legs direction :)'
+    else:
+        posture = 'Sorry, no idea about your posture for the moment... :('
 
+    print("entered firebase credential")
     cred = credentials.Certificate('/root/poschair-134c8-firebase-adminsdk-1i2vn-01f260312b.json')
     app = firebase_admin.initialize_app(cred)
+    print("finished firebase credential")
 
-    # # This registration token comes from the client FCM SDKs.
-    # registration_token = 'YOUR_REGISTRATION_TOKEN'
-    #
-    # # See documentation on defining a message payload.
-    # message = messaging.Message(
-    #     android=messaging.AndroidConfig(
-    #         ttl=0, #즉시 보낸다는 뜻
-    #         priority='normal',
-    #         notification=messaging.AndroidNotification(
-    #             title='Mind your posture!',
-    #             body=posture,
-    #         ),
-    #     )
-    # )
-    # The topic name can be optionally prefixed with "/topics/".
-    topic = 'poschair'
-
-    # See documentation on defining a message payload.
     message = messaging.Message(
         android=messaging.AndroidConfig(
-                ttl=0, #즉시 보낸다는 뜻
-                priority='normal',
-                notification=messaging.AndroidNotification(
-                    title='Mind your posture!',
-                    body=posture,
+            ttl=0,
+            priority='normal',
+            notification=messaging.AndroidNotification(
+                title='PosChair',
+                body=posture,
                 ),
-        )
-    )
+                ),
+                topic='poschair',
+                )
 
     # Send a message to the devices subscribed to the provided topic.
     response = messaging.send(message)
     # Response is a message ID string.
     print('Successfully sent message:', response)
+
 
 
 
@@ -274,7 +263,7 @@ def keyword_matching(upper, lower):
     #   upper: int type
     #   lower: list type
     #======================================
-	    
+
 	keyword_list = {"목디스크":"k0", "거북목":"k1", "어깨굽음":"k2", "골반불균형":"k3", "척추틀어짐":"k4", "고관절통증":"k5", "무릎통증":"k6", "혈액순환":"k7"}
     now = datetime.datetime.now()
     #DB에서 해당되는 키워드에 +1을 해줌 (Upper 경우)
@@ -289,7 +278,7 @@ def keyword_matching(upper, lower):
         k0 = c.fetchone()[0]
         k0 += 1
         c.execute("UPDATE Keyword SET k0 = ? WHERE ID = ?", (k0, "choo@naver.com"))
-        
+
 
     elif upper is 2:
         keyword_list["거북목"]
@@ -363,7 +352,7 @@ def keyword_matching(upper, lower):
         keyword_list["어깨굽음"]
         c.execute("SELECT k3 FROM Keyword WHERE ID = ?", ("choo@naver.com",))
         k0 = c.fetchone()[0]
-	
+
 
 def generate_keyword_for_video_matching():
     #=====================================
@@ -406,7 +395,7 @@ def video_matching(keyword):
     video_list = []
 
     for k, v in dictionary.items():
-    	if v == sorted_key[0][0]: 
+    	if v == sorted_key[0][0]:
         	video_list.append(video_dict[k])
 
     	if len(video_list)>3:
