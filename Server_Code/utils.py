@@ -171,14 +171,30 @@ def is_alarm():
     lower2cnt = 0
     lower3cnt = 0
     lower4cnt = 0
+    cnt = 0
 
     for row in rows:
+        print(row)
+        upper1cnt += row[2]
+        lower1cnt += row[3]
+        lower2cnt += row[4]
+        lower3cnt += row[5]
+        lower4cnt += row[6]
+        cnt += 1
 
+    #calculate whether percentage is over 85%
+    percent = [0,0,0,0,0]
+    percent[0] = upper1cnt / cnt
+    percent[1] = lower1cnt / cnt
+    percent[2] = lower2cnt / cnt
+    percent[3] = lower3cnt / cnt
+    percent[4] = lower4cnt / cnt
 
-    #check if the percentage is over 85%
-
-    #put the posture in the alarm_list
-
+    #if it is over 85% add 1 at the end of alarm_list else add 0
+    for i in range(len(percent)):
+        if percent[i] >= 0.85:
+            alarm_list.append(1)
+        else alarm_list.append(0)
 
 
     #교집합 구하기
@@ -260,8 +276,8 @@ def keyword_matching(upper, lower):
     #=====================================
     # save in Keyword Database
     # - input:
-    #   upper: int type
-    #   lower: list type
+    #   upper: int type 1/2/3
+    #   lower: list type [1,1,1,1] 0/1
     #======================================
 	    
 	keyword_list = {"목디스크":"k0", "거북목":"k1", "어깨굽음":"k2", "골반불균형":"k3", "척추틀어짐":"k4", "고관절통증":"k5", "무릎통증":"k6", "혈액순환":"k7"}
@@ -360,7 +376,7 @@ def generate_keyword_for_video_matching():
     # DB에 n시간 정도의 자세 키워드 데이터를 확인한 다음
     # 각 키워드, 시간을 출력함
     # - output: dictionary
-    # ex) {0: 128, 1:330 ...}
+    # ex) {"k0": 128, 1:330 ...}
     #======================================
     '''
     1. DB에서 n시간 정도의 자세 키워드 데이터 가져옴
@@ -370,13 +386,17 @@ def generate_keyword_for_video_matching():
     conn = sqlite3.connect("../../POSCHAIR.db")
     c = conn.cursor()
 
-    keyword_dict = None
+    keyword_dict = {"k0":0, "k1":0, "k2":0, "k3":0, "k4":0, "k5":0, "k6":0, "k7":0}
 
     t_now = datetime.datetime.now()
-    t_old = t_now - datetime.timedelta(minutes = 10)
+    t_old = t_now - datetime.timedelta(hours = 24)
 
-    cur.execute("SELECT * FROM Keyword WHERE date BETWEEN t_old AND t_now")
+    cur.execute("SELECT * FROM Keyword WHERE ID = ?")
     rows = cur.fetchall()
+
+    for row in rows:
+        for i in range(7):
+            keyword_dict["k"+str(i)] += row[i+1] 
 
 
     return keyword_dict
