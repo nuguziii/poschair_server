@@ -53,8 +53,6 @@ def generate_alarm(alarm_value):
 
     # See documentation on defining a message payload.
     # The topic name can be optionally prefixed with "/topics/".
-    topic = 'highScores'
-
     # See documentation on defining a message payload.
     message = messaging.Message(
         data={
