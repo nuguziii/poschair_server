@@ -11,7 +11,7 @@ from functools import wraps
 if __name__ == '__main__':
     d = data()
     conn = sqlite3.connect("../../POSCHAIR.db")
-    c = conn.cursor()
+	c = conn.cursor()
     #DB에서 초기자세 데이터 받아올 것
 
     c.execute("SELECT init_pos_lower FROM User WHERE ID = ?", ("choo@naver.com",))
