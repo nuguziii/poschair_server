@@ -398,7 +398,7 @@ def video_matching(keyword):
     weighted = []
     for i in range(7):
         tmp = "k"+str(i)
-        c.execute("SELECT * FROM Youtube_Video WHERE keyword = ?", tmp)
+        c.execute("SELECT * FROM Youtube_Video WHERE keyword = ?", (tmp,))
         #조회수/like 수
         #liked
         row = c.fetchone()[0]
