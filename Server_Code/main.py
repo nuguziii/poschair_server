@@ -18,43 +18,10 @@ import json
 import os
 
 
-DATABASE = '../POSCHAIR.db'
-
 # create a flask application - this ``app`` object will be used to handle
 # inbound requests, routing them to the proper 'view' functions, etc
 app = Flask(__name__)
 app.config.from_object(__name__)
-
-# create a peewee database instance -- our models will use this database to
-# persist information
-database = SqliteDatabase(DATABASE)
-
-
-
-# model definitions -- the standard "pattern" is to define a base model class
-# that specifies which database to use.  then, any subclasses will automatically
-# use the correct storage. for more information, see:
-# http://charlesleifer.com/docs/peewee/peewee/models.html#model-api-smells-like-django
-class BaseModel(Model):
-    class Meta:
-        database = database
-
-# the user model specifies its fields (or columns) declaratively, like django
-class User(BaseModel):
-    name = CharField()
-    pwd = CharField()
-    ID = CharField(unique=True)
-    pos_upper = CharField()
-    pos_lower = CharField()
-
-
-class Median(BaseModel):
-    ID = CharField()
-    lower_median = IntegerField()
-    upper_median = IntegerField()
-    lower_median_total = IntegerField()
-    upper_median_total = IntegerField()
-
 
 total_pressure = []
 total_ultra = []
@@ -64,20 +31,6 @@ interval = 0.2
 total_hour = 0
 real_time_count = 0
 total_time_count = 0
-
-
-@app.before_request
-def before_request():
-    print('before_request')
-    g.db = database
-    g.db.connect()
-
-
-@app.after_request
-def after_request(response):
-  print('close_request')
-  g.db.close()
-  return response
 
 
 @app.route('/', methods=['POST'])
@@ -107,7 +60,7 @@ def result():
         real_time_count+=1
         total_time_count+=1
 
-        conn = sqlite3.connect("../POSCHAIR.db")
+        conn = sqlite3.connect("../../POSCHAIR.db")
         c = conn.cursor()
         if real_time_count == num_of_sensor_real_time:
           real_time_count = 0
@@ -125,7 +78,6 @@ def result():
           global total_ultra
           total_pressure.append(lower_median)
           total_ultra.append(upper_median)
-          print('success')
 
         if total_time_count == num_of_sensor_real_time * num_of_sensor_total:
           total_time_count = 0
@@ -138,12 +90,7 @@ def result():
           #DB에 저장하기
           c.execute("UPDATE Median SET lower_median_total = ?, upper_median_total = ? WHERE ID = ?", (str(lower_median_total), str(upper_median_total), 'choo@naver.com'))
           conn.commit()
-
-
-          print('db_total_input_succeess')
         conn.close()
-    print('post success')
-
     return 'complete'
 
 
