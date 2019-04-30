@@ -53,7 +53,7 @@ class Median(BaseModel):
     upper_median = IntegerField()
     lower_median_total = IntegerField()
     upper_median_total = IntegerField()
-    
+
 
 total_pressure = []
 total_ultra = []
@@ -119,7 +119,7 @@ def result():
           #DB에 저장하기
           c.execute("UPDATE Median SET lower_median = ?, upper_median = ? WHERE ID = ?", (str(lower_median), str(upper_median), 'choo@naver.com'))
           conn.commit()
-          
+
           global total_pressure
           global total_ultra
           total_pressure.append(lower_median)
@@ -138,12 +138,108 @@ def result():
           c.execute("UPDATE Median SET lower_median_total = ?, upper_median_total = ? WHERE ID = ?", (str(lower_median_total), str(upper_median_total), 'choo@naver.com'))
           conn.commit()
 
-          
+
           print('db_total_input_succeess')
         conn.close()
     print('post success')
 
     return 'complete'
+
+@app.route('/image/',methods=['GET','POST'])
+def getImage():
+        return redirect(url_for('static',filename='posture_sample.png'))
+
+# views -- these are the actual mappings of url to view function
+@app.route('/login/', methods=['GET', 'POST'])
+def login():
+	print('login')
+	if request.method == 'POST' and request.form['email']:
+		try:
+			print ('in try')
+			user = User.select(
+                    (User.ID == request.form['email']) &
+                    (User.pwd == request.form['password'])
+                    )
+			print ('get success')
+
+		except User.DoesNotExist:
+			print ('wrong_pw')
+			return 'wrong_pw'
+
+		else:
+			print ('success')
+			return 'success'
+	return 'success'
+
+
+@app.route('/signup/', methods=['GET', 'POST'])
+def signup():
+	print('signup')
+	if request.method == 'POST':
+
+		try:
+			print('post')
+			with database.atomic():
+				user = User.create(
+					name=request.form['name'],
+					pwd=request.form['password'],
+                    ID=request.form['email'])
+			return "success"
+
+		except IntegrityError:
+			return 'already_existed'
+
+	return render_template('./index.html')
+
+
+
+@app.route('/addInfo/', methods=['GET', 'POST'])
+def addInfo():
+	#age, sex, height, weight
+	if request.method == 'POST':
+		try:
+			print('addInfo')
+			#with database.atomic():
+			#	query = User.update(
+			#		age=int(request.form['age']),
+			#		gender=request.form['sex'],
+			#		height=int(request.form['height']),
+			#		weight=int(request.form['weight'])).where(User.ID == "choo@naver.com")
+			#	query.execute()
+			return "success"
+
+		except IntegrityError:
+			return 'addInfo_error'
+
+@app.route('/video/',methods=['GET','POST'])
+def sendVideoList():
+    if request.method == 'GET':
+        user_id = request.form['user_id']
+        if request.form['isVideoLike']==0: #추천 영상 비디오
+            return
+        else: #사용자가 좋아한 비디오
+            return
+
+
+
+@app.route('/changeVideoLike/',methods=['GET','POST'])
+def updateVideoLike():
+    if request.method == 'POST':
+        user_id = request.form['user_id']
+        videoID = request.form['videoID']
+        isLike = request.form['isLike']
+
+        if isLike == "like": # 좋아요 x -> 좋아요 db 업데이트
+
+        else: #isLike=="unlike" : 좋아요 -> 좋아요 취소 db 업데이트
+
+
+
+@app.route('/posture/', methods=['GET', 'POST'])
+def getLabel():
+	#label(int 값) string으로 반환한다
+	if request.method == 'GET':
+
 
 
 if __name__ == '__main__':
