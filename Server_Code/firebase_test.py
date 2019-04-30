@@ -52,7 +52,10 @@ def generate_alarm(alarm_value):
 
     # See documentation on defining a message payload.
     # The topic name can be optionally prefixed with "/topics/".
+<<<<<<< HEAD
 
+=======
+>>>>>>> 7241fbb6935af41834198439ebefc689fdc601d6
     # See documentation on defining a message payload.
     # message = messaging.Message(
     #     data={
