@@ -16,7 +16,7 @@ import torch.nn as nn
 import time
 import os
 import sqlite3
-import datetime
+from datetime import datetime
 from data_generator import data
 from model import vgg19
 #import firebase_admin
