@@ -430,4 +430,4 @@ if __name__ == '__main__':
     print("keyword:", keyword)
     print("video_list: ", video_matching(keyword))
     print("message: ", messaging(2, [0,0,0,1]))
-    print("alarm_list: ", is_alarm())
+    print("alarm_list: ", is_alarm(2, [0,0,0,1]))
