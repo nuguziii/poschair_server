@@ -16,12 +16,11 @@ import torch.nn as nn
 import time
 import os
 import sqlite3
-from datetime import datetime
+import datetime
 from data_generator import data
 from model import vgg19
 #import firebase_admin
 #from firebase_admin import credentials
-from datetime import datetime
 
 
 
