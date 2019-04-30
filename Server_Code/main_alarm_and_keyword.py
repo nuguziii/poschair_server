@@ -50,7 +50,7 @@ if __name__ == '__main__':
 			
 			conn = sqlite3.connect("../../POSCHAIR.db")
 			c = conn.cursor()
-			input = [datetime.now().strftime('%Y-%m-%d %H:%M:%S'), "choo@naver.com", upper, lower[0], lower[1], lower[2], lower[3]]
+			input = [datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'), "choo@naver.com", upper, lower[0], lower[1], lower[2], lower[3]]
 			cur.execute("INSERT INTO Posture_data VALUES (?,?,?,?,?,?,?)", input)
 
             #키워드 매칭 알고리즘(DB에 저장하는 함수)
