@@ -147,6 +147,7 @@ def is_alarm():
     rows = c.fetchall()
 
     upper1cnt = 0
+    upper2cnt = 0
     lower1cnt = 0
     lower2cnt = 0
     lower3cnt = 0
@@ -155,7 +156,10 @@ def is_alarm():
 
     for row in rows:
         print(row)
-        upper1cnt += row[2]
+        if row[2]==1:
+            upper1cnt += 1
+        if row[2]==2:
+            upper2cnt += 1
         lower1cnt += row[3]
         lower2cnt += row[4]
         lower3cnt += row[5]
@@ -163,12 +167,13 @@ def is_alarm():
         cnt += 1
 
     #calculate whether percentage is over 85%
-    percent = [0,0,0,0,0]
+    percent = [0,0,0,0,0,0]
     percent[0] = upper1cnt / cnt
-    percent[1] = lower1cnt / cnt
-    percent[2] = lower2cnt / cnt
-    percent[3] = lower3cnt / cnt
-    percent[4] = lower4cnt / cnt
+    percent[1] = upper2cnt / cnt
+    percent[2] = lower1cnt / cnt
+    percent[3] = lower2cnt / cnt
+    percent[4] = lower3cnt / cnt
+    percent[5] = lower4cnt / cnt
 
     #if it is over 85% add 1 at the end of alarm_list else add 0
     for i in range(len(percent)):
