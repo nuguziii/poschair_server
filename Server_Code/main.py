@@ -13,6 +13,7 @@ from flask import session
 from flask import url_for, abort, render_template, flash
 from functools import wraps
 from peewee import *
+
 import json
 import os
 
@@ -21,7 +22,6 @@ import os
 # inbound requests, routing them to the proper 'view' functions, etc
 app = Flask(__name__)
 app.config.from_object(__name__)
-
 
 total_pressure = []
 total_ultra = []
@@ -73,7 +73,7 @@ def result():
           #DB에 저장하기
           c.execute("UPDATE Median SET lower_median = ?, upper_median = ? WHERE ID = ?", (str(lower_median), str(upper_median), 'choo@naver.com'))
           conn.commit()
-          
+
           global total_pressure
           global total_ultra
           total_pressure.append(lower_median)
