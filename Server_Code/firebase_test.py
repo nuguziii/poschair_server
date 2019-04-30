@@ -7,8 +7,8 @@ app.config.from_object(__name__)
 
 
 @app.route('/', methods=['POST'])
-def result:
-    generate_alarm(1);
+def result():
+    generate_alarm(1)
 
     return "Done!"
 

@@ -19,8 +19,8 @@ import sqlite3
 import datetime
 from data_generator import data
 from model import vgg19
-#import firebase_admin
-#from firebase_admin import credentials
+import firebase_admin
+from firebase_admin import credentials
 from datetime import datetime
 
 
@@ -99,11 +99,6 @@ def messaging(upper, lower, save_db=False, send_android=False):
     messaging_list = {"Alright":0, "moreThanOne":1, "turtle/bowed":2, "legsOnChair":3, "crossedLegs":4, "backbone":5, "others":6}
     send_result = None
 
-<<<<<<< HEAD
-=======
-
-
->>>>>>> 9a3e125523958f31c88d4d06b16be3f5c85838ff
     if upper==0 and sum(lower)==0: #둘다 바른자세일 경우 (바른 자세입니다.)
         send_result = messaging_list["Alright"]
         pos_upper1 = 0
