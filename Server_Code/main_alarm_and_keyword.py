@@ -46,9 +46,14 @@ if __name__ == '__main__':
 
             print(lower, upper)
 
-            '''
+            
             #실시간 자세 DB에 저장
             messaging(upper, lower, save_db=True) #output은 int 형태로 나옴 이걸 안드로이드로 전송해서 안드로이드에서 메세지 생성
+			
+    		conn = sqlite3.connect("../../POSCHAIR.db")
+    		c = conn.cursor()
+			input = [datetime.now().strftime('%Y-%m-%d %H:%M:%S'), "choo@naver.com", upper, lower[0], lower[1], lower[2], lower[3]]
+	       	cur.execute("INSERT INTO Posture_data VALUES (?,?,?,?,?,?,?)", input)
 
             #키워드 매칭 알고리즘(DB에 저장하는 함수)
             #keyword_matching(upper, lower) #자세 값을 기반으로 디비에 해당 키워드 별 +1 해줌
@@ -57,4 +62,4 @@ if __name__ == '__main__':
             alarm_list = is_alarm() #알람 보낼 리스트가 있는지 확인
             if len(alarm_list) is not 0: #알람 리스트가 있으면
                 result = generate_alarm(alarm_list) #알람 전송
-            '''
+            

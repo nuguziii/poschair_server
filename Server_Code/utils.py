@@ -103,44 +103,25 @@ def messaging(upper, lower, save_db=False, send_android=False):
 
     if upper==0 and sum(lower)==0: #둘다 바른자세일 경우 (바른 자세입니다.)
         send_result = messaging_list["Alright"]
-        pos_upper1 = 0
-        pos_lower1 = 0
-        pos_lower2 = 0
-        pos_lower3 = 0
-        pos_lower4 = 0
-
     if (upper==1 or upper==2) and (lower[0]==1 or lower[2]==1 or lower[3]==1): #전체적으로 바른자세 유지
         # 전체적으로 몸이 틀어져있습니다.
         send_result = messaging_list["moreThanOne"]
     elif upper==1:
         # 혹시 목을 숙이고 있으신가요?
         send_result = messaging_list["turtle/bowed"]
-        pos_upper1 = 1
     elif lower[3]==1:
         # 혹시 다리를 꼬고 계신가요?
         send_result = messaging_list["legsOnChair"]
-        pos_lower3 = 1
     elif lower[2]==1:
         # 혹시 다리를 의자 위에 올려놓고 계신가요?
         send_result = messaging_list["crossedLegs"]
-        pos_lower2 = 1
     elif lower[1]==1:
         # 허리를 바르게 유지하고 계신가요?
         send_result = messaging_list["backbone"]
-        pos_lower1 = 1
     else:
         send_result = messaging_list["others"]
 
-    if save_db:
-    	conn = sqlite3.connect("../../POSCHAIR.db")
-    	c = conn.cursor()
 
-
-        input = [datetime.now().strftime('%Y-%m-%d %H:%M:%S'), "choo@naver.com", pos_upper1, pos_lower1, pos_lower2, pos_lower3, pos_lower4]
-
-
-        cur.execute("INSERT INTO Posture_data VALUES (?,?,?,?,?,?,?)", input)
-        return send_list
 
     if send_android:
         '''send_result 안드로이드에 전송'''
