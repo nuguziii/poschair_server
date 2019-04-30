@@ -406,7 +406,7 @@ def video_matching(keyword):
         weighted.sort(reverse=True)
 
     for i in range(4):
-        c.execute("SELECT ? FROM Youtube_Video WHERE keyword = ?", (vidID, weighted[i][2]))
+        c.execute("SELECT vidID FROM Youtube_Video WHERE keyword = ?", (weighted[i][2],))
         tmpID = c.fetchone()[0]
         video_list.append(tmpID)
 
