@@ -45,7 +45,7 @@ if __name__ == '__main__':
 
             
             #실시간 자세 DB에 저장
-			messaging(upper, lower, save_db=True) #output은 int 형태로 나옴 이걸 안드로이드로 전송해서 안드로이드에서 메세지 생성
+			messaging(upper, lower) #output은 int 형태로 나옴 이걸 안드로이드로 전송해서 안드로이드에서 메세지 생성
 			
 			conn = sqlite3.connect("../../POSCHAIR.db")
 			c = conn.cursor()
