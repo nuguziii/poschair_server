@@ -262,7 +262,7 @@ def generate_alarm(alarm_value):
     print('Successfully sent message:', response)
 
 
-def keyword_matching(upper, lower):
+def keyword_matching(conn, upper, lower):
     #=====================================
     # save in Keyword Database
     # - input:
@@ -273,8 +273,6 @@ def keyword_matching(upper, lower):
     keyword_list = {"Turtle/Bowed":"k0", "Slouched":"k1", "PelvisImbalance":"k2", "Scoliosis":"k3", "HipPain":"k4", "KneePain":"k5", "PoorCirculation":"k6"}
     now = datetime.datetime.now()
 
-
-    conn = sqlite3.connect("../../POSCHAIR.db")
     c = conn.cursor()
 
     if upper is 1:
@@ -286,7 +284,6 @@ def keyword_matching(upper, lower):
     elif upper is 2:
         c.execute("SELECT k1 FROM Keyword WHERE ID = ?", ("choo@naver.com",))
         key = c.fetchone()[0]
-        print(key, type(key))
         key += 1
         c.execute("UPDATE Keyword SET k1 = ? WHERE ID = ?", (key, "choo@naver.com"))
 

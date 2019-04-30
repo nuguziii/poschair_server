@@ -53,7 +53,7 @@ if __name__ == '__main__':
 			c.execute("INSERT INTO Posture_data VALUES (?,?,?,?,?,?,?)", input)
 
             #키워드 매칭 알고리즘(DB에 저장하는 함수)
-			keyword_matching(upper, lower) #자세 값을 기반으로 디비에 해당 키워드 별 +1 해줌
+			keyword_matching(conn, upper, lower) #자세 값을 기반으로 디비에 해당 키워드 별 +1 해줌
 
             #알림 확인 및 전송
 			alarm_list = is_alarm(upper, lower) #알람 보낼 리스트가 있는지 확인
