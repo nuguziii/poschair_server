@@ -175,7 +175,7 @@ def is_alarm():
     for i in range(len(percent)):
         if percent[i] >= 0.85:
             alarm_list.append(1)
-        else alarm_list.append(0)
+        else: alarm_list.append(0)
 
 
     #교집합 구하기
