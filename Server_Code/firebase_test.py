@@ -28,9 +28,11 @@ def generate_alarm(alarm_value):
         posture = 'turtle neck'
     elif (alarm_value ==2):
         posture = 'slouched'
-
+    
+    print("entered firebase credential")
     cred = credentials.Certificate('/root/poschair-134c8-firebase-adminsdk-1i2vn-01f260312b.json')
     app = firebase_admin.initialize_app(cred)
+    print("finished firebase credential")
 
     # # This registration token comes from the client FCM SDKs.
     # registration_token = 'YOUR_REGISTRATION_TOKEN'
@@ -71,6 +73,7 @@ def generate_alarm(alarm_value):
 @app.route('/', methods=['POST'])
 def result():
     generate_alarm(1)
+    print("sucess")
     time.sleep(20)
     return "Done!"
 
