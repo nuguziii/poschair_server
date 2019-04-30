@@ -87,7 +87,7 @@ def upper_balance_check(value):
 
     return result
 
-def messaging(upper, lower, save_db=False, send_android=False):
+def messaging(upper, lower):
     #=====================================
     # generate message list, save DB and send android
     # - input
@@ -120,10 +120,10 @@ def messaging(upper, lower, save_db=False, send_android=False):
     else:
         send_result = messaging_list["others"]
 
+    return send_result
 
-
-    if send_android:
-        '''send_result 안드로이드에 전송'''
+    #send_android:
+    #send_result 안드로이드에 전송
 
 def is_alarm():
     #=====================================
@@ -196,9 +196,6 @@ def is_alarm():
         return notification_list["legs"]
     else: #자세 바르게 알람
         return notification_list["others"]
-
-
-
 
 
     return alarm_list
@@ -417,3 +414,5 @@ if __name__ == '__main__':
     keyword = generate_keyword_for_video_matching()
     print("keyword:", keyword)
     print("video_list: ", video_matching(keyword))
+    print("message: ", messaging(2, [0,0,0,1]))
+    print("alarm_list: ", is_alarm())
