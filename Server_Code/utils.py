@@ -125,7 +125,7 @@ def messaging(upper, lower):
     #send_android:
     #send_result 안드로이드에 전송
 
-def is_alarm(lower, upper):
+def is_alarm(upper, lower):
     #=====================================
     # check if we should alert alarm
     # - output: list type (alarm_list)
