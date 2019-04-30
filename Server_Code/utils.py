@@ -144,8 +144,8 @@ def is_alarm():
     t_old = t_now - datetime.timedelta(minutes = 10)
 
     #posture_data 이용해서 판단하기 10분전
-    cur.execute("SELECT * FROM Posture_data WHERE date BETWEEN t_old AND t_now")
-    rows = cur.fetchall()
+    c.execute("SELECT * FROM Posture_data WHERE date BETWEEN t_old AND t_now")
+    rows = c.fetchall()
 
     upper1cnt = 0
     lower1cnt = 0
@@ -354,10 +354,10 @@ def generate_keyword_for_video_matching():
     keyword_dict = {"k0":0, "k1":0, "k2":0, "k3":0, "k4":0, "k5":0, "k6":0, "k7":0}
 
     t_now = datetime.datetime.now()
-    t_old = t_now - datetime.timedelta(hours = 24)
+    t_old = t_now - datetime.timedelta(hours = 48)
 
-    cur.execute("SELECT * FROM Keyword WHERE ID = ?", ("choo@naver.com"))
-    rows = cur.fetchall()
+    c.execute("SELECT * FROM Keyword WHERE ID = ?", ("choo@naver.com"))
+    rows = c.fetchall()
 
     for row in rows:
         for i in range(7):
@@ -391,5 +391,28 @@ def video_matching(keyword):
     가져올 때 조희수/like 수 등 생각해서 높은 순서대로 상위 5개 가져오기.
     '''
 
+    conn = sqlite3.connect("../../POSCHAIR.db")
+    c = conn.cursor()
 
-    ''' url list 안드로이드에 전송 '''
+    weighted = []
+    for i in range(7):
+        tmp = "k"+str(i)
+        c.execute("SELECT * FROM Youtube_Video WHERE keyword = ?", tmp)
+        #조회수/like 수
+        #liked
+        row = c.fetchone()[0]
+        weighted.append((row[6], row[5]/row[4], tmp))
+        weighted.sort(reverse=True)
+
+    for i in range(4):
+        c.execute("SELECT ? FROM Youtube_Video WHERE keyword = ?", (vidID, weighted[i][2]))
+        tmpID = c.fetchone()[0]
+        video_list.append(tmpID)
+
+    return video_list
+
+if __name__ == '__main__':
+    keyword_matching(2, [0,0,0,1])
+    keyword = generate_keyword_for_video_matching()
+    print("keyword:", keyword)
+    print("video_list: ", video_matching(keyword))
