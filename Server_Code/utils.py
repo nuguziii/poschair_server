@@ -234,23 +234,36 @@ def generate_alarm(alarm_value):
     cred = credentials.Certificate('/root/poschair-134c8-firebase-adminsdk-1i2vn-01f260312b.json')
     app = firebase_admin.initialize_app(cred)
 
-    # This registration token comes from the client FCM SDKs.
-    registration_token = 'YOUR_REGISTRATION_TOKEN'
+    # # This registration token comes from the client FCM SDKs.
+    # registration_token = 'YOUR_REGISTRATION_TOKEN'
+    #
+    # # See documentation on defining a message payload.
+    # message = messaging.Message(
+    #     android=messaging.AndroidConfig(
+    #         ttl=0, #즉시 보낸다는 뜻
+    #         priority='normal',
+    #         notification=messaging.AndroidNotification(
+    #             title='Mind your posture!',
+    #             body=posture,
+    #         ),
+    #     )
+    # )
+    # The topic name can be optionally prefixed with "/topics/".
+    topic = 'poschair'
 
     # See documentation on defining a message payload.
     message = messaging.Message(
         android=messaging.AndroidConfig(
-            ttl=0, #즉시 보낸다는 뜻
-            priority='normal',
-            notification=messaging.AndroidNotification(
-                title='Mind your posture!',
-                body=posture,
-            ),
+                ttl=0, #즉시 보낸다는 뜻
+                priority='normal',
+                notification=messaging.AndroidNotification(
+                    title='Mind your posture!',
+                    body=posture,
+                ),
         )
     )
 
-    # Send a message to the device corresponding to the provided
-    # registration token.
+    # Send a message to the devices subscribed to the provided topic.
     response = messaging.send(message)
     # Response is a message ID string.
     print('Successfully sent message:', response)
