@@ -14,12 +14,10 @@ if __name__ == '__main__':
 
 	c = conn.cursor()
 	c.execute("SELECT init_pos_lower FROM User WHERE ID = ?", ("choo@naver.com",))
-    rows = c.fetchone()[0]
+	rows = c.fetchone()[0]
     
-
     lower_init = rows.replace('[','').replace(']','').split(',')
     lower_init = list(map(int, lower_init))
-
     print(lower_init)
 
     
