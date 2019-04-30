@@ -125,7 +125,7 @@ def messaging(upper, lower):
     #send_android:
     #send_result 안드로이드에 전송
 
-def is_alarm():
+def is_alarm(lower, upper):
     #=====================================
     # check if we should alert alarm
     # - output: list type (alarm_list)
@@ -185,10 +185,18 @@ def is_alarm():
 
 
     #교집합 구하기
-    result = [0]*len(a)
-    for i in range(len(a)):
-        if a[i]==b[i]:
-            result[i]=a[i]
+    upper_temp = [0,0]
+    if upper==1:
+        upper_temp[0]=1
+    if upper==2:
+        upper_temp[1]=1
+    current = upper_temp+lower
+    print(current)
+    result = [0]*len(current)
+    for i in range(len(current)):
+        if current[i]==alarm_list[i]:
+            result[i]=current[i]
+    print("result", result)
 
     notification_list = {"Alright":0, "moreThanOne":1, "turtle/bowed":2, "backbone":3, "legs":4, "others":5}
     if sum(result)==0: #바른자세
