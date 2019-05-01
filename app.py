@@ -1,134 +1,67 @@
 import datetime
-
+import sqlite3
 from flask import Flask
-from flask import g
 from flask import redirect
 from flask import request
 from flask import session
 from flask import url_for, abort, render_template, flash
+from data_generator import data
 from functools import wraps
-from hashlib import md5
-from peewee import *
 
-# config - aside from our database, the rest is for use by Flask
-DATABASE = 'POSCHAIR.db'
-DEBUG = True
-SECRET_KEY = 'hin6bab8ge25*r=x&amp;+5$0kn=-#log$pt^#@vrqjld!^2ci@g*b'
+
 
 # create a flask application - this ``app`` object will be used to handle
 # inbound requests, routing them to the proper 'view' functions, etc
 app = Flask(__name__)
 app.config.from_object(__name__)
 
-# create a peewee database instance -- our models will use this database to
-# persist information
-database = SqliteDatabase(DATABASE)
-
-# model definitions -- the standard "pattern" is to define a base model class
-# that specifies which database to use.  then, any subclasses will automatically
-# use the correct storage. for more information, see:
-# http://charlesleifer.com/docs/peewee/peewee/models.html#model-api-smells-like-django
-class BaseModel(Model):
-    class Meta:
-        database = database
-        db_table = 'User'
-
-# the user model specifies its fields (or columns) declaratively, like django
-class User(BaseModel):
-    name = CharField()
-    pwd = CharField()
-    ID = CharField(unique=True)
-    pos_upper = CharField()
-    pos_lower = CharField()
-
-
-
-def get_object_or_404(model, *expressions):
-    try:
-        return model.get(*expressions)
-    except model.DoesNotExist:
-        abort(404)
-
-
-# Request handlers -- these two hooks are provided by flask and we will use them
-# to create and tear down a database connection on each request.
-@app.before_request
-def before_request():
-    print('before_request')
-    g.db = database
-    g.db.connect()
-
-
-@app.after_request
-def after_request(response):
-	print('close_request')
-	g.db.close()
-	return response
 
 @app.route('/image/',methods=['GET','POST'])
 def getImage():
         return redirect(url_for('static',filename='posture_sample.png'))
 
-# views -- these are the actual mappings of url to view function
+
 @app.route('/login/', methods=['GET', 'POST'])
 def login():
-	print('login')
 	if request.method == 'POST' and request.form['email']:
-		try:
-			print ('in try')
-			user = User.select(
-                    (User.ID == request.form['email']) &
-                    (User.pwd == request.form['password'])
-                    )
-			print ('get success')
-		except User.DoesNotExist:
-			print ('wrong_pw')
-			return 'wrong_pw'
+		d = data()
+		conn = sqlite3.connect("../POSCHAIR.db")
+		c = conn.cursor()
 
+		iemail = request.form['email']
+		ipwd = request.form['pwd']
+
+		c.execute("SELECT ID, pwd FROM USER WHERE ID = ?", (iemail,))
+		k = c.fetchone()[0]
+
+		try:
+			if k[0] == iemail and k[1] == ipwd
+				return 'fetch success'
 		else:
-			print ('success')
-			return 'success'
+			return 'fetch failed'
 	return 'success'
 
 
 @app.route('/signup/', methods=['GET', 'POST'])
 def signup():
-	print('signup')
 	if request.method == 'POST':
-
-		try:
-			print('post')
-			with database.atomic():
-				user = User.create(
-					name=request.form['name'],
-					pwd=request.form['password'],
-                    ID=request.form['email'])
-			return "success"
-
-		except IntegrityError:
-			return 'already_existed'
-
+		d = data()
+    	conn = sqlite3.connect("../POSCHAIR.db")
+    	c = conn.cursor()
+		input = [request.form['email'], request.form['name'], request.form['pwd']]
+		c.execute("INSERT INTO User(ID, name, pwd) VALUES (?,?,?)", input)
+		
 	return render_template('./index.html')
 
 	
-
+'''
 @app.route('/addInfo/', methods=['GET', 'POST'])
 def addInfo():
 	#age, sex, height, weight
 	if request.method == 'POST':
-		try:
-			print('addInfo')
-			#with database.atomic():
-			#	query = User.update(
-			#		age=int(request.form['age']),
-			#		gender=request.form['sex'],
-			#		height=int(request.form['height']),
-			#		weight=int(request.form['weight'])).where(User.ID == "choo@naver.com")
-			#	query.execute()
-			return "success"
-
-		except IntegrityError:
-			return 'addInfo_error'
+		
+	return render_template('./index.html')
+'''
 
 @app.route('/image/',methods=['GET','POST'])
 def getImage():
