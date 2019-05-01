@@ -4,56 +4,22 @@ import numpy as np
 import time
 import os
 from data_generator import data
-#from utils import * #not using yet
+from utils import *
 from flask import Flask
-from flask import g
 from flask import redirect
 from flask import request
 from flask import session
 from flask import url_for, abort, render_template, flash
 from functools import wraps
-from peewee import *
 
 import json
 import os
 
 
-DATABASE = '../POSCHAIR.db'
-
 # create a flask application - this ``app`` object will be used to handle
 # inbound requests, routing them to the proper 'view' functions, etc
 app = Flask(__name__)
 app.config.from_object(__name__)
-
-# create a peewee database instance -- our models will use this database to
-# persist information
-database = SqliteDatabase(DATABASE)
-
-
-
-# model definitions -- the standard "pattern" is to define a base model class
-# that specifies which database to use.  then, any subclasses will automatically
-# use the correct storage. for more information, see:
-# http://charlesleifer.com/docs/peewee/peewee/models.html#model-api-smells-like-django
-class BaseModel(Model):
-    class Meta:
-        database = database
-
-# the user model specifies its fields (or columns) declaratively, like django
-class User(BaseModel):
-    name = CharField()
-    pwd = CharField()
-    ID = CharField(unique=True)
-    pos_upper = CharField()
-    pos_lower = CharField()
-
-
-class Median(BaseModel):
-    ID = CharField()
-    lower_median = IntegerField()
-    upper_median = IntegerField()
-    lower_median_total = IntegerField()
-    upper_median_total = IntegerField()
 
 
 total_pressure = []
@@ -64,20 +30,6 @@ interval = 0.2
 total_hour = 0
 real_time_count = 0
 total_time_count = 0
-
-
-@app.before_request
-def before_request():
-    print('before_request')
-    g.db = database
-    g.db.connect()
-
-
-@app.after_request
-def after_request(response):
-  print('close_request')
-  g.db.close()
-  return response
 
 
 @app.route('/', methods=['POST'])
