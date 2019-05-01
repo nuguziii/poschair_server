@@ -19,8 +19,11 @@ import sqlite3
 import datetime
 from data_generator import data
 from model import vgg19
-#import firebase_admin
-#from firebase_admin import credentials
+import firebase_admin
+from firebase_admin import credentials
+from firebase_admin import messaging
+
+
 
 
 
@@ -62,7 +65,6 @@ def LBCNet(image, guide):
     y_p = np.rint(temp_y)
 
     elapsed_time = time.time() - start_time
-    print(y_p, elapsed_time)
 
     return y_p
 
@@ -87,7 +89,7 @@ def upper_balance_check(value):
 
     return result
 
-def messaging(upper, lower, save_db=False, send_android=False):
+def messaging(upper, lower):
     #=====================================
     # generate message list, save DB and send android
     # - input
@@ -99,12 +101,12 @@ def messaging(upper, lower, save_db=False, send_android=False):
     send_result = None
 
 
-
     if upper==0 and sum(lower)==0: #둘다 바른자세일 경우 (바른 자세입니다.)
         send_result = messaging_list["Alright"]
-    if (upper==1 or upper==2) and (lower[0]==1 or lower[2]==1 or lower[3]==1): #전체적으로 바른자세 유지
+    if (upper==1 or upper==2):
+        if (lower[0]+lower[2]+lower[3])>0: #전체적으로 바른자세 유지
         # 전체적으로 몸이 틀어져있습니다.
-        send_result = messaging_list["moreThanOne"]
+            send_result = messaging_list["moreThanOne"]
     elif upper==1:
         # 혹시 목을 숙이고 있으신가요?
         send_result = messaging_list["turtle/bowed"]
@@ -121,11 +123,10 @@ def messaging(upper, lower, save_db=False, send_android=False):
         send_result = messaging_list["others"]
 
 
+    #send_android:
+    #send_result 안드로이드에 전송
 
-    if send_android:
-        '''send_result 안드로이드에 전송'''
-
-def is_alarm():
+def is_alarm(upper, lower):
     #=====================================
     # check if we should alert alarm
     # - output: list type (alarm_list)
@@ -143,10 +144,12 @@ def is_alarm():
     t_old = t_now - datetime.timedelta(minutes = 10)
 
     #posture_data 이용해서 판단하기 10분전
-    c.execute("SELECT * FROM Posture_data WHERE date BETWEEN t_old AND t_now")
+    c.execute("SELECT * FROM Posture_data WHERE date BETWEEN ? AND ?", (t_old, t_now))
     rows = c.fetchall()
 
+
     upper1cnt = 0
+    upper2cnt = 0
     lower1cnt = 0
     lower2cnt = 0
     lower3cnt = 0
@@ -154,8 +157,10 @@ def is_alarm():
     cnt = 0
 
     for row in rows:
-        print(row)
-        upper1cnt += row[2]
+        if row[2]==1:
+            upper1cnt += 1
+        if row[2]==2:
+            upper2cnt += 1
         lower1cnt += row[3]
         lower2cnt += row[4]
         lower3cnt += row[5]
@@ -163,12 +168,13 @@ def is_alarm():
         cnt += 1
 
     #calculate whether percentage is over 85%
-    percent = [0,0,0,0,0]
+    percent = [0,0,0,0,0,0]
     percent[0] = upper1cnt / cnt
-    percent[1] = lower1cnt / cnt
-    percent[2] = lower2cnt / cnt
-    percent[3] = lower3cnt / cnt
-    percent[4] = lower4cnt / cnt
+    percent[1] = upper2cnt / cnt
+    percent[2] = lower1cnt / cnt
+    percent[3] = lower2cnt / cnt
+    percent[4] = lower3cnt / cnt
+    percent[5] = lower4cnt / cnt
 
     #if it is over 85% add 1 at the end of alarm_list else add 0
     for i in range(len(percent)):
@@ -178,10 +184,16 @@ def is_alarm():
 
 
     #교집합 구하기
-    result = [0]*len(a)
-    for i in range(len(a)):
-        if a[i]==b[i]:
-            result[i]=a[i]
+    upper_temp = [0,0]
+    if upper==1:
+        upper_temp[0]=1
+    if upper==2:
+        upper_temp[1]=1
+    current = upper_temp+lower
+    result = [0]*len(current)
+    for i in range(len(current)):
+        if current[i]==alarm_list[i]:
+            result[i]=current[i]
 
     notification_list = {"Alright":0, "moreThanOne":1, "turtle/bowed":2, "backbone":3, "legs":4, "others":5}
     if sum(result)==0: #바른자세
@@ -198,9 +210,6 @@ def is_alarm():
         return notification_list["others"]
 
 
-
-
-
     return alarm_list
 
 def generate_alarm(alarm_value):
@@ -210,70 +219,71 @@ def generate_alarm(alarm_value):
     #     integer(indicates the current posture alarm label)
     #======================================
 
-    '''
-    1. current_posture와 alarm_list 비교해서 교집합 현재 alarm_list에 저장
-    3. alarm_list 가 0이 아닐 경우 android에 alarm_list 전송
-    '''
     posture = None
 
-    #예시임 5까지 추가해야하고 메세지 바꿔야함
     if alarm_value == 0:
     	return 0 #don't send the alarm
     elif alarm_value == 1:
-        posture = 'turtle neck'
-    elif (alarm_value ==2):
-        posture = 'slouched'
+        posture = 'Mind your posture! Stretch out a bit :)'
+    elif alarm_value == 2:
+        posture = 'Mind your neck! Better stretch your neck :)'
+    elif alarm_value == 3:
+        posture = 'Mind your back! Better stretch your back right and left :)'
+    elif alarm_value == 4:
+        posture = 'You are crossing your legs for too long. How about changing your legs direction :)'
+    else:
+        posture = 'Sorry, no idea about your posture for the moment... :('
 
+    print("entered firebase credential")
     cred = credentials.Certificate('/root/poschair-134c8-firebase-adminsdk-1i2vn-01f260312b.json')
     app = firebase_admin.initialize_app(cred)
+    print("finished firebase credential")
 
-    # This registration token comes from the client FCM SDKs.
-    registration_token = 'YOUR_REGISTRATION_TOKEN'
-
-    # See documentation on defining a message payload.
     message = messaging.Message(
         android=messaging.AndroidConfig(
-            ttl=0, #즉시 보낸다는 뜻
+            ttl=0,
             priority='normal',
             notification=messaging.AndroidNotification(
-                title='Mind your posture!',
+                title='PosChair',
                 body=posture,
-            ),
-        )
-    )
+                ),
+                ),
+                topic='poschair',
+                )
 
-    # Send a message to the device corresponding to the provided
-    # registration token.
+    # Send a message to the devices subscribed to the provided topic.
     response = messaging.send(message)
     # Response is a message ID string.
     print('Successfully sent message:', response)
 
 
-def keyword_matching(upper, lower):
+
+def keyword_matching(conn, upper, lower):
+
     #=====================================
     # save in Keyword Database
     # - input:
     #   upper: int type
     #   lower: list type
     #======================================
+
     # {"Alright":0, "Turtle/Bowed":1, "Slouched":2}
     keyword_list = {"Turtle/Bowed":"k0", "Slouched":"k1", "PelvisImbalance":"k2", "Scoliosis":"k3", "HipPain":"k4", "KneePain":"k5", "PoorCirculation":"k6"}
+
     now = datetime.datetime.now()
 
-
-    conn = sqlite3.connect("../../POSCHAIR.db")
     c = conn.cursor()
 
     if upper is 1:
         c.execute("SELECT k0 FROM Keyword WHERE ID = ?", ("choo@naver.com",))
-        key = int(c.fetchone()[0])
-        key += 1
-        c.execute("UPDATE Keyword SET k0 = ? WHERE ID = ?", (key, "choo@naver.com"))
+        k0 = c.fetchone()[0]
+        k0 += 1
+        c.execute("UPDATE Keyword SET k0 = ? WHERE ID = ?", (k0, "choo@naver.com"))
+
 
     elif upper is 2:
         c.execute("SELECT k1 FROM Keyword WHERE ID = ?", ("choo@naver.com",))
         key = c.fetchone()[0]
-        print(key, type(key))
         key += 1
         c.execute("UPDATE Keyword SET k1 = ? WHERE ID = ?", (key, "choo@naver.com"))
 
@@ -323,6 +333,7 @@ def keyword_matching(upper, lower):
         c.execute("UPDATE Keyword SET k2 = ? WHERE ID = ?", (key, "choo@naver.com"))
 
         c.execute("SELECT k3 FROM Keyword WHERE ID = ?", ("choo@naver.com",))
+
         key = int(c.fetchone()[0])
         key += 1
         c.execute("UPDATE Keyword SET k3 = ? WHERE ID = ?", (key, "choo@naver.com"))
@@ -334,6 +345,7 @@ def keyword_matching(upper, lower):
         c.execute("UPDATE Keyword SET k1 = ? WHERE ID = ?", (key, "choo@naver.com"))
 
     conn.commit()
+
 
 
 def generate_keyword_for_video_matching():
@@ -357,7 +369,7 @@ def generate_keyword_for_video_matching():
     t_now = datetime.datetime.now()
     t_old = t_now - datetime.timedelta(hours = 48)
 
-    c.execute("SELECT * FROM Keyword WHERE ID = ?", ("choo@naver.com"))
+    c.execute("SELECT * FROM Keyword WHERE ID = ?", ("choo@naver.com",))
     rows = c.fetchall()
 
     for row in rows:
@@ -387,6 +399,7 @@ def video_matching(keyword):
     else:
         video_keyword = video_dict[sorted_key[0][0]]
 
+
     '''
     video_list에 해당하는 url들 db에서 가져오기
     가져올 때 조희수/like 수 등 생각해서 높은 순서대로 상위 5개 가져오기.
@@ -398,15 +411,15 @@ def video_matching(keyword):
     weighted = []
     for i in range(7):
         tmp = "k"+str(i)
-        c.execute("SELECT * FROM Youtube_Video WHERE keyword = ?", tmp)
+        c.execute("SELECT * FROM Youtube_Video WHERE keyword = ?", (tmp,))
         #조회수/like 수
         #liked
-        row = c.fetchone()[0]
+        row = c.fetchone()
         weighted.append((row[6], row[5]/row[4], tmp))
         weighted.sort(reverse=True)
 
     for i in range(4):
-        c.execute("SELECT ? FROM Youtube_Video WHERE keyword = ?", (vidID, weighted[i][2]))
+        c.execute("SELECT vidID FROM Youtube_Video WHERE keyword = ?", (weighted[i][2],))
         tmpID = c.fetchone()[0]
         video_list.append(tmpID)
 
@@ -417,3 +430,5 @@ if __name__ == '__main__':
     keyword = generate_keyword_for_video_matching()
     print("keyword:", keyword)
     print("video_list: ", video_matching(keyword))
+    print("message: ", messaging(2, [0,0,0,1]))
+    print("alarm_list: ", is_alarm(2, [0,0,0,1]))
