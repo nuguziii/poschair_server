@@ -69,7 +69,7 @@ def addInfo():
 def getLabel():
 	#label string으로 반환한다
 	if request.method == 'GET':
-		return '5'
+		return '0'
 		
 
 if __name__=='__main__':
