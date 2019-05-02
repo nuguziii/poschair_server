@@ -37,7 +37,7 @@ def login():
 		try:
 			if k[0] == iemail and k[1] == ipwd:
 				return 'fetch success'
-		else:
+		except:
 			return 'fetch failed'
 	return 'success'
 
