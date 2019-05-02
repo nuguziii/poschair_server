@@ -61,10 +61,6 @@ def addInfo():
 	return render_template('./index.html')
 '''
 
-@app.route('/image/',methods=['GET','POST'])
-def getImage():
-	return '<img src='+url_for('static',filename='posture_sample.png')+'>'
-
 @app.route('/posture/', methods=['GET', 'POST'])
 def getLabel():
 	#label string으로 반환한다
