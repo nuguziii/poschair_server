@@ -35,7 +35,7 @@ def login():
 		k = c.fetchone()[0]
 
 		try:
-			if k[0] == iemail and k[1] == ipwd
+			if k[0] == iemail and k[1] == ipwd:
 				return 'fetch success'
 		else:
 			return 'fetch failed'
