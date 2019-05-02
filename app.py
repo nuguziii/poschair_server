@@ -7,6 +7,7 @@ from flask import session
 from flask import url_for, abort, render_template, flash
 import sqlite3
 import json
+import random
 
 
 
@@ -53,9 +54,7 @@ def login():
 def signup():
 	print('signup')
 	if request.method == 'POST':
-			print('post')
-
-            conn = sqlite3.connect("../../POSCHAIR.db")
+			conn = sqlite3.connect("../POSCHAIR.db")
             c = conn.cursor()
 
             c.excute("select count(*) from User where ID={}".format(request.form['email']))
@@ -92,31 +91,40 @@ def addInfo():
 		except IntegrityError:
 			return 'addInfo_error'
 
-@app.route('/video/',methods=['GET','POST'])
+@app.route('/video/',methods=['GET','POST']) #추천 영상 비디오
 def sendVideoList():
     if request.method == 'GET':
-        user_id = request.form['user_id']
-
-        conn = sqlite3.connect("../../POSCHAIR.db")
+        conn = sqlite3.connect("../POSCHAIR.db")
         conn.row_factory = sqlite3.Row
         c = conn.cursor()
 
-        if request.form['isVideoLike']==0: #추천 영상 비디오
-            rows = c.execute('''
-                             select * from Youtube_Video
-                             ''').fetchall()
+        rows = c.execute('''
+                         select vidID,vidTitle,view,uploadDate,liked from Youtube_Video
+                         ''').fetchall()
 
-            conn.close()
+        conn.close()
 
-            return json.dumps([dict(i) for i in rows])
+        print(json.dumps([dict(i) for i in rows]))
 
-        else: #사용자가 좋아한 비디오
-            rows = c.execute('''
-                             select * from Youtube_Video where liked=1
-                             ''').fetchall()
-            conn.commit()
-            conn.close()
+        return json.dumps([dict(i) for i in rows])
 
+
+
+@app.route('/likeVideo/',methods=['GET','POST'])  #사용자가 좋아한 비디오
+def sendlikeVideoList():
+    if request.method == 'GET':
+        conn = sqlite3.connect("../POSCHAIR.db")
+        conn.row_factory = sqlite3.Row
+        c = conn.cursor()
+
+        rows = c.execute('''
+                         select vidID,vidTitle,view,uploadDate,liked from Youtube_Video where liked=1
+                         ''').fetchall()
+        conn.close()
+
+        if rows == None:
+            return json.dumps([])
+        else:
             return json.dumps([dict(i) for i in rows])
 
 
@@ -144,15 +152,12 @@ def updateVideoLike():
 
             return "success"
 
+
 @app.route('/posture/', methods=['GET', 'POST'])
 def getLabel():
-    label=-1
 	#label(int 값) string으로 반환한다
     if request.method == 'GET':
-        if label>7:
-            label=0
-        else:
-            label+=1
+        label = random.randrange(0,7)
         return str(label)
 
 
