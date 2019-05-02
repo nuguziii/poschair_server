@@ -5,7 +5,7 @@ from flask import redirect
 from flask import request
 from flask import session
 from flask import url_for, abort, render_template, flash
-from data_generator import data
+#from data_generator import data
 from functools import wraps
 
 
@@ -24,7 +24,6 @@ def getImage():
 @app.route('/login/', methods=['GET', 'POST'])
 def login():
 	if request.method == 'POST' and request.form['email']:
-		d = data()
 		conn = sqlite3.connect("../POSCHAIR.db")
 		c = conn.cursor()
 
@@ -45,7 +44,6 @@ def login():
 @app.route('/signup/', methods=['GET', 'POST'])
 def signup():
 	if request.method == 'POST':
-		d = data()
 		conn = sqlite3.connect("../POSCHAIR.db")
 		c = conn.cursor()
 		input = [request.form['email'], request.form['name'], request.form['pwd']]
