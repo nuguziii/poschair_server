@@ -30,7 +30,7 @@ def login():
 		iemail = request.form['email']
 		ipwd = request.form['pwd']
 
-		c.execute("SELECT ID, pwd FROM USER WHERE ID = ?", (iemail,))
+		c.execute("SELECT ID, pwd FROM User WHERE ID = ?", (iemail,))
 		k = c.fetchone()[0]
 
 		try:
