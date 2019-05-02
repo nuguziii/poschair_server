@@ -71,6 +71,7 @@ def getImage():
 def getLabel():
 	#label string으로 반환한다
 	if request.method == 'GET':
+		return 'success'
 		
 
 if __name__=='__main__':
