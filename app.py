@@ -46,8 +46,8 @@ def login():
 def signup():
 	if request.method == 'POST':
 		d = data()
-    	conn = sqlite3.connect("../POSCHAIR.db")
-    	c = conn.cursor()
+		conn = sqlite3.connect("../POSCHAIR.db")
+		c = conn.cursor()
 		input = [request.form['email'], request.form['name'], request.form['pwd']]
 		c.execute("INSERT INTO User(ID, name, pwd) VALUES (?,?,?)", input)
 		
