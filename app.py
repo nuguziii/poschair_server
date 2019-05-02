@@ -48,6 +48,8 @@ def signup():
 		c = conn.cursor()
 		input = [request.form['email'], request.form['name'], request.form['pwd']]
 		c.execute("INSERT INTO User(ID, name, pwd) VALUES (?,?,?)", input)
+		conn.commit()
+		conn.close()
 
 		return 'success'
 		
