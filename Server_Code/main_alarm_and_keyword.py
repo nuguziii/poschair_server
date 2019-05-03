@@ -42,7 +42,7 @@ if __name__ == '__main__':
 			lower = LBCNet(d.generator(lower_median_total), d.generator(lower_init)) #lower 자세값
 			upper = upper_balance_check(upper_median_total) #upper 자세값 받아옴.
 
-			print(lower, upper)
+			print("lower: ",lower,"upper: ", upper)
 
             #실시간 자세 DB에 저장
 			messaging(upper, lower) #output은 int 형태로 나옴 이걸 안드로이드로 전송해서 안드로이드에서 메세지 생성
@@ -57,7 +57,7 @@ if __name__ == '__main__':
 
             #알림 확인 및 전송
 			alarm_list = is_alarm(upper, lower, conn) #알람 보낼 리스트가 있는지 확인
-			print(alarm_list)
+			print("alarm_list: ", alarm_list)
 			try:
 				if len(alarm_list) is not 0: #알람 리스트가 있으면
 					result = generate_alarm(alarm_list) #알람 전송
