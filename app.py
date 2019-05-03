@@ -1,5 +1,4 @@
 import datetime
-
 from flask import Flask
 from flask import redirect
 from flask import request
@@ -11,32 +10,40 @@ import random
 
 
 
+
 # create a flask application - this ``app`` object will be used to handle
 # inbound requests, routing them to the proper 'view' functions, etc
 app = Flask(__name__)
 app.config.from_object(__name__)
 
-# create a peewee database instance -- our models will use this database to
-# persist information
-
-# model definitions -- the standard "pattern" is to define a base model class
-# that specifies which database to use.  then, any subclasses will automatically
-# use the correct storage. for more information, see:
-# http://charlesleifer.com/docs/peewee/peewee/models.html#model-api-smells-like-django
 
 @app.route('/image/',methods=['GET','POST'])
 def getImage():
         return redirect(url_for('static',filename='posture_sample.png'))
 
-# views -- these are the actual mappings of url to view function
+
 @app.route('/login/', methods=['GET', 'POST'])
 def login():
-	print('login')
 	if request.method == 'POST' and request.form['email']:
-            conn = sqlite3.connect("../../POSCHAIR.db")
-            c = conn.cursor()
+		conn = sqlite3.connect("../POSCHAIR.db")
+		c = conn.cursor()
 
-            c.excute("select count(*) from User where ID={}".format(request.form['email']))
+		iemail = request.form['email']
+		ipwd = request.form['pwd']
+
+		c.execute("SELECT ID, pwd FROM USER WHERE ID = ?", (iemail,))
+		k = c.fetchone()[0]
+
+		
+		if k[0] == iemail and k[1] == ipwd:
+      print('fetch success')
+		else:
+      print('fetch failed')
+    
+	  return 'success'
+
+'''
+            c.execute("select count(*) from User where ID={}".format(request.form['email']))
             isUser = c.fetchone()
 
             if isUser == 1:
@@ -49,11 +56,11 @@ def login():
                     return "wrong_pw"
             else:
                 return 'non_email'
-
+'''
 @app.route('/signup/', methods=['GET', 'POST'])
 def signup():
-	print('signup')
 	if request.method == 'POST':
+      '''
 			conn = sqlite3.connect("../POSCHAIR.db")
             c = conn.cursor()
 
@@ -69,27 +76,27 @@ def signup():
 
                 return "success"
 
-	return render_template('./index.html')
+	    return render_template('./index.html')
+      '''
 
 
 
+    	conn = sqlite3.connect("../POSCHAIR.db")
+    	c = conn.cursor()
+	  	input = [request.form['email'], request.form['name'], request.form['pwd']]
+	  	c.execute("INSERT INTO User(ID, name, pwd) VALUES (?,?,?)", input)
+		
+    	return render_template('./index.html')
+
+	
+'''
 @app.route('/addInfo/', methods=['GET', 'POST'])
 def addInfo():
 	#age, sex, height, weight
 	if request.method == 'POST':
-		try:
-			print('addInfo')
-			#with database.atomic():
-			#	query = User.update(
-			#		age=int(request.form['age']),
-			#		gender=request.form['sex'],
-			#		height=int(request.form['height']),
-			#		weight=int(request.form['weight'])).where(User.ID == "choo@naver.com")
-			#	query.execute()
-			return "success"
-
-		except IntegrityError:
-			return 'addInfo_error'
+		
+	return render_template('./index.html')
+'''
 
 @app.route('/video/',methods=['GET','POST']) #추천 영상 비디오
 def sendVideoList():
