@@ -375,7 +375,7 @@ def generate_keyword_for_video_matching(conn):
     conn = sqlite3.connect("../../POSCHAIR.db")
     c = conn.cursor()
 
-    keyword_dict = {"k0":0, "k1":0, "k2":0, "k3":0, "k4":0, "k5":0, "k6":0, "k7":0}
+    keyword_dict = {"k0":0, "k1":0, "k2":0, "k3":0, "k4":0, "k5":0, "k6":0}
 
     t_now = datetime.datetime.now()
     t_old = t_now - datetime.timedelta(hours = 48)
