@@ -78,13 +78,12 @@ def signup():
            '''
 
 
+           conn = sqlite3.connect("../POSCHAIR.db")
+           c = conn.cursor()
+           input = [request.form['email'], request.form['name'], request.form['pwd']]
+           c.execute("INSERT INTO User(ID, name, pwd) VALUES (?,?,?)", input)
 
-    	conn = sqlite3.connect("../POSCHAIR.db")
-    	c = conn.cursor()
-	  	input = [request.form['email'], request.form['name'], request.form['pwd']]
-	  	c.execute("INSERT INTO User(ID, name, pwd) VALUES (?,?,?)", input)
-
-    	return render_template('./index.html')
+           return render_template('./index.html')
 
 
 '''
