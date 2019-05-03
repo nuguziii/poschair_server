@@ -37,12 +37,12 @@ def login():
 		k = c.fetchone()[0]
 
 
-		
+
 		if k[0] == iemail and k[1] == ipwd:
-      print('fetch success')
+            print('fetch success')
 		else:
-      print('fetch failed')
-    
+            print('fetch failed')
+
 	  return 'success'
 
 '''
@@ -88,16 +88,16 @@ def signup():
     	c = conn.cursor()
 	  	input = [request.form['email'], request.form['name'], request.form['pwd']]
 	  	c.execute("INSERT INTO User(ID, name, pwd) VALUES (?,?,?)", input)
-		
+
     	return render_template('./index.html')
 
-	
+
 '''
 @app.route('/addInfo/', methods=['GET', 'POST'])
 def addInfo():
 	#age, sex, height, weight
 	if request.method == 'POST':
-		
+
 	return render_template('./index.html')
 '''
 
