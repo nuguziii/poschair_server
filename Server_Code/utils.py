@@ -63,6 +63,7 @@ def LBCNet(image, guide):
 
     elapsed_time = time.time() - start_time
 
+    y_p = y_p.reshape(4).tolist()
     return y_p
 
 def upper_balance_check(value):
@@ -125,7 +126,7 @@ def messaging(upper, lower):
     #send_android:
     #send_result 안드로이드에 전송
 
-def is_alarm(upper, lower):
+def is_alarm(upper, lower, conn):
     #=====================================
     # check if we should alert alarm
     # - output: list type (alarm_list)
@@ -259,7 +260,7 @@ def generate_alarm(alarm_value):
     print('Successfully sent message:', response)
 
 
-def keyword_matching(conn, upper, lower):
+def keyword_matching(conn, upper, lower, lower_median_total):
     #=====================================
     # save in Keyword Database
     # - input:
@@ -271,6 +272,11 @@ def keyword_matching(conn, upper, lower):
     now = datetime.datetime.now()
 
     c = conn.cursor()
+
+    c.execute("SELECT total_time FROM Keyword WHERE ID = ?", ("choo@naver.com",))
+    key = int(c.fetchone()[0])
+    key += 1
+    c.execute("UPDATE Keyword SET total_time = ? WHERE ID = ?", (key, "choo@naver.com"))
 
     if upper is 1:
         c.execute("SELECT k0 FROM Keyword WHERE ID = ?", ("choo@naver.com",))
@@ -317,11 +323,21 @@ def keyword_matching(conn, upper, lower):
         key += 1
         c.execute("UPDATE Keyword SET k3 = ? WHERE ID = ?", (key, "choo@naver.com"))
 
-
         c.execute("SELECT k6 FROM Keyword WHERE ID = ?", ( "choo@naver.com",))
         key = int(c.fetchone()[0])
         key += 1
         c.execute("UPDATE Keyword SET k6 = ? WHERE ID = ?", (key, "choo@naver.com"))
+
+        if lower_medain_total[0]>lower_median_total[4]:
+            c.execute("SELECT left FROM Keyword WHERE ID = ?", ( "choo@naver.com",))
+            key = int(c.fetchone()[0])
+            key += 1
+            c.execute("UPDATE Keyword SET left = ? WHERE ID = ?", (key, "choo@naver.com"))
+        else:
+            c.execute("SELECT right FROM Keyword WHERE ID = ?", ( "choo@naver.com",))
+            key = int(c.fetchone()[0])
+            key += 1
+            c.execute("UPDATE Keyword SET right = ? WHERE ID = ?", (key, "choo@naver.com"))
 
     elif lower[0] is 1:
         c.execute("SELECT k2 FROM Keyword WHERE ID = ?", ( "choo@naver.com",))
@@ -374,7 +390,7 @@ def generate_keyword_for_video_matching():
 
     return keyword_dict
 
-def video_matching(keyword):
+def video_matching(keyword, conn):
     #=====================================
     # generate_keyword_for_video_matching 으로부터 keyword 받아와서
     # video url list string 형태로 안드로이드에 보냄
