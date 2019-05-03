@@ -40,8 +40,7 @@ def login():
             print('fetch failed')
 
         return 'success'
-
-'''
+        '''
             c.execute("select count(*) from User where ID={}".format(request.form['email']))
             isUser = c.fetchone()
 
@@ -55,11 +54,11 @@ def login():
                     return "wrong_pw"
             else:
                 return 'non_email'
-'''
+        '''
 @app.route('/signup/', methods=['GET', 'POST'])
 def signup():
 	if request.method == 'POST':
-      '''
+            '''
 			conn = sqlite3.connect("../POSCHAIR.db")
             c = conn.cursor()
 
@@ -75,8 +74,8 @@ def signup():
 
                 return "success"
 
-	    return render_template('./index.html')
-      '''
+	       return render_template('./index.html')
+           '''
 
 
 
