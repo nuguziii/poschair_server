@@ -27,16 +27,14 @@ def getImage():
 @app.route('/login/', methods=['GET', 'POST'])
 def login():
 	if request.method == 'POST' and request.form['email']:
-		conn = sqlite3.connect("../POSCHAIR.db")
-		c = conn.cursor()
+        conn = sqlite3.connect("../POSCHAIR.db")
+        c = conn.cursor()
+        iemail = request.form['email']
+        ipwd = request.form['pwd']
+        c.execute("SELECT ID, pwd FROM User WHERE ID = ?", (iemail,))
+        k = c.fetchone()[0]
 
-		iemail = request.form['email']
-		ipwd = request.form['pwd']
-
-		c.execute("SELECT ID, pwd FROM User WHERE ID = ?", (iemail,))
-		k = c.fetchone()[0]
-
-        if k[0]==iemail and k[1] == ipwd:
+        if k[0]==iemail and k[1] == ipwd :
             print('fetch success')
         else:
             print('fetch failed')
