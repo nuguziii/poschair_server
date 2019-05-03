@@ -19,7 +19,6 @@ if __name__ == '__main__':
 	lower_init = rows.replace('[','').replace(']','').split(',')
 	lower_init = list(map(int, lower_init))
 
-
     #계속 돌면서 keyword 저장
 	while(True):
 
@@ -58,6 +57,7 @@ if __name__ == '__main__':
             #알림 확인 및 전송
 			alarm_list = is_alarm(upper, lower, conn) #알람 보낼 리스트가 있는지 확인
 			print("alarm_list: ", alarm_list)
+
 			try:
 				if len(alarm_list) is not 0: #알람 리스트가 있으면
 					result = generate_alarm(alarm_list) #알람 전송

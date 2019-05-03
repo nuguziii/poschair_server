@@ -19,8 +19,11 @@ import sqlite3
 import datetime
 from data_generator import data
 from model import vgg19
-#import firebase_admin
-#from firebase_admin import credentials
+import firebase_admin
+from firebase_admin import credentials
+from firebase_admin import messaging
+
+
 
 
 
@@ -146,6 +149,7 @@ def is_alarm(upper, lower, conn):
     c.execute("SELECT * FROM Posture_data WHERE date BETWEEN ? AND ?", (t_old, t_now))
     rows = c.fetchall()
 
+
     upper1cnt = 0
     upper2cnt = 0
     lower1cnt = 0
@@ -217,44 +221,42 @@ def generate_alarm(alarm_value):
     #     integer(indicates the current posture alarm label)
     #======================================
 
-    '''
-    1. current_posture와 alarm_list 비교해서 교집합 현재 alarm_list에 저장
-    3. alarm_list 가 0이 아닐 경우 android에 alarm_list 전송
-    '''
     posture = None
 
-    #예시임 5까지 추가해야하고 메세지 바꿔야함
     if alarm_value == 0:
     	return 0 #don't send the alarm
     elif alarm_value == 1:
-        posture = 'turtle neck'
-    elif (alarm_value ==2):
-        posture = 'slouched'
+        posture = 'Mind your posture! Stretch out a bit :)'
+    elif alarm_value == 2:
+        posture = 'Mind your neck! Better stretch your neck :)'
+    elif alarm_value == 3:
+        posture = 'Mind your back! Better stretch your back right and left :)'
+    elif alarm_value == 4:
+        posture = 'You are crossing your legs for too long. How about changing your legs direction :)'
+    else:
+        posture = 'Sorry, no idea about your posture for the moment... :('
 
+    print("entered firebase credential")
     cred = credentials.Certificate('/root/poschair-134c8-firebase-adminsdk-1i2vn-01f260312b.json')
     app = firebase_admin.initialize_app(cred)
+    print("finished firebase credential")
 
-    # This registration token comes from the client FCM SDKs.
-    registration_token = 'YOUR_REGISTRATION_TOKEN'
-
-    # See documentation on defining a message payload.
     message = messaging.Message(
         android=messaging.AndroidConfig(
-            ttl=0, #즉시 보낸다는 뜻
+            ttl=0,
             priority='normal',
             notification=messaging.AndroidNotification(
-                title='Mind your posture!',
+                title='PosChair',
                 body=posture,
-            ),
-        )
-    )
+                ),
+                ),
+                topic='poschair',
+                )
 
-    # Send a message to the device corresponding to the provided
-    # registration token.
+    # Send a message to the devices subscribed to the provided topic.
     response = messaging.send(message)
     # Response is a message ID string.
     print('Successfully sent message:', response)
-
 
 def keyword_matching(conn, upper, lower, lower_median_total):
     #=====================================
@@ -263,10 +265,9 @@ def keyword_matching(conn, upper, lower, lower_median_total):
     #   upper: int type
     #   lower: list type
     #======================================
+
     # {"Alright":0, "Turtle/Bowed":1, "Slouched":2}
     keyword_list = {"Turtle/Bowed":"k0", "Slouched":"k1", "PelvisImbalance":"k2", "Scoliosis":"k3", "HipPain":"k4", "KneePain":"k5", "PoorCirculation":"k6"}
-    now = datetime.datetime.now()
-
     c = conn.cursor()
 
     c.execute("SELECT total_time FROM Keyword WHERE ID = ?", ("choo@naver.com",))
@@ -276,9 +277,10 @@ def keyword_matching(conn, upper, lower, lower_median_total):
 
     if upper is 1:
         c.execute("SELECT k0 FROM Keyword WHERE ID = ?", ("choo@naver.com",))
-        key = int(c.fetchone()[0])
-        key += 1
-        c.execute("UPDATE Keyword SET k0 = ? WHERE ID = ?", (key, "choo@naver.com"))
+        k0 = c.fetchone()[0]
+        k0 += 1
+        c.execute("UPDATE Keyword SET k0 = ? WHERE ID = ?", (k0, "choo@naver.com"))
+
 
     elif upper is 2:
         c.execute("SELECT k1 FROM Keyword WHERE ID = ?", ("choo@naver.com",))
@@ -342,6 +344,7 @@ def keyword_matching(conn, upper, lower, lower_median_total):
         c.execute("UPDATE Keyword SET k2 = ? WHERE ID = ?", (key, "choo@naver.com"))
 
         c.execute("SELECT k3 FROM Keyword WHERE ID = ?", ("choo@naver.com",))
+
         key = int(c.fetchone()[0])
         key += 1
         c.execute("UPDATE Keyword SET k3 = ? WHERE ID = ?", (key, "choo@naver.com"))
@@ -405,6 +408,7 @@ def video_matching(keyword, conn):
         video_keyword = video_dict["k7"]
     else:
         video_keyword = video_dict[sorted_key[0][0]]
+
 
     '''
     video_list에 해당하는 url들 db에서 가져오기

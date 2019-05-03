@@ -1,5 +1,4 @@
 import datetime
-import sqlite3
 from flask import Flask
 from flask import redirect
 from flask import request
@@ -7,6 +6,10 @@ from flask import session
 from flask import url_for, abort, render_template, flash
 #from data_generator import data
 from functools import wraps
+import sqlite3
+import json
+import random
+
 
 
 
@@ -33,27 +36,60 @@ def login():
 		c.execute("SELECT ID, pwd FROM User WHERE ID = ?", (iemail,))
 		k = c.fetchone()[0]
 
-		try:
-			if k[0] == iemail and k[1] == ipwd:
-				return 'fetch success'
-		except:
-			return 'fetch failed'
-	return 'success'
 
+		
+		if k[0] == iemail and k[1] == ipwd:
+      print('fetch success')
+		else:
+      print('fetch failed')
+    
+	  return 'success'
 
+'''
+            c.execute("select count(*) from User where ID={}".format(request.form['email']))
+            isUser = c.fetchone()
+
+            if isUser == 1:
+                c.excute("select count(*) from User where ID={} and pwd={}".format(request.form['email'],request.form['password']))
+                isRightPwd = c.fetchone()
+
+                if isRightPwd == 1:
+                    return "success"
+                else:
+                    return "wrong_pw"
+            else:
+                return 'non_email'
+'''
 @app.route('/signup/', methods=['GET', 'POST'])
 def signup():
 	if request.method == 'POST':
-		conn = sqlite3.connect("../POSCHAIR.db")
-		c = conn.cursor()
-		input = [request.form['email'], request.form['name'], request.form['pwd']]
-		c.execute("INSERT INTO User(ID, name, pwd) VALUES (?,?,?)", input)
-		conn.commit()
-		conn.close()
+      '''
+			conn = sqlite3.connect("../POSCHAIR.db")
+            c = conn.cursor()
 
-		return 'success'
+            c.excute("select count(*) from User where ID={}".format(request.form['email']))
+            isUser = c.fetchone()
+
+            if isUser == 1:
+                return "already_existed"
+            else:
+                c.excute("insert into User(ID,name,pwd) values(?,?,?,?,?)",request.form['email'],request.form['name'],request.form['password'])
+                conn.commit()
+                conn.close()
+
+                return "success"
+
+	    return render_template('./index.html')
+      '''
+
+
+
+    	conn = sqlite3.connect("../POSCHAIR.db")
+    	c = conn.cursor()
+	  	input = [request.form['email'], request.form['name'], request.form['pwd']]
+	  	c.execute("INSERT INTO User(ID, name, pwd) VALUES (?,?,?)", input)
 		
-	return render_template('./index.html')
+    	return render_template('./index.html')
 
 	
 '''
@@ -65,12 +101,75 @@ def addInfo():
 	return render_template('./index.html')
 '''
 
+@app.route('/video/',methods=['GET','POST']) #추천 영상 비디오
+def sendVideoList():
+    if request.method == 'GET':
+        conn = sqlite3.connect("../POSCHAIR.db")
+        conn.row_factory = sqlite3.Row
+        c = conn.cursor()
+
+        rows = c.execute('''
+                         select vidID,vidTitle,view,uploadDate,liked from Youtube_Video
+                         ''').fetchall()
+
+        conn.close()
+
+        print(json.dumps([dict(i) for i in rows]))
+
+        return json.dumps([dict(i) for i in rows])
+
+
+
+@app.route('/likeVideo/',methods=['GET','POST'])  #사용자가 좋아한 비디오
+def sendlikeVideoList():
+    if request.method == 'GET':
+        conn = sqlite3.connect("../POSCHAIR.db")
+        conn.row_factory = sqlite3.Row
+        c = conn.cursor()
+
+        rows = c.execute('''
+                         select vidID,vidTitle,view,uploadDate,liked from Youtube_Video where liked=1
+                         ''').fetchall()
+        conn.close()
+
+        if rows == None:
+            return json.dumps([])
+        else:
+            return json.dumps([dict(i) for i in rows])
+
+
+@app.route('/changeVideoLike/',methods=['GET','POST'])
+def updateVideoLike():
+    if request.method == 'POST':
+        user_id = request.form['user_id']
+        videoID = request.form['videoID']
+        isLike = request.form['isLike']
+
+        conn = sqlite3.connect("../../POSCHAIR.db")
+        c = conn.cursor()
+
+        if isLike == "like": # 좋아요 x -> 좋아요 db 업데이트
+            c.execute("update Youtube_Video set liked=1 where vidID={}".format(videoID))
+            conn.commit()
+            conn.close()
+
+            return "success"
+
+        else: #isLike=="unlike" : 좋아요 -> 좋아요 취소 db 업데이트
+            c.execute("update Youtube_Video set liked=0 where vidID={}".format(videoID))
+            conn.commit()
+            conn.close()
+
+            return "success"
+
+
 @app.route('/posture/', methods=['GET', 'POST'])
 def getLabel():
-	#label string으로 반환한다
-	if request.method == 'GET':
-		return '0'
-		
+	#label(int 값) string으로 반환한다
+    if request.method == 'GET':
+        label = random.randrange(0,7)
+        return str(label)
+
 
 if __name__=='__main__':
 	print('connection succeeded')

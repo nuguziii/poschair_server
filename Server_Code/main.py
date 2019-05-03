@@ -4,7 +4,7 @@ import numpy as np
 import time
 import os
 from data_generator import data
-from utils import *
+from utils import * #not using yet
 from flask import Flask
 from flask import redirect
 from flask import request
@@ -20,7 +20,6 @@ import os
 # inbound requests, routing them to the proper 'view' functions, etc
 app = Flask(__name__)
 app.config.from_object(__name__)
-
 
 total_pressure = []
 total_ultra = []
@@ -59,7 +58,7 @@ def result():
         real_time_count+=1
         total_time_count+=1
 
-        conn = sqlite3.connect("../POSCHAIR.db")
+        conn = sqlite3.connect("../../POSCHAIR.db")
         c = conn.cursor()
         if real_time_count == num_of_sensor_real_time:
           real_time_count = 0
@@ -77,7 +76,6 @@ def result():
           global total_ultra
           total_pressure.append(lower_median)
           total_ultra.append(upper_median)
-          print('success')
 
         if total_time_count == num_of_sensor_real_time * num_of_sensor_total:
           total_time_count = 0
@@ -90,14 +88,10 @@ def result():
           #DB에 저장하기
           c.execute("UPDATE Median SET lower_median_total = ?, upper_median_total = ? WHERE ID = ?", (str(lower_median_total), str(upper_median_total), 'choo@naver.com'))
           conn.commit()
-
-
-          print('db_total_input_succeess')
         conn.close()
-    print('post success')
-
     return 'complete'
 
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=80, debug=False)
+
