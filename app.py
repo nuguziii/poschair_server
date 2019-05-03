@@ -4,6 +4,8 @@ from flask import redirect
 from flask import request
 from flask import session
 from flask import url_for, abort, render_template, flash
+#from data_generator import data
+from functools import wraps
 import sqlite3
 import json
 import random
@@ -31,8 +33,9 @@ def login():
 		iemail = request.form['email']
 		ipwd = request.form['pwd']
 
-		c.execute("SELECT ID, pwd FROM USER WHERE ID = ?", (iemail,))
+		c.execute("SELECT ID, pwd FROM User WHERE ID = ?", (iemail,))
 		k = c.fetchone()[0]
+
 
 		
 		if k[0] == iemail and k[1] == ipwd:

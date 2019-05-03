@@ -66,6 +66,7 @@ def LBCNet(image, guide):
 
     elapsed_time = time.time() - start_time
 
+    y_p = y_p.reshape(4).tolist()
     return y_p
 
 def upper_balance_check(value):
@@ -112,21 +113,22 @@ def messaging(upper, lower):
         send_result = messaging_list["turtle/bowed"]
     elif lower[3]==1:
         # 혹시 다리를 꼬고 계신가요?
-        send_result = messaging_list["legsOnChair"]
+        send_result = messaging_list["crossedLegs"]
     elif lower[2]==1:
         # 혹시 다리를 의자 위에 올려놓고 계신가요?
-        send_result = messaging_list["crossedLegs"]
+        send_result = messaging_list["legsOnChair"]
     elif lower[1]==1:
         # 허리를 바르게 유지하고 계신가요?
         send_result = messaging_list["backbone"]
     else:
         send_result = messaging_list["others"]
 
+    return send_result
 
     #send_android:
     #send_result 안드로이드에 전송
 
-def is_alarm(upper, lower):
+def is_alarm(upper, lower, conn):
     #=====================================
     # check if we should alert alarm
     # - output: list type (alarm_list)
@@ -256,10 +258,7 @@ def generate_alarm(alarm_value):
     # Response is a message ID string.
     print('Successfully sent message:', response)
 
-
-
-def keyword_matching(conn, upper, lower):
-
+def keyword_matching(conn, upper, lower, lower_median_total):
     #=====================================
     # save in Keyword Database
     # - input:
@@ -269,10 +268,12 @@ def keyword_matching(conn, upper, lower):
 
     # {"Alright":0, "Turtle/Bowed":1, "Slouched":2}
     keyword_list = {"Turtle/Bowed":"k0", "Slouched":"k1", "PelvisImbalance":"k2", "Scoliosis":"k3", "HipPain":"k4", "KneePain":"k5", "PoorCirculation":"k6"}
-
-    now = datetime.datetime.now()
-
     c = conn.cursor()
+
+    c.execute("SELECT total_time FROM Keyword WHERE ID = ?", ("choo@naver.com",))
+    key = int(c.fetchone()[0])
+    key += 1
+    c.execute("UPDATE Keyword SET total_time = ? WHERE ID = ?", (key, "choo@naver.com"))
 
     if upper is 1:
         c.execute("SELECT k0 FROM Keyword WHERE ID = ?", ("choo@naver.com",))
@@ -320,11 +321,21 @@ def keyword_matching(conn, upper, lower):
         key += 1
         c.execute("UPDATE Keyword SET k3 = ? WHERE ID = ?", (key, "choo@naver.com"))
 
-
         c.execute("SELECT k6 FROM Keyword WHERE ID = ?", ( "choo@naver.com",))
         key = int(c.fetchone()[0])
         key += 1
         c.execute("UPDATE Keyword SET k6 = ? WHERE ID = ?", (key, "choo@naver.com"))
+
+        if lower_medain_total[0]>lower_median_total[4]:
+            c.execute("SELECT left FROM Keyword WHERE ID = ?", ( "choo@naver.com",))
+            key = int(c.fetchone()[0])
+            key += 1
+            c.execute("UPDATE Keyword SET left = ? WHERE ID = ?", (key, "choo@naver.com"))
+        else:
+            c.execute("SELECT right FROM Keyword WHERE ID = ?", ( "choo@naver.com",))
+            key = int(c.fetchone()[0])
+            key += 1
+            c.execute("UPDATE Keyword SET right = ? WHERE ID = ?", (key, "choo@naver.com"))
 
     elif lower[0] is 1:
         c.execute("SELECT k2 FROM Keyword WHERE ID = ?", ( "choo@naver.com",))
@@ -347,8 +358,7 @@ def keyword_matching(conn, upper, lower):
     conn.commit()
 
 
-
-def generate_keyword_for_video_matching():
+def generate_keyword_for_video_matching(conn):
     #=====================================
     # generate keyword from Database
     # DB에 n시간 정도의 자세 키워드 데이터를 확인한 다음
@@ -364,7 +374,7 @@ def generate_keyword_for_video_matching():
     conn = sqlite3.connect("../../POSCHAIR.db")
     c = conn.cursor()
 
-    keyword_dict = {"k0":0, "k1":0, "k2":0, "k3":0, "k4":0, "k5":0, "k6":0, "k7":0}
+    keyword_dict = {"k0":0, "k1":0, "k2":0, "k3":0, "k4":0, "k5":0, "k6":0}
 
     t_now = datetime.datetime.now()
     t_old = t_now - datetime.timedelta(hours = 48)
@@ -373,13 +383,13 @@ def generate_keyword_for_video_matching():
     rows = c.fetchall()
 
     for row in rows:
-        for i in range(7):
-            keyword_dict["k"+str(i)] += row[i+1]
+        for i in range(7): #3-9
+            keyword_dict["k"+str(i)] += row[i+3]
 
 
     return keyword_dict
 
-def video_matching(keyword):
+def video_matching(keyword, conn):
     #=====================================
     # generate_keyword_for_video_matching 으로부터 keyword 받아와서
     # video url list string 형태로 안드로이드에 보냄
