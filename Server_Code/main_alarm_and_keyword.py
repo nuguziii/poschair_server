@@ -21,7 +21,9 @@ if __name__ == '__main__':
 
 
     #계속 돌면서 keyword 저장
-	for i in range(2):
+	while(True):
+
+		start = time.time()
 
         #lower_median_total, upper_median_total DB에서 가져옴
 		c.execute("SELECT lower_median_total FROM Median WHERE ID = ?", ("choo@naver.com",))
@@ -61,3 +63,7 @@ if __name__ == '__main__':
 					result = generate_alarm(alarm_list) #알람 전송
 			except:
 				pass
+
+		elapsed_time = time.time() - start
+
+		sleep(300-elapsed_time)
