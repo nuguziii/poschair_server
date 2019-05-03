@@ -36,14 +36,12 @@ def login():
 		c.execute("SELECT ID, pwd FROM User WHERE ID = ?", (iemail,))
 		k = c.fetchone()[0]
 
-
-
-		if k[0] == iemail and k[1] == ipwd:
+        if k[0]==iemail and k[1] == ipwd:
             print('fetch success')
-		else:
+        else:
             print('fetch failed')
 
-	  return 'success'
+        return 'success'
 
 '''
             c.execute("select count(*) from User where ID={}".format(request.form['email']))
