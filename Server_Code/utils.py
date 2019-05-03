@@ -111,10 +111,10 @@ def messaging(upper, lower):
         send_result = messaging_list["turtle/bowed"]
     elif lower[3]==1:
         # 혹시 다리를 꼬고 계신가요?
-        send_result = messaging_list["legsOnChair"]
+        send_result = messaging_list["crossedLegs"]
     elif lower[2]==1:
         # 혹시 다리를 의자 위에 올려놓고 계신가요?
-        send_result = messaging_list["crossedLegs"]
+        send_result = messaging_list["legsOnChair"]
     elif lower[1]==1:
         # 허리를 바르게 유지하고 계신가요?
         send_result = messaging_list["backbone"]
@@ -359,7 +359,7 @@ def keyword_matching(conn, upper, lower, lower_median_total):
     conn.commit()
 
 
-def generate_keyword_for_video_matching():
+def generate_keyword_for_video_matching(conn):
     #=====================================
     # generate keyword from Database
     # DB에 n시간 정도의 자세 키워드 데이터를 확인한 다음
