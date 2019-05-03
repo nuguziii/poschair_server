@@ -384,8 +384,8 @@ def generate_keyword_for_video_matching(conn):
     rows = c.fetchall()
 
     for row in rows:
-        for i in range(3,10):
-            keyword_dict["k"+str(i)] += row[i]
+        for i in range(7): #3-9
+            keyword_dict["k"+str(i)] += row[i+3]
 
 
     return keyword_dict
