@@ -66,4 +66,4 @@ if __name__ == '__main__':
 
 		elapsed_time = time.time() - start
 
-		sleep(300-elapsed_time)
+		sleep(60-elapsed_time)
