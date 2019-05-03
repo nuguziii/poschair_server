@@ -26,7 +26,7 @@ def getImage():
 
 @app.route('/login/', methods=['GET', 'POST'])
 def login():
-	if request.method == 'POST' and request.form['email']:
+    if request.method == 'POST' and request.form['email']:
         conn = sqlite3.connect("../POSCHAIR.db")
         c = conn.cursor()
         iemail = request.form['email']
