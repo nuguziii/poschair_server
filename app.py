@@ -95,6 +95,7 @@ def addInfo():
 	return render_template('./index.html')
 '''
 
+# main_video 구현 후 지워야
 @app.route('/video/',methods=['GET','POST']) #추천 영상 비디오
 def sendVideoList():
     if request.method == 'GET':
@@ -107,8 +108,6 @@ def sendVideoList():
                          ''').fetchall()
 
         conn.close()
-
-        print(json.dumps([dict(i) for i in rows]))
 
         return json.dumps([dict(i) for i in rows])
 
