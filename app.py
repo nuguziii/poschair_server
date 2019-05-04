@@ -59,7 +59,7 @@ def login():
 def signup():
 	if request.method == 'POST':
             '''
-			conn = sqlite3.connect("../POSCHAIR.db")
+			      conn = sqlite3.connect("../POSCHAIR.db")
             c = conn.cursor()
 
             c.excute("select count(*) from User where ID={}".format(request.form['email']))
@@ -74,7 +74,7 @@ def signup():
 
                 return "success"
 
-	       return render_template('./index.html')
+	         return render_template('./index.html')
            '''
 
 
@@ -86,7 +86,6 @@ def signup():
            conn.close()
 
            return render_template('./index.html')
-
 
 '''
 @app.route('/addInfo/', methods=['GET', 'POST'])
