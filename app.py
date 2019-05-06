@@ -58,31 +58,12 @@ def login():
 @app.route('/signup/', methods=['GET', 'POST'])
 def signup():
 	if request.method == 'POST':
-            '''
-			conn = sqlite3.connect("../POSCHAIR.db")
+            conn = sqlite3.connect("../POSCHAIR.db")
             c = conn.cursor()
-
-            c.excute("select count(*) from User where ID={}".format(request.form['email']))
-            isUser = c.fetchone()
-
-            if isUser == 1:
-                return "already_existed"
-            else:
-                c.excute("insert into User(ID,name,pwd) values(?,?,?,?,?)",request.form['email'],request.form['name'],request.form['password'])
-                conn.commit()
-                conn.close()
-
-                return "success"
-
-	         return render_template('./index.html')
-           '''
-        
-        conn = sqlite3.connect("../POSCHAIR.db")
-        c = conn.cursor()
-        input = [request.form['email'], request.form['name'], request.form['pwd']]
-        c.execute("INSERT INTO User(ID, name, pwd) VALUES (?,?,?)", input)
-        conn.commit()
-        conn.close()
+            input = [request.form['email'], request.form['name'], request.form['pwd']]
+            c.execute("INSERT INTO User(ID, name, pwd) VALUES (?,?,?)", input)
+            conn.commit()
+            conn.close()
 
         return render_template('./index.html')
 
