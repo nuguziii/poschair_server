@@ -59,7 +59,7 @@ def login():
 def signup():
 	if request.method == 'POST':
             '''
-			      conn = sqlite3.connect("../POSCHAIR.db")
+			conn = sqlite3.connect("../POSCHAIR.db")
             c = conn.cursor()
 
             c.excute("select count(*) from User where ID={}".format(request.form['email']))
@@ -76,16 +76,14 @@ def signup():
 
 	         return render_template('./index.html')
            '''
+        conn = sqlite3.connect("../POSCHAIR.db")
+        c = conn.cursor()
+        input = [request.form['email'], request.form['name'], request.form['pwd']]
+        c.execute("INSERT INTO User(ID, name, pwd) VALUES (?,?,?)", input)
+        conn.commit()
+        conn.close()
 
-
-           conn = sqlite3.connect("../POSCHAIR.db")
-           c = conn.cursor()
-           input = [request.form['email'], request.form['name'], request.form['pwd']]
-           c.execute("INSERT INTO User(ID, name, pwd) VALUES (?,?,?)", input)
-           conn.commit()
-           conn.close()
-
-           return render_template('./index.html')
+        return render_template('./index.html')
 
 '''
 @app.route('/addInfo/', methods=['GET', 'POST'])
