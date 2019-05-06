@@ -76,6 +76,7 @@ def signup():
 
 	         return render_template('./index.html')
            '''
+        
         conn = sqlite3.connect("../POSCHAIR.db")
         c = conn.cursor()
         input = [request.form['email'], request.form['name'], request.form['pwd']]
