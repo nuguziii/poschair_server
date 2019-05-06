@@ -65,7 +65,7 @@ def signup():
             conn.commit()
             conn.close()
 
-        return render_template('./index.html')
+            return render_template('./index.html')
 
 '''
 @app.route('/addInfo/', methods=['GET', 'POST'])
