@@ -101,7 +101,7 @@ def addInfo():
 def sendVideoList():
     if request.method == 'GET':
         conn = sqlite3.connect("../POSCHAIR.db")
-        #conn.row_factory = sqlite3.Row
+        conn.row_factory = sqlite3.Row
         c = conn.cursor()
 
         rows = c.execute('''
