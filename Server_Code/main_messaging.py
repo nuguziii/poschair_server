@@ -3,12 +3,16 @@ import time
 import os
 from data_generator import data
 from utils import *
+import sqlite3
 
 if __name__ == '__main__': #함수로 바꾼 후 @app.route('/posture/', methods=['GET', 'POST'])에서 호출해야
     d = data()
+    conn = sqlite3.connect("../../POSCHAIR.db")
 
-    '''DB에서 초기자세 데이터 받아올 것'''
-    lower_origin = None #DB에서 초기 압력센서 자세값 받아옴
+	c = conn.cursor()
+    c.execute("SELECT init_pos_lower FROM User WHERE ID = ?", ("choo@naver.com",))
+    lower_origin = c.fetchone()[0]
+    print(lower_origin)
 
     '''오늘 총 시간 DB에서 받아옴'''
     total_hour = 0
