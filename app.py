@@ -58,34 +58,14 @@ def login():
 @app.route('/signup/', methods=['GET', 'POST'])
 def signup():
 	if request.method == 'POST':
-            '''
-			      conn = sqlite3.connect("../POSCHAIR.db")
+            conn = sqlite3.connect("../POSCHAIR.db")
             c = conn.cursor()
+            input = [request.form['email'], request.form['name'], request.form['pwd']]
+            c.execute("INSERT INTO User(ID, name, pwd) VALUES (?,?,?)", input)
+            conn.commit()
+            conn.close()
 
-            c.excute("select count(*) from User where ID={}".format(request.form['email']))
-            isUser = c.fetchone()
-
-            if isUser == 1:
-                return "already_existed"
-            else:
-                c.excute("insert into User(ID,name,pwd) values(?,?,?,?,?)",request.form['email'],request.form['name'],request.form['password'])
-                conn.commit()
-                conn.close()
-
-                return "success"
-
-	         return render_template('./index.html')
-           '''
-
-
-           conn = sqlite3.connect("../POSCHAIR.db")
-           c = conn.cursor()
-           input = [request.form['email'], request.form['name'], request.form['pwd']]
-           c.execute("INSERT INTO User(ID, name, pwd) VALUES (?,?,?)", input)
-           conn.commit()
-           conn.close()
-
-           return render_template('./index.html')
+            return 'success'
 
 '''
 @app.route('/addInfo/', methods=['GET', 'POST'])
@@ -139,18 +119,18 @@ def updateVideoLike():
         videoID = request.form['videoID']
         isLike = request.form['isLike']
 
-        conn = sqlite3.connect("../../POSCHAIR.db")
+        conn = sqlite3.connect("../POSCHAIR.db")
         c = conn.cursor()
 
         if isLike == "like": # 좋아요 x -> 좋아요 db 업데이트
-            c.execute("update Youtube_Video set liked=1 where vidID={}".format(videoID))
+            c.execute("update Youtube_Video set liked=1 where vidID='{}'".format(videoID))
             conn.commit()
             conn.close()
 
             return "success"
 
         else: #isLike=="unlike" : 좋아요 -> 좋아요 취소 db 업데이트
-            c.execute("update Youtube_Video set liked=0 where vidID={}".format(videoID))
+            c.execute("update Youtube_Video set liked=0 where vidID='{}'".format(videoID))
             conn.commit()
             conn.close()
 
@@ -161,7 +141,7 @@ def updateVideoLike():
 def getLabel():
 	#label(int 값) string으로 반환한다
     if request.method == 'GET':
-        label = random.randrange(0,7)
+        label = random.randrange(0,7) #현재 random인 상태 -> main_messaging 이용해서 수정해야
         return str(label)
 
 
