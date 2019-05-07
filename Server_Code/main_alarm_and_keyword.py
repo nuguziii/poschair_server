@@ -46,7 +46,7 @@ if __name__ == '__main__':
             #실시간 자세 DB에 저장
 			messaging(upper, lower) #output은 int 형태로 나옴 이걸 안드로이드로 전송해서 안드로이드에서 메세지 생성
 
-			conn = sqlite3.connect("../../POSCHAIR.db")
+			conn = sqlite3.connect("/root/POSCHAIR.db")
 			c = conn.cursor()
 			input = [datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'), "choo@naver.com", upper, lower[0], lower[1], lower[2], lower[3]]
 			c.execute("INSERT INTO Posture_data VALUES (?,?,?,?,?,?,?)", input)

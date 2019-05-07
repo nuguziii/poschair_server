@@ -58,7 +58,7 @@ def result():
         real_time_count+=1
         total_time_count+=1
 
-        conn = sqlite3.connect("../../POSCHAIR.db")
+        conn = sqlite3.connect("/root/POSCHAIR.db")
         c = conn.cursor()
         if real_time_count == num_of_sensor_real_time:
           real_time_count = 0
