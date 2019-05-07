@@ -18,7 +18,7 @@ if __name__ == '__main__': #함수로 바꾼 후 @app.route('/video/',methods=['
 		temp_rows = []
 		for videoID in video_list:
 			rows = c.execute("SELECT vidID,vidTitle,uploadDate,view,liked FROM Youtube_Video WHERE vidID = ?", (videoID,)).fetchall()
-			temp_rows.append(rows)
+			temp_rows += rows
 
 		print(temp_rows)
 		#row 내용들 -> rows로 합친 후
