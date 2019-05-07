@@ -2,6 +2,7 @@ import numpy as np
 import time
 import os
 from utils import *
+import json
 
 if __name__ == '__main__': #함수로 바꾼 후 @app.route('/video/',methods=['GET','POST'])에서 호출해야 or 이 부분을 app.py로 이동
 
@@ -22,6 +23,6 @@ if __name__ == '__main__': #함수로 바꾼 후 @app.route('/video/',methods=['
 		#row 내용들 -> rows로 합친 후
 		a = [dict(i) for i in temp_rows]
 		print(a)
-		return json.dumps(a)
+		print(json.dumps(a))
 		
 		#print(video_list)
