@@ -11,11 +11,16 @@ if __name__ == '__main__': #함수로 바꾼 후 @app.route('/video/',methods=['
 
 		keyword = generate_keyword_for_video_matching(conn) #기록을 통해 keyword dictionary 생성
 		video_list = video_matching(keyword, conn) #안드로이드에 url list 보냄
-		'''
-		for videoID in video_list:
-			row = c.execute("select vidID,vidTitle,view,uploadDate,liked from Youtube_Video where vidID={}".format(videoID)).fetchone()[0]
+		
 
-		row 내용들 -> rows로 합친 후
-		return json.dumps([dict(i) for i in rows])
-		'''
-		print(video_list)
+
+		for videoID in video_list:
+			rows = c.execute("SELECT vidID,vidTitle,uploadDate,view,liked FROM Youtube_Video WHERE vidID = ?", (videoID,)).fetchall()
+			a = [dict(i) for i in rows]
+			print(a)
+
+
+		#row 내용들 -> rows로 합친 후
+		#return json.dumps([dict(i) for i in rows])
+		
+		#print(video_list)
