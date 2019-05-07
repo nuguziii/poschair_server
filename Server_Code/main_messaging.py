@@ -8,7 +8,6 @@ import sqlite3
 if __name__ == '__main__': #함수로 바꾼 후 @app.route('/posture/', methods=['GET', 'POST'])에서 호출해야
     d = data()
     conn = sqlite3.connect("../../POSCHAIR.db")
-
 	c = conn.cursor()
     c.execute("SELECT init_pos_lower FROM User WHERE ID = ?", ("choo@naver.com",))
     lower_origin = c.fetchone()[0]
