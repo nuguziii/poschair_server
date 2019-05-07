@@ -26,26 +26,21 @@ def getImage():
 
 @app.route('/login/', methods=['GET', 'POST'])
 def login():
-	if request.method == 'POST' and request.form['email']:
-		conn = sqlite3.connect("../POSCHAIR.db")
-		c = conn.cursor()
+    if request.method == 'POST' and request.form['email']:
+        conn = sqlite3.connect("../POSCHAIR.db")
+        c = conn.cursor()
+        iemail = request.form['email']
+        ipwd = request.form['pwd']
+        c.execute("SELECT ID, pwd FROM User WHERE ID = ?", (iemail,))
+        k = c.fetchone()[0]
 
-		iemail = request.form['email']
-		ipwd = request.form['pwd']
-
-		c.execute("SELECT ID, pwd FROM User WHERE ID = ?", (iemail,))
-		k = c.fetchone()[0]
-
-
-
-		if k[0] == iemail and k[1] == ipwd:
+        if k[0]==iemail and k[1] == ipwd :
             print('fetch success')
-		else:
+        else:
             print('fetch failed')
 
-	  return 'success'
-
-'''
+        return 'success'
+        '''
             c.execute("select count(*) from User where ID={}".format(request.form['email']))
             isUser = c.fetchone()
 
@@ -59,12 +54,12 @@ def login():
                     return "wrong_pw"
             else:
                 return 'non_email'
-'''
+        '''
 @app.route('/signup/', methods=['GET', 'POST'])
 def signup():
 	if request.method == 'POST':
-      '''
-			conn = sqlite3.connect("../POSCHAIR.db")
+            '''
+			      conn = sqlite3.connect("../POSCHAIR.db")
             c = conn.cursor()
 
             c.excute("select count(*) from User where ID={}".format(request.form['email']))
@@ -79,18 +74,18 @@ def signup():
 
                 return "success"
 
-	    return render_template('./index.html')
-      '''
+	         return render_template('./index.html')
+           '''
 
 
+           conn = sqlite3.connect("../POSCHAIR.db")
+           c = conn.cursor()
+           input = [request.form['email'], request.form['name'], request.form['pwd']]
+           c.execute("INSERT INTO User(ID, name, pwd) VALUES (?,?,?)", input)
+           conn.commit()
+           conn.close()
 
-    	conn = sqlite3.connect("../POSCHAIR.db")
-    	c = conn.cursor()
-	  	input = [request.form['email'], request.form['name'], request.form['pwd']]
-	  	c.execute("INSERT INTO User(ID, name, pwd) VALUES (?,?,?)", input)
-
-    	return render_template('./index.html')
-
+           return render_template('./index.html')
 
 '''
 @app.route('/addInfo/', methods=['GET', 'POST'])
@@ -101,6 +96,7 @@ def addInfo():
 	return render_template('./index.html')
 '''
 
+# main_video 구현 후 지워야
 @app.route('/video/',methods=['GET','POST']) #추천 영상 비디오
 def sendVideoList():
     if request.method == 'GET':
@@ -113,8 +109,6 @@ def sendVideoList():
                          ''').fetchall()
 
         conn.close()
-
-        print(json.dumps([dict(i) for i in rows]))
 
         return json.dumps([dict(i) for i in rows])
 

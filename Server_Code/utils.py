@@ -326,7 +326,7 @@ def keyword_matching(conn, upper, lower, lower_median_total):
         key += 1
         c.execute("UPDATE Keyword SET k6 = ? WHERE ID = ?", (key, "choo@naver.com"))
 
-        if lower_medain_total[0]>lower_median_total[4]:
+        if lower_median_total[0]>lower_median_total[4]:
             c.execute("SELECT left FROM Keyword WHERE ID = ?", ( "choo@naver.com",))
             key = int(c.fetchone()[0])
             key += 1
@@ -434,11 +434,3 @@ def video_matching(keyword, conn):
         video_list.append(tmpID)
 
     return video_list
-
-if __name__ == '__main__':
-    keyword_matching(2, [0,0,0,1])
-    keyword = generate_keyword_for_video_matching()
-    print("keyword:", keyword)
-    print("video_list: ", video_matching(keyword))
-    print("message: ", messaging(2, [0,0,0,1]))
-    print("alarm_list: ", is_alarm(2, [0,0,0,1]))
