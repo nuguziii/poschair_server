@@ -3,13 +3,16 @@ import time
 import os
 from data_generator import data
 from utils import *
-from main import interval
-from main import num_of_sensor_total
 import sqlite3
+from flask import Flask
+from flask import request
 
-if __name__ == '__main__': #함수로 바꾼 후 @app.route('/posture/', methods=['GET', 'POST'])에서 호출해야
-    d = data()
-    conn = sqlite3.connect("../../POSCHAIR.db")
+
+app = Flask(__name__)
+
+@app.route('/messaging', methods=['POST'])
+def send_msg:
+    conn = sqlite3.connect("/root/POSCHAIR.db")
     c = conn.cursor()
 
     c.execute("SELECT init_pos_lower FROM User WHERE ID = ?", ("choo@naver.com",))

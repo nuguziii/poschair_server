@@ -6,7 +6,7 @@ from utils import *
 if __name__ == '__main__': #함수로 바꾼 후 @app.route('/video/',methods=['GET','POST'])에서 호출해야 or 이 부분을 app.py로 이동
 
 	while(True): #안드로이드로 부터 video 신호 들어오면
-		conn = sqlite3.connect("../POSCHAIR.db")
+		conn = sqlite3.connect("/root/POSCHAIR.db")
 		c = conn.cursor()
 
 		keyword = generate_keyword_for_video_matching(conn) #기록을 통해 keyword dictionary 생성
