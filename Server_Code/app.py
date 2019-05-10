@@ -76,24 +76,12 @@ def addInfo():
 	return render_template('./index.html')
 '''
 
-# main_video 구현 후 지워야
 @app.route('/video/',methods=['GET','POST']) #추천 영상 비디오
 def sendVideoList():
     if request.method == 'GET':
-        conn = sqlite3.connect("../POSCHAIR.db")
-        conn.row_factory = sqlite3.Row
-        c = conn.cursor()
 
-        rows = c.execute('''
-                         select vidID,vidTitle,view,uploadDate,liked from Youtube_Video
-                         ''').fetchall()
-
-        conn.close()
-
-        print(rows)
-        temp = [dict(i) for i in rows]
-        print(temp)
-        return json.dumps(temp)
+        result = get_info_video()
+        return result
 
 
 
