@@ -40,21 +40,7 @@ def login():
             print('fetch failed')
 
         return 'success'
-        '''
-            c.execute("select count(*) from User where ID={}".format(request.form['email']))
-            isUser = c.fetchone()
-
-            if isUser == 1:
-                c.excute("select count(*) from User where ID={} and pwd={}".format(request.form['email'],request.form['password']))
-                isRightPwd = c.fetchone()
-
-                if isRightPwd == 1:
-                    return "success"
-                else:
-                    return "wrong_pw"
-            else:
-                return 'non_email'
-        '''
+       
 @app.route('/signup/', methods=['GET', 'POST'])
 def signup():
 	if request.method == 'POST':
