@@ -27,7 +27,7 @@ def getImage():
 @app.route('/login/', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST' and request.form['email']:
-        conn = sqlite3.connect("../POSCHAIR.db")
+        conn = sqlite3.connect("/root/POSCHAIR.db")
         c = conn.cursor()
         iemail = request.form['email']
         ipwd = request.form['pwd']
@@ -44,7 +44,7 @@ def login():
 @app.route('/signup/', methods=['GET', 'POST'])
 def signup():
 	if request.method == 'POST':
-            conn = sqlite3.connect("../POSCHAIR.db")
+            conn = sqlite3.connect("/root/POSCHAIR.db")
             c = conn.cursor()
             input = [request.form['email'], request.form['name'], request.form['pwd']]
             c.execute("INSERT INTO User(ID, name, pwd) VALUES (?,?,?)", input)
@@ -74,7 +74,7 @@ def sendVideoList():
 @app.route('/likeVideo/',methods=['GET','POST'])  #사용자가 좋아한 비디오
 def sendlikeVideoList():
     if request.method == 'GET':
-        conn = sqlite3.connect("../POSCHAIR.db")
+        conn = sqlite3.connect("/root/POSCHAIR.db")
         conn.row_factory = sqlite3.Row
         c = conn.cursor()
 
@@ -96,7 +96,7 @@ def updateVideoLike():
         videoID = request.form['videoID']
         isLike = request.form['isLike']
 
-        conn = sqlite3.connect("../POSCHAIR.db")
+        conn = sqlite3.connect("/root/POSCHAIR.db")
         c = conn.cursor()
 
         if isLike == "like": # 좋아요 x -> 좋아요 db 업데이트
