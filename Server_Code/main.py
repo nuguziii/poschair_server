@@ -53,6 +53,7 @@ def result():
 
         d.save_image(image, "/root/poschair_server/Server_Code/static/posture_sample.png") #실시간으로 보낼 이미지 폴더에 저장
 
+
         global real_time_count
         global total_time_count
         real_time_count+=1

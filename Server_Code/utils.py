@@ -269,93 +269,118 @@ def keyword_matching(conn, upper, lower, lower_median_total):
     # {"Alright":0, "Turtle/Bowed":1, "Slouched":2}
     keyword_list = {"Turtle/Bowed":"k0", "Slouched":"k1", "PelvisImbalance":"k2", "Scoliosis":"k3", "HipPain":"k4", "KneePain":"k5", "PoorCirculation":"k6"}
     c = conn.cursor()
+    correct = True
 
-    c.execute("SELECT total_time FROM Keyword WHERE ID = ?", ("choo@naver.com",))
-    key = int(c.fetchone()[0])
-    key += 1
-    c.execute("UPDATE Keyword SET total_time = ? WHERE ID = ?", (key, "choo@naver.com"))
+    today = datetime.datetime.now().strftime('%Y-%m-%d')
+    c.execute("SELECT date FROM Keyword WHERE date = ?", (today,))
+    data = c.fetchall()
+    if len(data) == 0:
+        input = ["choo@naver.com", today, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        c.execute("INSERT INTO Keyword(ID, date, total_time, k0, k1, k2, k3, k4, k5, k6, left, right) VALUES (?,?,?,?,?,?,?,?,?,?)", today)
+
+    else:
+        c.execute("SELECT total_time FROM Keyword WHERE date = ?", (today,))
+        key = int(c.fetchone()[0])
+        key += 1
+        c.execute("UPDATE Keyword SET total_time = ? WHERE date = ?", (today,))
+
+
 
     if upper is 1:
-        c.execute("SELECT k0 FROM Keyword WHERE ID = ?", ("choo@naver.com",))
+        c.execute("SELECT k0 FROM Keyword WHERE date = ?", (today))
         k0 = c.fetchone()[0]
         k0 += 1
-        c.execute("UPDATE Keyword SET k0 = ? WHERE ID = ?", (k0, "choo@naver.com"))
+        c.execute("UPDATE Keyword SET k0 = ? WHERE date = ?", (key, today))
+        correct = False
 
 
     elif upper is 2:
-        c.execute("SELECT k1 FROM Keyword WHERE ID = ?", ("choo@naver.com",))
+        c.execute("SELECT k1 FROM Keyword WHERE date = ?", (today,))
         key = c.fetchone()[0]
         key += 1
-        c.execute("UPDATE Keyword SET k1 = ? WHERE ID = ?", (key, "choo@naver.com"))
+        c.execute("UPDATE Keyword SET k1 = ? WHERE date = ?", (key, today))
+        correct = False
 
     #DB에서 해당되는 키워드에 +1을 해줌 (Lower 경우)
     if lower[2] is 1:
-        c.execute("SELECT k2 FROM Keyword WHERE ID = ?", ("choo@naver.com",))
+        c.execute("SELECT k2 FROM Keyword WHERE date = ?", (today,))
         key = int(c.fetchone()[0])
         key += 1
-        c.execute("UPDATE Keyword SET k2 = ? WHERE ID = ?", (key, "choo@naver.com"))
+        c.execute("UPDATE Keyword SET k2 = ? WHERE date = ?", (key, today))
 
-        c.execute("SELECT k3 FROM Keyword WHERE ID = ?", ("choo@naver.com",))
+        c.execute("SELECT k3 FROM Keyword WHERE date = ?", (today,))
         key = int(c.fetchone()[0])
         key += 1
-        c.execute("UPDATE Keyword SET k3 = ? WHERE ID = ?", (key, "choo@naver.com"))
+        c.execute("UPDATE Keyword SET k3 = ? WHERE date = ?", (key, today))
 
-        c.execute("SELECT k4 FROM Keyword WHERE ID = ?", ("choo@naver.com",))
+        c.execute("SELECT k4 FROM Keyword WHERE date = ?", (today,))
         key = int(c.fetchone()[0])
         key += 1
-        c.execute("UPDATE Keyword SET k4 = ? WHERE ID = ?", (key, "choo@naver.com"))
+        c.execute("UPDATE Keyword SET k4 = ? WHERE date = ?", (key, today))
 
-        c.execute("SELECT k5 FROM Keyword WHERE ID = ?", ("choo@naver.com",))
+        c.execute("SELECT k5 FROM Keyword WHERE date = ?", (today,))
         key = int(c.fetchone()[0])
         key += 1
-        c.execute("UPDATE Keyword SET k5 = ? WHERE ID = ?", ( key, "choo@naver.com"))
+        c.execute("UPDATE Keyword SET k5 = ? WHERE date = ?", (key, today))
+        correct = False
 
     elif lower[3] is 1:
-        c.execute("SELECT k2 FROM Keyword WHERE ID = ?", ("choo@naver.com",))
+        c.execute("SELECT k2 FROM Keyword WHERE date = ?", (today,))
         key = int(c.fetchone()[0])
         key += 1
-        c.execute("UPDATE Keyword SET k2 = ? WHERE ID = ?", (key, "choo@naver.com"))
+        c.execute("UPDATE Keyword SET k2 = ? WHERE date = ?", (key, today))
 
-        c.execute("SELECT k3 FROM Keyword WHERE ID = ?", ("choo@naver.com",))
+        c.execute("SELECT k3 FROM Keyword WHERE date = ?", (today,))
         key = int(c.fetchone()[0])
         key += 1
-        c.execute("UPDATE Keyword SET k3 = ? WHERE ID = ?", (key, "choo@naver.com"))
+        c.execute("UPDATE Keyword SET k3 = ? WHERE date = ?", (key, today))
 
-        c.execute("SELECT k6 FROM Keyword WHERE ID = ?", ( "choo@naver.com",))
+        c.execute("SELECT k6 FROM Keyword WHERE date = ?", (today,))
         key = int(c.fetchone()[0])
         key += 1
-        c.execute("UPDATE Keyword SET k6 = ? WHERE ID = ?", (key, "choo@naver.com"))
+        c.execute("UPDATE Keyword SET k6 = ? WHERE date = ?", (key, today))
+        correct = False
 
         if lower_median_total[0]>lower_median_total[4]:
-            c.execute("SELECT left FROM Keyword WHERE ID = ?", ( "choo@naver.com",))
+            c.execute("SELECT left FROM Keyword WHERE date = ?", (today,))
             key = int(c.fetchone()[0])
             key += 1
-            c.execute("UPDATE Keyword SET left = ? WHERE ID = ?", (key, "choo@naver.com"))
+            c.execute("UPDATE Keyword SET left = ? WHERE date = ?", (key, today))
         else:
-            c.execute("SELECT right FROM Keyword WHERE ID = ?", ( "choo@naver.com",))
+            c.execute("SELECT right FROM Keyword WHERE date = ?", (today,))
             key = int(c.fetchone()[0])
             key += 1
-            c.execute("UPDATE Keyword SET right = ? WHERE ID = ?", (key, "choo@naver.com"))
+            c.execute("UPDATE Keyword SET right = ? WHERE date = ?", (key, today))
 
     elif lower[0] is 1:
-        c.execute("SELECT k2 FROM Keyword WHERE ID = ?", ( "choo@naver.com",))
+        c.execute("SELECT k2 FROM Keyword WHERE date = ?", (today,))
         key = int(c.fetchone()[0])
         key += 1
-        c.execute("UPDATE Keyword SET k2 = ? WHERE ID = ?", (key, "choo@naver.com"))
+        c.execute("UPDATE Keyword SET k2 = ? WHERE date = ?", (key, today))
 
-        c.execute("SELECT k3 FROM Keyword WHERE ID = ?", ("choo@naver.com",))
+        c.execute("SELECT k3 FROM Keyword WHERE date = ?", (today,))
 
         key = int(c.fetchone()[0])
         key += 1
-        c.execute("UPDATE Keyword SET k3 = ? WHERE ID = ?", (key, "choo@naver.com"))
+        c.execute("UPDATE Keyword SET k3 = ? WHERE date = ?", (key, today))
+        correct = False
 
     if lower[1] is 1 and upper is not 2:
-        c.execute("SELECT k1 FROM Keyword WHERE ID = ?", ("choo@naver.com",))
+        c.execute("SELECT k1 FROM Keyword WHERE date = ?", (today,))
         key = int(c.fetchone()[0])
         key += 1
-        c.execute("UPDATE Keyword SET k1 = ? WHERE ID = ?", (key, "choo@naver.com"))
+        c.execute("UPDATE Keyword SET k1 = ? WHERE date = ?", (key, today))
+        correct = False;
+
+    if correct:
+        c = conn.cursor()
+        c.execute("SELECT correct_time FROM Keyword WHERE date = ?", (today,))
+        key = int(c.fetchone()[0])
+        key += 1
+        c.execute("UPDATE Keyword SET correct_time = ? WHERE date = ?", (key, today))
 
     conn.commit()
+
 
 
 def generate_keyword_for_video_matching(conn):

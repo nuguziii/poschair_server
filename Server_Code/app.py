@@ -14,6 +14,7 @@ from utils import data
 from utils import messaging
 from utils import upper_balance_check
 import numpy as np
+from main_video import vidFunc
 
 
 
@@ -55,6 +56,7 @@ def signup():
 	if request.method == 'POST':
             conn = sqlite3.connect("/root/POSCHAIR.db")
             c = conn.cursor()
+
             email = request.form['email']
             name = request.form['name']
             pwd = request.form['pwd']
@@ -74,6 +76,7 @@ def signup():
 @app.route('/video/',methods=['GET','POST']) #추천 영상 비디오
 def sendVideoList():
     if request.method == 'GET':
+        '''
         conn = sqlite3.connect("/root/POSCHAIR.db")
         conn.row_factory = sqlite3.Row
         c = conn.cursor()
@@ -85,6 +88,10 @@ def sendVideoList():
         conn.close()
 
         return json.dumps([dict(i) for i in rows])
+        '''
+        temp = vidFunc()
+        return json.dumps(temp)
+
 
 
 
