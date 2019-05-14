@@ -187,7 +187,7 @@ def getLabel():
 
         label = 0
 
-        if np.count_nonzero(lower_median-10)>6: #사용자가 의자에 앉아있는지 판단
+        if np.count_nonzero(int(lower_median)-10)>6: #사용자가 의자에 앉아있는지 판단
             #각 센서값으로 자세 lower/upper 자세 판단 (이건 median
             lower = LBCNet(d.generator(lower_median_list), d.generator(lower_origin_list))
             upper = upper_balance_check(upper_median_list) #upper 자세값 받아옴.
