@@ -51,7 +51,8 @@ def result():
 
         image = d.generator(pressure_value) #압력센서 값을 이미지로 전송
 
-        d.save_image(image, "/root/poschair_server/Server_code/static/posture_sample.png") #실시간으로 보낼 이미지 폴더에 저장
+        d.save_image(image, "/root/poschair_server/Server_Code/static/posture_sample.png") #실시간으로 보낼 이미지 폴더에 저장
+
 
         global real_time_count
         global total_time_count
@@ -93,4 +94,4 @@ def result():
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=80, debug=False)
+    app.run(host='0.0.0.0', port=70, debug=False)
