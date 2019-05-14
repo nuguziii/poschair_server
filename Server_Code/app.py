@@ -66,7 +66,6 @@ def signup():
             c.execute("INSERT INTO User(ID, name, pwd) VALUES (?,?,?)", input)
             conn.commit()
             conn.close()
-
             return 'success'
 
 '''
@@ -91,8 +90,11 @@ def sendVideoList():
                          ''').fetchall()
 
         conn.close()
+        print(rows)
+        temp =[dict(i) for i in rows]
+        print(temp)    
 
-        return json.dumps([dict(i) for i in rows])
+        return json.dumps(temp)
 
 
 
