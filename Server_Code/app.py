@@ -141,7 +141,7 @@ def sendDayChartInfo():
         c = conn.cursor()
 
         rows = c.execute('''
-                         select DATE,TOTAL_SITTING,CORRECT_SITTING,k0,k1,k2,k3,k4,k5,k6,CORRECT_SITTING,LEFT_PELVIS from dayChart
+                         select DATE,TOTAL_SITTING,CORRECT_SITTING,k0,k1,k2,k3,k4,k5,k6,CORRECT_PELVIS,LEFT_PELVIS from dayChart
                          ''').fetchall()
 
         conn.close()
