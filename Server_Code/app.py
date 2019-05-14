@@ -12,7 +12,7 @@ import random
 from utils import LBCNet
 from utils import data
 from utils import messaging
-
+from main_video import vidFunc
 
 
 # create a flask application - this ``app`` object will be used to handle
@@ -42,21 +42,7 @@ def login():
             print('fetch failed')
 
         return 'success'
-        '''
-            c.execute("select count(*) from User where ID={}".format(request.form['email']))
-            isUser = c.fetchone()
-
-            if isUser == 1:
-                c.excute("select count(*) from User where ID={} and pwd={}".format(request.form['email'],request.form['password']))
-                isRightPwd = c.fetchone()
-
-                if isRightPwd == 1:
-                    return "success"
-                else:
-                    return "wrong_pw"
-            else:
-                return 'non_email'
-        '''
+        
 @app.route('/signup/', methods=['GET', 'POST'])
 def signup():
 	if request.method == 'POST':
@@ -68,32 +54,13 @@ def signup():
             conn.close()
             return 'success'
 
-'''
-@app.route('/addInfo/', methods=['GET', 'POST'])
-def addInfo():
-	#age, sex, height, weight
-	if request.method == 'POST':
 
-	return render_template('./index.html')
-'''
 
 # main_video 구현 후 지워야
 @app.route('/video/',methods=['GET','POST']) #추천 영상 비디오
 def sendVideoList():
     if request.method == 'GET':
-        conn = sqlite3.connect("../POSCHAIR.db")
-        conn.row_factory = sqlite3.Row
-        c = conn.cursor()
-
-        rows = c.execute('''
-                         select vidID,vidTitle,view,uploadDate,liked from Youtube_Video
-                         ''').fetchall()
-
-        conn.close()
-        print(rows)
-        temp =[dict(i) for i in rows]
-        print(temp)    
-
+        temp = vidFunc()
         return json.dumps(temp)
 
 
