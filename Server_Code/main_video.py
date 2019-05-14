@@ -8,7 +8,7 @@ if __name__ == '__main__': #함수로 바꾼 후 @app.route('/video/',methods=['
 
 def get_video_info():
 	 #안드로이드로 부터 video 신호 들어오면
-	conn = sqlite3.connect("../../POSCHAIR.db")
+	conn = sqlite3.connect("/root/POSCHAIR.db")
 	conn.row_factory = sqlite3.Row
 	c = conn.cursor()
 

@@ -138,7 +138,7 @@ def is_alarm(upper, lower, conn):
     '''DB에서 10분간 데이터 계산해서 85% 비율을 차지한 자세를 alarm_list에 넣음'''
 
     d = data()
-    conn = sqlite3.connect("../../POSCHAIR.db")
+    conn = sqlite3.connect("/root/POSCHAIR.db")
     c = conn.cursor()
 
     #bring data of 10 minutes from the database
@@ -425,7 +425,7 @@ def video_matching(keyword, conn):
     가져올 때 조희수/like 수 등 생각해서 높은 순서대로 상위 5개 가져오기.
     '''
 
-    conn = sqlite3.connect("../../POSCHAIR.db")
+    conn = sqlite3.connect("/root/POSCHAIR.db")
     c = conn.cursor()
 
     weighted = []
