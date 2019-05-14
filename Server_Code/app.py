@@ -146,8 +146,6 @@ def sendDayChartInfo():
 
         conn.close()
 
-        print(json.dumps([dict(i) for i in rows]))
-
         return json.dumps([dict(i) for i in rows])
 
 
