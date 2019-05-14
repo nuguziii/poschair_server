@@ -10,7 +10,7 @@ from functools import wraps
 
 if __name__ == '__main__':
 	d = data()
-	conn = sqlite3.connect("../../POSCHAIR.db")
+	conn = sqlite3.connect("/root/POSCHAIR.db")
 
 	c = conn.cursor()
 	c.execute("SELECT init_pos_lower FROM User WHERE ID = ?", ("choo@naver.com",))
