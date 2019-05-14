@@ -144,7 +144,7 @@ def updateVideoLike():
 def sendDayChartInfo():
     if request.method == 'POST':
         print("sendDayChartInfo")
-        date =  request.form['date'] #보내는 기준 날짜 - 해당 날짜부터 7일 이전 날짜까지의 데이터 조회 후 모두 전송
+        #date =  request.form['date'] #보내는 기준 날짜 - 해당 날짜부터 7일 이전 날짜까지의 데이터 조회 후 모두 전송
 
         conn = sqlite3.connect("/root/POSCHAIR.db")
         conn.row_factory = sqlite3.Row
