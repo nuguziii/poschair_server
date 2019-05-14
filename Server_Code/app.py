@@ -35,15 +35,24 @@ def login():
         c = conn.cursor()
         iemail = request.form['email']
         ipwd = request.form['pwd']
-        c.execute("SELECT ID, pwd FROM User WHERE ID = ?", (iemail,))
-        k = c.fetchone()[0]
+        c.execute("SELECT count(*) FROM User WHERE ID = {}".format(iemail))
+        isUser = c.fetchone()[0]
 
-        if k[0]==iemail and k[1] == ipwd :
-            print('fetch success')
+        if isUser == 1:
+            c.excute("select count(*) from User where ID={} and pwd={}".format(iemail,ipwd))
+            isRightPwd = c.fetchone()[0]
+
+            if isRightPwd == 1:
+                print("success")
+                return "success"
+            else:
+                print("wrong_pw")
+                return "wrong_pw"
         else:
-            print('fetch failed')
+            print('non_email')
+            return 'non_email'
 
-        return 'success'
+
         '''
             c.execute("select count(*) from User where ID={}".format(request.form['email']))
             isUser = c.fetchone()
@@ -155,6 +164,8 @@ def sendDayChartInfo():
                          ''').fetchall()
 
         conn.close()
+
+        print(json.dumps([dict(i) for i in rows]))
 
         return json.dumps([dict(i) for i in rows])
 
