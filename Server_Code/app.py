@@ -35,11 +35,11 @@ def login():
         c = conn.cursor()
         iemail = request.form['email']
         ipwd = request.form['pwd']
-        c.execute("SELECT count(*) FROM User WHERE ID = {}".format(iemail))
+        c.execute("SELECT count(*) FROM User WHERE ID = '{}'".format(iemail))
         isUser = c.fetchone()[0]
 
         if isUser == 1:
-            c.excute("select count(*) from User where ID={} and pwd={}".format(iemail,ipwd))
+            c.excute("select count(*) from User where ID='{}' and pwd='{}'".format(iemail,ipwd))
             isRightPwd = c.fetchone()[0]
 
             if isRightPwd == 1:
