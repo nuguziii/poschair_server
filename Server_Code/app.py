@@ -12,6 +12,7 @@ import random
 from utils import LBCNet
 from utils import data
 from utils import messaging
+import numpy as np
 
 
 
@@ -29,7 +30,7 @@ def getImage():
 @app.route('/login/', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST' and request.form['email']:
-        conn = sqlite3.connect("../POSCHAIR.db")
+        conn = sqlite3.connect("/root/POSCHAIR.db")
         c = conn.cursor()
         iemail = request.form['email']
         ipwd = request.form['pwd']
@@ -60,7 +61,7 @@ def login():
 @app.route('/signup/', methods=['GET', 'POST'])
 def signup():
 	if request.method == 'POST':
-            conn = sqlite3.connect("../POSCHAIR.db")
+            conn = sqlite3.connect("/root/POSCHAIR.db")
             c = conn.cursor()
             input = [request.form['email'], request.form['name'], request.form['pwd']]
             c.execute("INSERT INTO User(ID, name, pwd) VALUES (?,?,?)", input)
@@ -82,7 +83,7 @@ def addInfo():
 @app.route('/video/',methods=['GET','POST']) #추천 영상 비디오
 def sendVideoList():
     if request.method == 'GET':
-        conn = sqlite3.connect("../POSCHAIR.db")
+        conn = sqlite3.connect("/root/POSCHAIR.db")
         conn.row_factory = sqlite3.Row
         c = conn.cursor()
 
@@ -99,7 +100,7 @@ def sendVideoList():
 @app.route('/likeVideo/',methods=['GET','POST'])  #사용자가 좋아한 비디오
 def sendlikeVideoList():
     if request.method == 'GET':
-        conn = sqlite3.connect("../POSCHAIR.db")
+        conn = sqlite3.connect("/root/POSCHAIR.db")
         conn.row_factory = sqlite3.Row
         c = conn.cursor()
 
@@ -121,7 +122,7 @@ def updateVideoLike():
         videoID = request.form['videoID']
         isLike = request.form['isLike']
 
-        conn = sqlite3.connect("../POSCHAIR.db")
+        conn = sqlite3.connect("/root/POSCHAIR.db")
         c = conn.cursor()
 
         if isLike == "like": # 좋아요 x -> 좋아요 db 업데이트
@@ -138,6 +139,25 @@ def updateVideoLike():
 
             return "success"
 
+@app.route('/dayChart/', methods=['GET', 'POST'])
+def sendDayChartInfo():
+    if request.method == 'POST':
+        print("sendDayChartInfo")
+        user_id = request.form['user_id']
+        date =  request.form['sendDate'] #보내는 기준 날짜 - 해당 날짜부터 7일 이전 날짜까지의 데이터 조회 후 모두 전송
+
+        conn = sqlite3.connect("/root/POSCHAIR.db")
+        conn.row_factory = sqlite3.Row
+        c = conn.cursor()
+
+        rows = c.execute('''
+                         select DATE,TOTAL_SITTING,CORRECT_SITTING,k0,k1,k2,k3,k4,k5,k6,CORRECT_SITTING,LEFT_PELVIS from dayChart
+                         ''').fetchall()
+
+        conn.close()
+
+        return json.dumps([dict(i) for i in rows])
+
 
 @app.route('/posture/', methods=['GET', 'POST'])
 def getLabel():
@@ -145,7 +165,7 @@ def getLabel():
     if request.method == 'GET':
         conn = sqlite3.connect("/root/POSCHAIR.db")
         c = conn.cursor()
-        
+
         d = data()
         c.execute("SELECT init_pos_lower FROM User WHERE ID = ?", ("choo@naver.com",))
         lower_origin = c.fetchone()[0]
@@ -168,11 +188,11 @@ def getLabel():
         label = 0
 
         if np.count_nonzero(lower_median-10)>6: #사용자가 의자에 앉아있는지 판단
-            #각 센서값으로 자세 lower/upper 자세 판단 (이건 median 
+            #각 센서값으로 자세 lower/upper 자세 판단 (이건 median
             lower = LBCNet(d.generator(lower_median_list), d.generator(lower_origin_list))
             upper = upper_balance_check(upper_median_list) #upper 자세값 받아옴.
             label = messaging(upper, lower)
-        
+
         return str(label)
 
 
