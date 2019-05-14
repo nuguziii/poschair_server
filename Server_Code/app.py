@@ -43,51 +43,32 @@ def login():
             isRightPwd = c.fetchone()[0]
 
             if isRightPwd == 1:
-                print("success")
                 return "success"
             else:
-                print("wrong_pw")
                 return "wrong_pw"
         else:
-            print('non_email')
             return "non_email"
 
 
-        '''
-            c.execute("select count(*) from User where ID={}".format(request.form['email']))
-            isUser = c.fetchone()
-
-            if isUser == 1:
-                c.excute("select count(*) from User where ID={} and pwd={}".format(request.form['email'],request.form['password']))
-                isRightPwd = c.fetchone()
-
-                if isRightPwd == 1:
-                    return "success"
-                else:
-                    return "wrong_pw"
-            else:
-                return 'non_email'
-        '''
 @app.route('/signup/', methods=['GET', 'POST'])
 def signup():
 	if request.method == 'POST':
             conn = sqlite3.connect("/root/POSCHAIR.db")
             c = conn.cursor()
-            input = [request.form['email'], request.form['name'], request.form['pwd']]
-            c.execute("INSERT INTO User(ID, name, pwd) VALUES (?,?,?)", input)
-            conn.commit()
-            conn.close()
+            email = request.form['email']
+            name = request.form['name']
+            pwd = request.form['pwd']
 
-            return 'success'
+            c.execute("select count(*) from User where ID='{}'".format(email))
+            isEmail = c.fetchone()[0]
 
-'''
-@app.route('/addInfo/', methods=['GET', 'POST'])
-def addInfo():
-	#age, sex, height, weight
-	if request.method == 'POST':
-
-	return render_template('./index.html')
-'''
+            if isEmail == 1:
+                return "already_existed"
+            else:
+                c.execute("INSERT INTO User(ID, name, pwd) VALUES (?,?,?)", [email,name,pwd])
+                conn.commit()
+                conn.close()
+                return 'success'
 
 # main_video 구현 후 지워야
 @app.route('/video/',methods=['GET','POST']) #추천 영상 비디오
