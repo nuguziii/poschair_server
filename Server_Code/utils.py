@@ -269,6 +269,7 @@ def keyword_matching(conn, upper, lower, lower_median_total):
     # {"Alright":0, "Turtle/Bowed":1, "Slouched":2}
     keyword_list = {"Turtle/Bowed":"k0", "Slouched":"k1", "PelvisImbalance":"k2", "Scoliosis":"k3", "HipPain":"k4", "KneePain":"k5", "PoorCirculation":"k6"}
     c = conn.cursor()
+    correct = True;
 
     c.execute("SELECT total_time FROM Keyword WHERE ID = ?", ("choo@naver.com",))
     key = int(c.fetchone()[0])
@@ -280,6 +281,7 @@ def keyword_matching(conn, upper, lower, lower_median_total):
         k0 = c.fetchone()[0]
         k0 += 1
         c.execute("UPDATE Keyword SET k0 = ? WHERE ID = ?", (k0, "choo@naver.com"))
+        correct = False;
 
 
     elif upper is 2:
@@ -287,6 +289,7 @@ def keyword_matching(conn, upper, lower, lower_median_total):
         key = c.fetchone()[0]
         key += 1
         c.execute("UPDATE Keyword SET k1 = ? WHERE ID = ?", (key, "choo@naver.com"))
+        correct = False;
 
     #DB에서 해당되는 키워드에 +1을 해줌 (Lower 경우)
     if lower[2] is 1:
@@ -309,6 +312,7 @@ def keyword_matching(conn, upper, lower, lower_median_total):
         key = int(c.fetchone()[0])
         key += 1
         c.execute("UPDATE Keyword SET k5 = ? WHERE ID = ?", ( key, "choo@naver.com"))
+        correct = False;
 
     elif lower[3] is 1:
         c.execute("SELECT k2 FROM Keyword WHERE ID = ?", ("choo@naver.com",))
@@ -325,6 +329,7 @@ def keyword_matching(conn, upper, lower, lower_median_total):
         key = int(c.fetchone()[0])
         key += 1
         c.execute("UPDATE Keyword SET k6 = ? WHERE ID = ?", (key, "choo@naver.com"))
+        correct = False;
 
         if lower_median_total[0]>lower_median_total[4]:
             c.execute("SELECT left FROM Keyword WHERE ID = ?", ( "choo@naver.com",))
@@ -348,14 +353,24 @@ def keyword_matching(conn, upper, lower, lower_median_total):
         key = int(c.fetchone()[0])
         key += 1
         c.execute("UPDATE Keyword SET k3 = ? WHERE ID = ?", (key, "choo@naver.com"))
+        correct = False;
 
     if lower[1] is 1 and upper is not 2:
         c.execute("SELECT k1 FROM Keyword WHERE ID = ?", ("choo@naver.com",))
         key = int(c.fetchone()[0])
         key += 1
         c.execute("UPDATE Keyword SET k1 = ? WHERE ID = ?", (key, "choo@naver.com"))
+        correct = False;
+
+    if correct:
+        c = conn.cursor()
+        c.execute("SELECT correct_time FROM Keyword WHERE ID = ?", ("choo@naver.com",))
+        key = int(c.fetchone()[0])
+        key += 1
+        c.execute("UPDATE Keyword SET correct_time = ? WHERE ID = ?", (key, "choo@naver.com"))
 
     conn.commit()
+
 
 
 def generate_keyword_for_video_matching(conn):

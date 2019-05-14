@@ -50,6 +50,7 @@ if __name__ == '__main__':
 			c = conn.cursor()
 			input = [datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'), "choo@naver.com", upper, lower[0], lower[1], lower[2], lower[3]]
 			c.execute("INSERT INTO Posture_data VALUES (?,?,?,?,?,?,?)", input)
+			c.commit()
 
             #키워드 매칭 알고리즘(DB에 저장하는 함수)
 			keyword_matching(conn, upper, lower, lower_median_total) #자세 값을 기반으로 디비에 해당 키워드 별 +1 해줌
