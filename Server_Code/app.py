@@ -39,7 +39,7 @@ def login():
         isUser = c.fetchone()[0]
 
         if isUser == 1:
-            c.excute("select count(*) from User where ID='{}' and pwd='{}'".format(iemail,ipwd))
+            c.execute("select count(*) from User where ID='{}' and pwd='{}'".format(iemail,ipwd))
             isRightPwd = c.fetchone()[0]
 
             if isRightPwd == 1:
@@ -50,7 +50,7 @@ def login():
                 return "wrong_pw"
         else:
             print('non_email')
-            return 'non_email'
+            return "non_email"
 
 
         '''
