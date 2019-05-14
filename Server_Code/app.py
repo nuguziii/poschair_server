@@ -142,7 +142,7 @@ def updateVideoLike():
 
 @app.route('/dayChart/', methods=['GET', 'POST'])
 def sendDayChartInfo():
-    if request.method == 'POST':
+    if request.method == 'GET':
         print("sendDayChartInfo")
         #date =  request.form['date'] #보내는 기준 날짜 - 해당 날짜부터 7일 이전 날짜까지의 데이터 조회 후 모두 전송
 
