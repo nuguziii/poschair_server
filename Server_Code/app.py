@@ -165,7 +165,7 @@ def sendDayChartInfo():
             print(json.dumps([dict(i) for i in rows]))
             return json.dumps([dict(i) for i in rows])
         else:
-            return "non_data"
+            return {}
 
 
 @app.route('/posture/', methods=['GET', 'POST'])
