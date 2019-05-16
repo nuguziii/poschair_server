@@ -143,6 +143,9 @@ def sendDayChartInfo():
         DATE = request.form['sendDate']
 
         print("success to get date: "+DATE)
+        return "success"
+
+
 
     if request.method == 'GET':
         print("sendDayChartInfo: "+DATE)
