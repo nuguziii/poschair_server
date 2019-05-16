@@ -81,9 +81,7 @@ def sendVideoList():
         conn.row_factory = sqlite3.Row
         c = conn.cursor()
 
-        rows = c.execute('''
-                         select vidID,vidTitle,view,uploadDate,liked from Youtube_Video
-                         ''').fetchall()
+        rows = c.execute("select vidID,vidTitle,view,uploadDate,liked from Youtube_Video").fetchall()
 
         conn.close()
 
@@ -137,23 +135,37 @@ def updateVideoLike():
 
             return "success"
 
+DATE = ""
 @app.route('/dayChart/', methods=['GET', 'POST'])
 def sendDayChartInfo():
+    global DATE
+    if request.method == 'POST':
+
+        user_id = request.form['user_id']
+        DATE = request.form['sendDate']
+
+        print("success to get date: "+DATE)
+        return "success"
+
     if request.method == 'GET':
-        print("sendDayChartInfo")
+        print("sendDayChartInfo: "+DATE)
         #date =  request.form['date'] #보내는 기준 날짜 - 해당 날짜부터 7일 이전 날짜까지의 데이터 조회 후 모두 전송
 
-        conn = sqlite3.connect("/root/POSCHAIR.db")
-        conn.row_factory = sqlite3.Row
-        c = conn.cursor()
+        if DATE != '2019-05-10':
+            conn = sqlite3.connect("/root/POSCHAIR.db")
+            conn.row_factory = sqlite3.Row
+            c = conn.cursor()
 
-        rows = c.execute('''
-                         select DATE,TOTAL_SITTING,CORRECT_SITTING,k0,k1,k2,k3,k4,k5,k6,CORRECT_PELVIS,LEFT_PELVIS from dayChart
-                         ''').fetchall()
+            rows = c.execute('''
+                             select DATE,TOTAL_SITTING,CORRECT_SITTING,k0,k1,k2,k3,k4,k5,k6,CORRECT_PELVIS,LEFT_PELVIS from dayChart
+                             ''').fetchall()
 
-        conn.close()
+            conn.close()
 
-        return json.dumps([dict(i) for i in rows])
+            print(json.dumps([dict(i) for i in rows]))
+            return json.dumps([dict(i) for i in rows])
+        else:
+            return json.dumps([])
 
 
 @app.route('/posture/', methods=['GET', 'POST'])
