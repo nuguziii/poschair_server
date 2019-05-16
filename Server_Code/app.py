@@ -140,7 +140,7 @@ def sendDayChartInfo():
     DATE = ""
     if request.method == 'POST':
         user_id = request.form['user_id']
-        DATE = request.form['date']
+        DATE = request.form['sendDate']
 
         print("success to get date: "+DATE)
 
