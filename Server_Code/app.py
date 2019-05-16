@@ -147,8 +147,6 @@ def sendDayChartInfo():
         print("success to get date: "+DATE)
         return "success"
 
-
-
     if request.method == 'GET':
         print("sendDayChartInfo: "+DATE)
         #date =  request.form['date'] #보내는 기준 날짜 - 해당 날짜부터 7일 이전 날짜까지의 데이터 조회 후 모두 전송
@@ -163,6 +161,7 @@ def sendDayChartInfo():
 
         conn.close()
 
+        print(json.dumps([dict(i) for i in rows]))
         return json.dumps([dict(i) for i in rows])
 
 
