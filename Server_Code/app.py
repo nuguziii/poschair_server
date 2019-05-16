@@ -81,9 +81,7 @@ def sendVideoList():
         conn.row_factory = sqlite3.Row
         c = conn.cursor()
 
-        rows = c.execute('''
-                         select vidID,vidTitle,view,uploadDate,liked from Youtube_Video
-                         ''').fetchall()
+        rows = c.execute("select vidID,vidTitle,view,uploadDate,liked from Youtube_Video").fetchall()
 
         conn.close()
 
