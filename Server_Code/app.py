@@ -135,10 +135,12 @@ def updateVideoLike():
 
             return "success"
 
+DATE = ""
 @app.route('/dayChart/', methods=['GET', 'POST'])
 def sendDayChartInfo():
-    DATE = ""
+    global DATE
     if request.method == 'POST':
+
         user_id = request.form['user_id']
         DATE = request.form['sendDate']
 
