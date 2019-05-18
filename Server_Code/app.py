@@ -178,13 +178,13 @@ def getLabel():
         d = data()
         c.execute("SELECT init_pos_lower FROM User WHERE ID = ?", ("choo@naver.com",))
         lower_origin = c.fetchone()[0]
-        print(lower_origin)
+        #print(lower_origin)
 
         lower_origin_list = json.loads(lower_origin)
 
         c.execute("SELECT total_time FROM Keyword WHERE ID = ?", ("choo@naver.com",))
         total_hour = c.fetchone()[0]
-        print(total_hour)
+        #print(total_hour)
 
         '''lower_median DB에서 가져옴'''
         c.execute("SELECT lower_median FROM Median WHERE ID = ?", ("choo@naver.com",))
