@@ -201,7 +201,8 @@ def getLabel():
             lower = LBCNet(d.generator(lower_median_list), d.generator(lower_origin_list))
             upper = upper_balance_check(upper_median_list) #upper 자세값 받아옴.
             label = messaging(upper, lower)
-
+        
+        print(label)
         return str(label)
 
 
