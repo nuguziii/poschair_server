@@ -92,7 +92,7 @@ def sendVideoList():
         conn.close()
         print(rows)
         temp =[dict(i) for i in rows]
-        print(temp)    
+        print(temp)
 
         return json.dumps(temp)
 
@@ -147,7 +147,7 @@ def getLabel():
     if request.method == 'GET':
         conn = sqlite3.connect("/root/POSCHAIR.db")
         c = conn.cursor()
-        
+
         d = data()
         c.execute("SELECT init_pos_lower FROM User WHERE ID = ?", ("choo@naver.com",))
         lower_origin = c.fetchone()[0]
@@ -170,13 +170,31 @@ def getLabel():
         label = 0
 
         if np.count_nonzero(lower_median-10)>6: #사용자가 의자에 앉아있는지 판단
-            #각 센서값으로 자세 lower/upper 자세 판단 (이건 median 
+            #각 센서값으로 자세 lower/upper 자세 판단 (이건 median
             lower = LBCNet(d.generator(lower_median_list), d.generator(lower_origin_list))
             upper = upper_balance_check(upper_median_list) #upper 자세값 받아옴.
             label = messaging(upper, lower)
-        
+
         return str(label)
 
+@app.route('/dayChart/', methods=['GET', 'POST'])
+def sendDayChartInfo():
+   if request.method == 'POST':
+       print("sendDayChartInfo")
+       user_id = request.form['user_id']
+       date =  request.form['sendDate'] #보내는 기준 날짜 - 해당 날짜부터 7일 이전 날짜까지의 데이터 조회 후 모두 전송
+
+       conn = sqlite3.connect("/root/POSCHAIR.db")
+       conn.row_factory = sqlite3.Row
+       c = conn.cursor()
+
+       rows = c.execute('''
+                        select DATE,TOTAL_SITTING,CORRECT_SITTING,k0,k1,k2,k3,k4,k5,k6,CORRECT_SITTING,LEFT_PELVIS from dayChart
+                        ''').fetchall()
+
+       conn.close()
+
+       return json.dumps([dict(i) for i in rows])
 
 if __name__=='__main__':
 	print('connection succeeded')
