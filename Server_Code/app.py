@@ -12,6 +12,9 @@ import random
 from utils import LBCNet
 from utils import data
 from utils import messaging
+from utils import upper_balance_check
+import numpy as np
+from main_video import vidFunc
 
 
 
@@ -29,79 +32,77 @@ def getImage():
 @app.route('/login/', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST' and request.form['email']:
-        conn = sqlite3.connect("../POSCHAIR.db")
+        conn = sqlite3.connect("/root/POSCHAIR.db")
         c = conn.cursor()
         iemail = request.form['email']
         ipwd = request.form['pwd']
-        c.execute("SELECT ID, pwd FROM User WHERE ID = ?", (iemail,))
-        k = c.fetchone()[0]
+        c.execute("SELECT count(*) FROM User WHERE ID = '{}'".format(iemail))
+        isUser = c.fetchone()[0]
 
-        if k[0]==iemail and k[1] == ipwd :
-            print('fetch success')
-        else:
-            print('fetch failed')
+        if isUser == 1:
+            c.execute("select count(*) from User where ID='{}' and pwd='{}'".format(iemail,ipwd))
+            isRightPwd = c.fetchone()[0]
 
-        return 'success'
-        '''
-            c.execute("select count(*) from User where ID={}".format(request.form['email']))
-            isUser = c.fetchone()
-
-            if isUser == 1:
-                c.excute("select count(*) from User where ID={} and pwd={}".format(request.form['email'],request.form['password']))
-                isRightPwd = c.fetchone()
-
-                if isRightPwd == 1:
-                    return "success"
-                else:
-                    return "wrong_pw"
+            if isRightPwd == 1:
+                return "success"
             else:
-                return 'non_email'
-        '''
+                return "wrong_pw"
+        else:
+            return "non_email"
+
+
 @app.route('/signup/', methods=['GET', 'POST'])
 def signup():
 	if request.method == 'POST':
-            conn = sqlite3.connect("../POSCHAIR.db")
+            conn = sqlite3.connect("/root/POSCHAIR.db")
             c = conn.cursor()
-            input = [request.form['email'], request.form['name'], request.form['pwd']]
-            c.execute("INSERT INTO User(ID, name, pwd) VALUES (?,?,?)", input)
-            conn.commit()
-            conn.close()
-            return 'success'
 
-'''
-@app.route('/addInfo/', methods=['GET', 'POST'])
-def addInfo():
-	#age, sex, height, weight
-	if request.method == 'POST':
+            email = request.form['email']
+            name = request.form['name']
+            pwd = request.form['pwd']
 
-	return render_template('./index.html')
-'''
+            c.execute("select count(*) from User where ID='{}'".format(email))
+            isEmail = c.fetchone()[0]
+
+            if isEmail == 1:
+                return "already_existed"
+            else:
+                c.execute("INSERT INTO User(ID, name, pwd) VALUES (?,?,?)", [email,name,pwd])
+                conn.commit()
+                conn.close()
+                return 'success'
 
 # main_video 구현 후 지워야
 @app.route('/video/',methods=['GET','POST']) #추천 영상 비디오
 def sendVideoList():
     if request.method == 'GET':
-        conn = sqlite3.connect("../POSCHAIR.db")
+        '''
+        conn = sqlite3.connect("/root/POSCHAIR.db")
         conn.row_factory = sqlite3.Row
         c = conn.cursor()
 
-        rows = c.execute('''
-                         select vidID,vidTitle,view,uploadDate,liked from Youtube_Video
-                         ''').fetchall()
+        rows = c.execute("select vidID,vidTitle,view,uploadDate,liked from Youtube_Video").fetchall()
 
         conn.close()
+<<<<<<< HEAD
         print(rows)
         temp =[dict(i) for i in rows]
         print(temp)
+=======
+>>>>>>> e5c3e665127d590c36b9499fcde3d5d1ab2ecfdd
 
+        return json.dumps([dict(i) for i in rows])
+        '''
+        temp = vidFunc()
         return json.dumps(temp)
+
 
 
 
 @app.route('/likeVideo/',methods=['GET','POST'])  #사용자가 좋아한 비디오
 def sendlikeVideoList():
     if request.method == 'GET':
-        conn = sqlite3.connect("../POSCHAIR.db")
+        conn = sqlite3.connect("/root/POSCHAIR.db")
         conn.row_factory = sqlite3.Row
         c = conn.cursor()
 
@@ -123,7 +124,7 @@ def updateVideoLike():
         videoID = request.form['videoID']
         isLike = request.form['isLike']
 
-        conn = sqlite3.connect("../POSCHAIR.db")
+        conn = sqlite3.connect("/root/POSCHAIR.db")
         c = conn.cursor()
 
         if isLike == "like": # 좋아요 x -> 좋아요 db 업데이트
@@ -140,6 +141,38 @@ def updateVideoLike():
 
             return "success"
 
+DATE = ""
+@app.route('/dayChart/', methods=['GET', 'POST'])
+def sendDayChartInfo():
+    global DATE
+    if request.method == 'POST':
+
+        user_id = request.form['user_id']
+        DATE = request.form['sendDate']
+
+        print("success to get date: "+DATE)
+        return "success"
+
+    if request.method == 'GET':
+        print("sendDayChartInfo: "+DATE)
+        #date =  request.form['date'] #보내는 기준 날짜 - 해당 날짜부터 7일 이전 날짜까지의 데이터 조회 후 모두 전송
+
+        if DATE != '2019-05-10':
+            conn = sqlite3.connect("/root/POSCHAIR.db")
+            conn.row_factory = sqlite3.Row
+            c = conn.cursor()
+
+            rows = c.execute('''
+                             select DATE,TOTAL_SITTING,CORRECT_SITTING,k0,k1,k2,k3,k4,k5,k6,CORRECT_PELVIS,LEFT_PELVIS from dayChart
+                             ''').fetchall()
+
+            conn.close()
+
+            print(json.dumps([dict(i) for i in rows]))
+            return json.dumps([dict(i) for i in rows])
+        else:
+            return json.dumps([])
+
 
 @app.route('/posture/', methods=['GET', 'POST'])
 def getLabel():
@@ -151,13 +184,13 @@ def getLabel():
         d = data()
         c.execute("SELECT init_pos_lower FROM User WHERE ID = ?", ("choo@naver.com",))
         lower_origin = c.fetchone()[0]
-        print(lower_origin)
+        #print(lower_origin)
 
         lower_origin_list = json.loads(lower_origin)
 
         c.execute("SELECT total_time FROM Keyword WHERE ID = ?", ("choo@naver.com",))
         total_hour = c.fetchone()[0]
-        print(total_hour)
+        #print(total_hour)
 
         '''lower_median DB에서 가져옴'''
         c.execute("SELECT lower_median FROM Median WHERE ID = ?", ("choo@naver.com",))
@@ -169,12 +202,21 @@ def getLabel():
 
         label = 0
 
+<<<<<<< HEAD
         if np.count_nonzero(lower_median-10)>6: #사용자가 의자에 앉아있는지 판단
+=======
+        if np.count_nonzero(np.asarray(lower_median_list)-10 > 6): #사용자가 의자에 앉아있는지 판단
+>>>>>>> e5c3e665127d590c36b9499fcde3d5d1ab2ecfdd
             #각 센서값으로 자세 lower/upper 자세 판단 (이건 median
             lower = LBCNet(d.generator(lower_median_list), d.generator(lower_origin_list))
             upper = upper_balance_check(upper_median_list) #upper 자세값 받아옴.
             label = messaging(upper, lower)
+<<<<<<< HEAD
 
+=======
+        
+        print(label)
+>>>>>>> e5c3e665127d590c36b9499fcde3d5d1ab2ecfdd
         return str(label)
 
 @app.route('/dayChart/', methods=['GET', 'POST'])
