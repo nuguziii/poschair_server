@@ -1,7 +1,9 @@
-# PosChair 서버
+# PosChair Python Code
+## Sitting Posture Prediction and Correction System using Arduino-Based Chair and Deep Learning Model
 ## 자세교정을 위한 스마트 의자 시스템
-### -사용 스택
-#### Flask 
-#### SQLite 
-#### Python
-#### Naver Cloud Platform
+
+### Library
+#### Flask
+#### SQLite
+#### Pytorch
+#### Scikit-image
